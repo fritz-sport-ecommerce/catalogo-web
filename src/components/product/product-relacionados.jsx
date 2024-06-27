@@ -23,7 +23,7 @@ export default function ProductRelacionados({
             ? `https://www.fritzsportoutlet.pe/products/${products.slug}/${products.sku}`
             : `/products/${products.slug}/${products.sku}`
         } `}
-        className="group z-10 text-sm  border-y-[1px] border-l-[1px]  p-3 border-blue-gray-300  dark:border-none"
+        className="group z-10 text-sm  flex flex-col justify-center items-start border-y-[1px] border-l-[1px] px-1 xl:p-3 border-blue-gray-300  dark:border-none"
       >
         <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md    group-hover:opacity-75 ">
           {products.images && (
@@ -52,13 +52,13 @@ export default function ProductRelacionados({
             </>
           )} */}
         </div>
-    
-          <h3 className="mt-4 font-medium capitalize ">
-            {products.marca} - {products.genero}
-          </h3>
-   
-        <h3 className="mt-2 font-medium uppercase text-sm">
-          {products.name} {products.genero}
+
+        <h3 className="xl:mt-4 font-medium capitalize  text-xs">
+          {products.marca} - {products.genero}
+        </h3>
+
+        <h3 className="mt-2 font-medium uppercase xl:text-sm text-xs">
+          {products.name}
         </h3>
 
         {/* <p className="mt-2 font-medium">S/{products.descuento}</p> */}
