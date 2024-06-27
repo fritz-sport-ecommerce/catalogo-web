@@ -9,6 +9,33 @@ import NavTop from "./nav-top";
 const dataHeader = {
   menuSubmenu: [
     {
+      id: "marcas",
+      titulo: "Marcas",
+      url: "/productos?genero=mujer",
+
+      infoNav: [
+        {
+          categoria: [
+            {
+              id: "1",
+              title: "",
+              url: "/productos?genero=mujer",
+            },
+            {
+              id: "3",
+              title: "ADIDAS",
+              url: "/productos?marca=adidas",
+            },
+            {
+              id: "5",
+              title: "NIKE",
+              url: "/productos?marca=nike",
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: "mujer",
       titulo: "Mujer",
       url: "/productos?genero=mujer",
