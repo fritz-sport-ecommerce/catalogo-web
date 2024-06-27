@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/components/pedidos-tabs-user/pedidos-tabs-user.js",
+    "src/components/love-follow/items-follow.js",
+    "src/components/love-follow/love-follow-navigation.js",
+    "src/components/love-follow/love-follow.js",
+    "src/components/Footer/Footer.jsx",
+    "src/app/(web)/exito/page.js",
+    "src/components/form-info-cuenta/form-info-cuenta.js"
+, "src/components/promo-image/promo-image.js"  ],
+  "exclude": ["node_modules"]
+}

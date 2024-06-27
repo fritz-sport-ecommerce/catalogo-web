@@ -1,0 +1,156 @@
+.slides {
+  height: 100%;
+}
+.slides .slide {
+  width: 100%;
+  position: absolute;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* padding-left: 10%; */
+}
+
+.slidetitles {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.slides .slide.active {
+  opacity: 1;
+}
+.slidecont {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  opacity: 1;
+  transform: translateY(50px);
+  transition: all 0.7s;
+  opacity: 0;
+  transition-delay: 0.4s;
+}
+.white .slidecont {
+  color: #fff;
+}
+.white .slidecont button {
+  background-color: #fff;
+  color: #000;
+}
+.active .slidecont {
+  transform: initial;
+  opacity: 1;
+}
+.slidecont > * {
+  transition: all 0.3s;
+}
+.slide {
+  width: 100vw;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.slide button {
+  flex-direction: row-reverse;
+}
+.slide .appbtn i {
+  margin-left: 10px;
+}
+.slide .appbtn:hover i {
+  margin-left: 20px;
+}
+.pause i:hover {
+  color: var(--theme-color);
+}
+.leftimg {
+  display: flex;
+  gap: 10px;
+}
+.leftimg .slidecont .slidetitles {
+  flex-direction: column-reverse;
+}
+.leftimg .img2 {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  opacity: 0;
+  transition: all 1s;
+  /* transform: translateX(-80px); */
+}
+.active .img2 {
+  left: 0;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.img2 img {
+  width: 100vw;
+  widows: 100%;
+  z-index: 1;
+  object-fit: contain;
+  /* max-height: 6; */
+  /* max-height: 500px; */
+  /* top: 50%; */
+
+  /* transform: translateY(-50%); */
+}
+.slides .center {
+  justify-content: center;
+}
+.center .slidecont {
+  text-align: center;
+}
+.center .slidecont a {
+  justify-content: center;
+  display: flex;
+}
+@media (min-width: 320px) {
+  /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+}
+@media (min-width: 480px) {
+  /* smartphones, Android phones, landscape iPhone */
+}
+@media (min-width: 600px) {
+  /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+}
+@media (min-width: 801px) {
+  /* tablet, landscape iPad, lo-res laptops ands desktops */
+}
+@media (min-width: 1025px) {
+  /* big landscape tablets, laptops, and desktops */
+}
+@media (min-width: 1281px) {
+  /* hi-res laptops and desktops */
+  .slides .slide {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    /* padding-left: 10%; */
+  }
+}
+
+.img2 {
+  width: 100% !important;
+  height: 100% !important;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  z-index: 0;
+  opacity: 0;
+  transition: all 1s;
+  /* transform: translateX(-80px); */
+}
