@@ -130,12 +130,19 @@ export default function ProductAddToCart({ product, descuentos }) {
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="w-full">
-          <Button
-            type="button"
-            className=" w-full rounded-none uppercase bg-black py-6 text-base font-medium focus:outline-none focus:ring-2 dark:bg-white "
+          <Link
+            href={
+              "https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+            }
+            target="_blank"
           >
-            contactar a un asessor
-          </Button>
+            <Button
+              type="button"
+              className=" w-full rounded-none uppercase bg-black py-6 text-base font-medium focus:outline-none focus:ring-2 dark:bg-white "
+            >
+              contactar a un asessor
+            </Button>
+          </Link>
         </div>
         {/* <LoveFollow view={false} product={product} /> */}
       </form>
