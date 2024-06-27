@@ -295,7 +295,7 @@ export function ProductFilters() {
                         checked
                           ? params.delete(section.id)
                           : params.set(section.id, option.value);
-                        router.replace(`tienda/?${params.toString()}`);
+                        router.replace(`productos/?${params.toString()}`);
                       }}
                     />
                     <label
