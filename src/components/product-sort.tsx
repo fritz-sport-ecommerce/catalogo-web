@@ -21,7 +21,7 @@ import {
 import { ProductFilters } from "@/components/product-filters";
 
 const sortOptions = [
-  { name: "Lo mas Nuevo", value: "tienda/?date=desc" },
+  { name: "Lo mas Nuevo", value: "productos/?date=desc" },
   // { name: "Precio, Bajo a Alto", value: "tienda/?price=asc" },
   // { name: "Precio, Alto a Bajo", value: "tienda/?price=desc" },
 ];
