@@ -22,10 +22,7 @@ const raleway = Raleway({
   display: "swap",
   // display: "swap",
 });
-let product = false;
-  if (!product) {
-    return notFound();
-  }
+
 export const metadata: Metadata = {
   title: "Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
   description:
@@ -64,6 +61,11 @@ export default async function RootLayout({
   >(groq`*[_type == "home"] {
 whatsapp
 }`);
+
+  let product = false;
+  if (!product) {
+    return notFound();
+  }
   return (
     <html lang="es">
       <head>
