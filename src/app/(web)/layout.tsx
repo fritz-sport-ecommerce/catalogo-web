@@ -3,7 +3,7 @@ import { Poppins, Raleway } from "next/font/google";
 
 // import Header from "@/components/Header/Header";
 import "./globals.css";
-
+import { notFound } from "next/navigation";
 import ThemeProvider from "@/components/ThemeProvider/ThemeProvider";
 import { NextAuthProvider } from "@/components/AuthProvider/AuthProvider";
 import Toast from "@/components/Toast/Toast";
