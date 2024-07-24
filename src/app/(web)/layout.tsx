@@ -62,10 +62,7 @@ export default async function RootLayout({
 whatsapp
 }`);
 
-  let product = false;
-  if (!product) {
-    return notFound();
-  }
+
   return (
     <html lang="es">
       <head>
