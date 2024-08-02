@@ -93,6 +93,8 @@ export default async function Page({ params }: Props) {
           marca,
           priceecommerce,
           description,
+          priceemprendedor,
+          pricemayorista,
           descuento,
           tipo,
           genero,
@@ -124,9 +126,15 @@ export default async function Page({ params }: Props) {
                   {product?.name} - {product?.genero}
                 </h1>
                 <div className="flex">
-                  {/* <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
-                    S/{product?.priceecommerce}
-                  </p> */}
+                  <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
+                 Precio Ecommerce:   S/{product?.priceecommerce}
+                  </p>
+                      <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
+                 Precio Mayorista:   S/{product?.pricemayorista}
+                  </p>
+                           <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
+                 Precio Emprendedor:   S/{product?.priceemprendedor}
+                  </p>
                   {/* <p className="tracking-tight 2xl:text-3xl ">
                     S/
                     {precioProduct(
