@@ -123,19 +123,22 @@ export default async function Page({ params }: Props) {
               {/* <div className=" xl:block">
                 <BreadcrumbsDefault product={product} />
               </div> */}
-              <div className=" flex w-full items-center justify-between  px-4 py-2 ">
-                <h1 className="text-sm sm:text-lg font-bold uppercase tracking-tight 2xl:text-3xl">
+              <div className=" flex w-full items-center justify-center  px-4 py-2 ">
+                <h1 className="text-sm sm:text-lg font-bold text-center uppercase tracking-tight 2xl:text-3xl">
                   {product?.name} - {product?.genero}
                 </h1>
-                <div className="flex">
-                  <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
-                 Precio Ecommerce:   S/{product?.priceecommerce}
+              </div>
+                <div className="">
+                  <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
+                 P. Ecommerce:   S/{product?.priceecommerce}
                   </p>
-                      <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
-                 Precio Mayorista:   S/{product?.pricemayorista}
+                  <br />
+                      <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
+                 P. Mayorista:   S/{product?.pricemayorista}
                   </p>
-                           <p className=" mr-2 font-semibold  tracking-tight text-[#767677] line-through 2xl:text-3xl">
-                 Precio Emprendedor:   S/{product?.priceemprendedor}
+                  <br />
+                           <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
+                 P. Emprendedor:   S/{product?.priceemprendedor}
                   </p>
                   {/* <p className="tracking-tight 2xl:text-3xl ">
                     S/
@@ -147,7 +150,6 @@ export default async function Page({ params }: Props) {
                     )}
                   </p> */}
                 </div>
-              </div>
             </div>
             {/* Product gallery */}
             <div>
