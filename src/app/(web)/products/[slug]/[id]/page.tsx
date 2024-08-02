@@ -54,6 +54,8 @@ export default async function Page({ params }: Props) {
     marca,
     images,
     priceecommerce,
+              priceemprendedor,
+          pricemayorista,
     currency,
     description,
     sizes,
