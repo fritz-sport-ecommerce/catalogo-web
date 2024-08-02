@@ -8,7 +8,7 @@ interface InventoryProduct {
 
   description: string;
 }
-
+// dsadas
 interface InventorySlider {
   id: string;
   name: string;
@@ -48,6 +48,10 @@ export interface InventoryNuestrasTiendas
   images: Image[];
 }
 export interface SanityProduct extends Omit<InventoryProduct, "images"> {
+  priceemprendedor: any;
+  pricemayorista: any;
+  descuentosobred: any;
+  categories: string;
   detalles: any;
   tipo: string;
   stock: number;
@@ -72,11 +76,11 @@ export interface SanitySlider extends Omit<InventorySlider, "images"> {
     bannerhome: {
       titulo?: string | undefined;
       description?: string | undefined;
-      btntext?: string | undefined; 
+      btntext?: string | undefined;
       urlbtn?: string | undefined;
       desc?: string | undefined;
     };
-  } 
+  };
   bottom: Boolean;
   slug: string;
   images: Image[];
