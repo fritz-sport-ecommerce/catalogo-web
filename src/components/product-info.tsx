@@ -66,7 +66,20 @@ export function ProductInfo({ product, descuentos }: Props) {
 
           <h6 className="text-md tracking-tight">Marca: {product.marca}</h6>
           <h5 className="text-md tracking-tight">Sku: {product.sku}</h5>
-
+    <div className="flex flex-col items-start mb-2 ">
+                  <p className=" mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
+                <span className="font-medium">P. Ecommerce:</span>    S/{product?.priceecommerce}
+                  </p>
+                  <p className="mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
+                  <span className="font-medium">P. Emprendedor:</span>        S/{product?.priceemprendedor}
+                  </p>
+                      <p className=" mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
+                      <span className="font-medium">P. Mayorista:</span>        S/{product?.pricemayorista}
+                  </p>
+                 
+ 
+             
+                </div>
           {/* <div className="mt-6">
             <h3 className="sr-only">Description</h3>
             <div className="space-y-6 text-justify text-base 2xl:hidden">
