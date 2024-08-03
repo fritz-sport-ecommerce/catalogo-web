@@ -41,6 +41,8 @@ export default async function ContedorCarouselProduct({
           categories,
           stock,
           preciomanual,
+          pricemayorista,
+          priceemprendedor,
           "slug":slug.current
         }`);
 
