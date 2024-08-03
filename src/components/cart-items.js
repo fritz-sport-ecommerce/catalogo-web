@@ -57,14 +57,23 @@ export function CartItems() {
                         </Link>
                       </h3>
                     </div>
-                    <p className="mt-1 text-sm font-medium">
-                      Precio por unidad: S/{el.price}
-                    </p>
+                    <div className="border-t-[1px] border-blue-gray-300 mt-2">
+          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
+          <span className="font-medium">Precio Retail:</span> S/{el?.priceecommerce}
+          </div>
+          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
+          <span className="font-medium">Precio Emprendedor:</span> S/{el?.priceemprendedor}
+          </div>
+          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
+          <span className="font-medium">Precio Mayorista:</span> S/{el?.pricemayorista}
+          </div>
 
-                    <p className="mt-1 text-sm font-medium">
-                      Talla: {/* @ts-ignore */}
-                      <strong>{el.talla}</strong>
-                    </p>
+          </div>
+                    {/* <p className="mt-1 text-sm font-medium">
+                      Precio por unidad: S/{el.price}
+                    </p> */}
+
+                
                   </div>
 
                   <div className="mt-4 flex items-center  sm:mt-0 sm:pr-9">
@@ -97,10 +106,7 @@ export function CartItems() {
                   <Clock className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>Se envía en 1 semana</span>
                 </p> */}
-                <p className="mt-4 flex space-x-2 text-sm">
-                  {/* <Clock className="h-5 w-5 shrink-0" aria-hidden="true" /> */}
-                  <span>Precio total: S/{el.itemTotal} </span>
-                </p>
+          
               </div>
             </div>
           ))}
