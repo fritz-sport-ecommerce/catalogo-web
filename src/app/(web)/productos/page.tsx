@@ -122,7 +122,8 @@ export default async function Page({ searchParams }: Props) {
       marca,
       descuento,
       color,
-    
+      priceemprendedor,
+      pricemayorista,
       razonsocial,
       tallas,
       preciomanual,
