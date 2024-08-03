@@ -73,7 +73,7 @@ export default function NavTop({
                 </Link>
               </div> */}
             {/* icono carrito */}
-            {/* <Link href="/carrito">
+            <Link href="/carrito">
               <Button size="sm" variant="ghost">
                 <ShoppingBag className="h-5 w-5" />
                 <span className="ml-2 text-sm font-bold">
@@ -81,7 +81,7 @@ export default function NavTop({
                 </span>
                 <span className="sr-only">Cart</span>
               </Button>
-            </Link> */}
+            </Link>
             {/* icono Buscador */}
             <Button
               className="xl:hidden p-1"
