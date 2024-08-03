@@ -32,7 +32,7 @@ export default function ProductAddToCart({ product, descuentos }) {
     };
 
     addItem({
-      id: String(`${selectSize._key}`),
+      id: product.id,
       name: product.name,
       idsanity: product.id,
       img: product.image,
@@ -45,7 +45,11 @@ export default function ProductAddToCart({ product, descuentos }) {
         product.preciomanual,
         descuentos
       ),
-      talla: String(`${selectSize.talla}`),
+      priceecommerce:product.priceecommerce,
+      pricemayorista:product.pricemayorista,
+      priceemprendedor:product.priceemprendedor,
+
+      talla: String(`${selectSize.tallascatalogo}`),
       slug: product.slug,
     });
     toast({
@@ -75,10 +79,10 @@ export default function ProductAddToCart({ product, descuentos }) {
 
   return (
     <div>
+      <p>
+        Tallas: <strong>{product?.tallascatalogo || ""}</strong>
+      </p>
       {/* <div className="mt-4">
-        <p>
-          Tallas: <strong>{selectSize.talla || ""}</strong>
-        </p>
         {cliente &&
           product.tallas.map(({ talla, stock, _key }) => (
             <Button
@@ -124,7 +128,24 @@ export default function ProductAddToCart({ product, descuentos }) {
           />
         </ModalDesk>
       )}
-
+ <form
+        className=" flex items-center mt-4 "
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <div className="w-full">
+  
+            <Button
+              // disabled={activeAddProduct}
+              onClick={addToCart}
+              type="button"
+              className=" w-full rounded-none uppercase bg-black py-6 text-base font-medium focus:outline-none focus:ring-2 dark:bg-white "
+            >
+              { "Agregar Al Carrito"}
+            </Button>
+       
+        </div>
+        {/* <LoveFollow view={false} product={product} /> */}
+      </form>
       <form
         className=" flex items-center mt-4 "
         onSubmit={(e) => e.preventDefault()}
