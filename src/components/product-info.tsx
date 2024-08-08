@@ -44,6 +44,7 @@ export function ProductInfo({ product, descuentos }: Props) {
       categories,
       marca,
       tallas,
+      tipoproducto,
       stock,
       descuento,
       preciomanual,
@@ -73,9 +74,18 @@ export function ProductInfo({ product, descuentos }: Props) {
                   <p className="mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
                   <span className="font-medium">Precio Emprendedor:</span>        S/{product?.priceemprendedor}
                   </p>
+                  {
+                    product?.tipoproducto ? (
+                      <></>
+                    ):
+                    <>
+                    
                       <p className=" mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
                       <span className="font-medium">Precio Mayorista:</span>        S/{product?.pricemayorista}
                   </p>
+                    
+                    </>
+                  }
                  
  
              
