@@ -75,7 +75,7 @@ export function ProductInfo({ product, descuentos }: Props) {
                   <span className="font-medium">Precio Emprendedor:</span>        S/{product?.priceemprendedor}
                   </p>
                   {
-                    product?.tipoproducto ? (
+                    product?.tipoproducto === "web" ? (
                       <></>
                     ):
                     <>
