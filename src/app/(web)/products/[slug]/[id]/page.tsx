@@ -66,6 +66,8 @@ export default async function Page({ params }: Props) {
     genero,
     tipo,
     descuento,
+             tipoproducto,
+
     tallas,
     preciomanual,
     "slug":slug.current
@@ -101,6 +103,7 @@ export default async function Page({ params }: Props) {
           descuento,
           tipo,
           tallascatalogo,
+             tipoproducto,
           genero,
           detalles,
           descuento,
@@ -135,13 +138,21 @@ export default async function Page({ params }: Props) {
                  P. Ecommerce:   S/{product?.priceecommerce}
                   </p>
                   <br />
-                      <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
-                 P. Mayorista:   S/{product?.pricemayorista}
-                  </p>
-                  <br />
                            <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
                  P. Emprendedor:   S/{product?.priceemprendedor}
                   </p>
+                  {
+                    product?.tipoproducto === "web" ? (<></>) : (
+                      <div>
+                      
+                  <br />
+                      <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
+                 P. Mayorista:   S/{product?.pricemayorista}
+                  </p>
+                      </div>
+
+                    )
+                  }
                   {/* <p className="tracking-tight 2xl:text-3xl ">
                     S/
                     {precioProduct(
