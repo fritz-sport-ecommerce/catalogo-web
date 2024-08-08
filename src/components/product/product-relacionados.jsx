@@ -67,9 +67,16 @@ export default function ProductRelacionados({
           <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
           <span className="font-medium">Precio Emprendedor:</span> S/{products?.priceemprendedor}
           </div>
-          <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista}
-          </div>
+          {
+            products.tipoproducto === "web" ? (
+
+                   <></>
+            ) : (
+              <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
+                    <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista}
+              </div>
+            )
+          }
 
           </div>
         {/* <p className="mt-2 font-medium">S/{products.descuento}</p> */}
