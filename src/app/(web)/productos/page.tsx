@@ -27,6 +27,7 @@ interface Props {
     tipo?: string;
     marca?: string;
     size?: string;
+    tipoproducto?: string;
     genero?: string;
     razonsocial?: string;
     search?: string;
@@ -73,6 +74,8 @@ export default async function Page({ searchParams }: Props) {
       razonsocial,
       genero,
       coleccion,
+
+      tipoproducto,
       talla,
       marca,
       tipo,
@@ -89,7 +92,7 @@ export default async function Page({ searchParams }: Props) {
     const tipoFilter = tipo ? `&& tipo match "${tipo}"` : "";
     const marcaFilter = marca ? `&& marca match "${marca}"` : "";
     const razon = razonsocial ? `&& razonsocial match "${razonsocial}"` : "";
-
+    const tipo_producto = tipoproducto ? `&& tipoproducto match "${tipoproducto}"` : "";
     const tallaFilter = talla ? `&& count(tallas[talla == "${talla}"])>0` : "";
 
     const categoryFilter = category ? `&& "${category}" match categories` : "";
@@ -103,7 +106,7 @@ export default async function Page({ searchParams }: Props) {
       ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" && categories != "originals" `
       : "";
 
-    const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${razon}] | order(_createdAt desc)`;
+    const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${razon}${tipo_producto}] | order(_createdAt desc)`;
 
     // await seedSanityData()
 
@@ -116,6 +119,7 @@ export default async function Page({ searchParams }: Props) {
       images,
       priceecommerce,
       description,
+      stock,
       genero,
       tipo,
       coleccion,
@@ -123,6 +127,7 @@ export default async function Page({ searchParams }: Props) {
       descuento,
       color,
       priceemprendedor,
+      tipoproducto,
       pricemayorista,
       razonsocial,
       tallas,
@@ -131,7 +136,18 @@ export default async function Page({ searchParams }: Props) {
     } `
     );
     // console.log(priceecommerce)
-    return products;
+    if(searchFilter){
+      if (products[0].stock === 0) {
+        return [];
+      }else{
+        return [products[0]]
+
+      }
+    }else{
+      return products;
+
+    }
+  
   }
   const products = await fetchNextPage();
   // console.log(products[0].tallas)
