@@ -48,6 +48,7 @@ export interface InventoryNuestrasTiendas
   images: Image[];
 }
 export interface SanityProduct extends Omit<InventoryProduct, "images"> {
+  tipoproducto: string;
   priceemprendedor: any;
   pricemayorista: any;
   descuentosobred: any;
