@@ -68,6 +68,7 @@ export default function Product({
       stock,
       priceemprendedor,
       pricemayorista,
+      tipoproducto,
       descuento,
       razonsocial,
       preciomanual,
@@ -161,15 +162,22 @@ export default function Product({
             {products.name}
           </h3>
           <div className="border-t-[1px] border-blue-gray-300 mt-2">
-          <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
+          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
           <span className="font-medium">Precio Retail:</span> S/{products?.priceecommerce}
           </div>
-          <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
+          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
           <span className="font-medium">Precio Emprendedor:</span> S/{products?.priceemprendedor}
           </div>
-          <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista}
-          </div>
+          {
+            products.tipoproducto === "web" ? (
+
+                   <></>
+            ) : (
+              <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
+                    <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista}
+              </div>
+            )
+          }
 
           </div>
         </Link>
