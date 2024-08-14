@@ -116,7 +116,7 @@ export default function Product({
           </Link>
           {/* <LoveFollow product={products} /> */}
         </div>
-        {relacionados && (
+
           <>
             <div className="mt-2 xl:flex gap-1 hidden ">
               {data?.map((el, i) => (
@@ -143,7 +143,7 @@ export default function Product({
               ))}
             </div>
           </>
-        )}
+    
 
         <Link
           key={products.id}
