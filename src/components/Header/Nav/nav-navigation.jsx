@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
+
 
 import NavMenuDesktop from "./nav-menu-desktop";
 import NavMenuHoverDesktop from "./nav-menu-hover-desktop";
@@ -8,33 +8,33 @@ import NavTop from "./nav-top";
 
 const dataHeader = {
   menuSubmenu: [
-    {
-      id: "marcas",
-      titulo: "Marcas",
-      url: "/productos?genero=mujer",
+    // {
+    //   id: "marcas",
+    //   titulo: "Marcas",
+    //   url: "/productos?genero=mujer",
 
-      infoNav: [
-        {
-          categoria: [
-            {
-              id: "1",
-              title: "",
-              url: "/productos?genero=mujer",
-            },
-            {
-              id: "3",
-              title: "ADIDAS",
-              url: "/productos?marca=adidas",
-            },
-            {
-              id: "5",
-              title: "NIKE",
-              url: "/productos?marca=nike",
-            },
-          ],
-        },
-      ],
-    },
+    //   infoNav: [
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "1",
+    //           title: "",
+    //           url: "/productos?genero=mujer",
+    //         },
+    //         {
+    //           id: "3",
+    //           title: "ADIDAS",
+    //           url: "/productos?marca=adidas",
+    //         },
+    //         {
+    //           id: "5",
+    //           title: "NIKE",
+    //           url: "/productos?marca=nike",
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // },
     // {
     //   id: "mujer",
     //   titulo: "Mujer",
@@ -500,14 +500,14 @@ const dataHeader = {
       titulo: "Productos",
       url: "/productos",
     },
-        {
+    {
       id: "pdf",
-      titulo: "PDF",
+      titulo: "DESCARGAR PDF",
       url: "/pdf",
     },
     {
       id: "Ntiendas",
-      titulo: "Nuestras Tiendas",
+      titulo: "Ubicanos",
       url: "/nuestras-tiendas",
     },
     // {
