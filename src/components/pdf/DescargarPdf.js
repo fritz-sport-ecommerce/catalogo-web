@@ -19,18 +19,18 @@ export default function DescargarPdf({catalogo}) {
                 <section key={el._key}  className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl">
 
                     <div className='text-center xl:text-lg uppercase'>
-                    {el.titulo}
+                    {el?.titulo}
                     </div>
                 <div className="flex justify-between py-2 uppercase text-xs">
-                    <div>                    {el.mes}
+                    <div>                    {el?.mes}
                     </div>
 
-                    <div>{el.marca}</div>
+                    <div>{el?.marca}</div>
                 </div>
                 <img className="" src={urlForImage(el?.imgdw?.asset._ref).url()} alt="" />
 
                 <div className="w-full flex justify-center py-3">
-                    <a href={getUrlFromId(el.asset._ref)} target="_blank">
+                    <a href={getUrlFromId(el.asset._ref )} target="_blank">
 
                         <button type="button" className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Descargar</button>
                     </a>
