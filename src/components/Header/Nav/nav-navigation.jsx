@@ -502,7 +502,7 @@ const dataHeader = {
     },
     {
       id: "pdf",
-      titulo: "DESCARGAR PDF",
+      titulo: "DESCARGAR CATALOGO",
       url: "/pdf",
     },
     {
