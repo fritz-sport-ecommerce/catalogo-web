@@ -1577,7 +1577,7 @@ let options = [
   },
     {
     id: 21,
-    title: "PDF",
+    title: "DESCARGAR CATALOGO",
     icon: "",
     hideBorder: false,
     disabled: false,
