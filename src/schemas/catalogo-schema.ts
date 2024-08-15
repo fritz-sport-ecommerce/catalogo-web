@@ -13,6 +13,65 @@ export const catalogo = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     }),
+        {
+      name: "catalogospdf",
+      title: "Lista de Catalogos PDF",
+      type: "array",
+      of:[
+
+        {
+          title: ' PDF',
+          name: 'pdf',
+          type: 'file',
+          fields: [
+            {
+              name: 'titulo',
+              type: 'string',
+              title: 'Titulo'
+            },
+            {
+              name: 'mes',
+              type: 'string',
+              title: 'Mes'
+            },
+            {
+              title: "Image (jpg,png,webp) 595pxx495px",
+              name: "imgdw",
+              type: "image",
+              validation: (rule) => rule.required(),
+              options: {
+                hotspot: true, // <-- Defaults to false
+              },
+            },
+            {
+              title: "Marca",
+              name: "marca",
+              type: "string",
+        
+              validation: (rule) => rule.required(),
+              options: {
+                list: [
+                  { title: "Adidas", value: "adidas" },
+                  { title: "Nike", value: "nike" },
+                  { title: "Puma", value: "puma" },
+                  { title: "Reebok", value: "reebok" },
+                  { title: "Cat", value: "cat" },
+                  { title: "Fritz Sport", value: "fritzsport" },
+                  { title: "joma", value: "joma" },
+                ], // <-- predefined values
+              },
+            },
+            
+            // {
+            //   name: 'author',
+            //   type: 'reference',
+            //   title: 'Author',
+            //   to: {type: 'person'}
+            // }
+          ]
+        },
+      ]
+    },
     {
       name: "slider",
       title: "Slider catalogo",
