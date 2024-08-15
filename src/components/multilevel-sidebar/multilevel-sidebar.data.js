@@ -1575,6 +1575,14 @@ let options = [
     disabled: false,
     to: "/emprende",
   },
+    {
+    id: 21,
+    title: "PDF",
+    icon: "",
+    hideBorder: false,
+    disabled: false,
+    to: "/pdf",
+  },
   {
     id: 25,
     title: "Nuestras Tiendas",
