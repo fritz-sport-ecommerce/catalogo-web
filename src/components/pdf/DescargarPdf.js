@@ -13,7 +13,7 @@ export default function DescargarPdf({catalogo}) {
     
   
   return (
-    <div className="xl:grid xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="xl:grid xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-10" >
         {
             catalogo.map(el=>(
                 <section key={el._key}  className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl">
