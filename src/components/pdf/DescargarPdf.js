@@ -16,7 +16,7 @@ export default function DescargarPdf({catalogo}) {
     <div className="xl:grid xl:grid-cols-3 2xl:grid-cols-4">
         {
             catalogo.map(el=>(
-                <section className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl">
+                <section key={el._key}  className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl">
 
                     <div className='text-center xl:text-lg uppercase'>
                     {el.titulo}
