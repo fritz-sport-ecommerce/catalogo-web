@@ -23,6 +23,9 @@ export const catalogo = defineType({
           title: ' PDF',
           name: 'pdf',
           type: 'file',
+           options: {
+            accept: 'application/pdf'
+          },
           fields: [
             {
               name: 'titulo',
