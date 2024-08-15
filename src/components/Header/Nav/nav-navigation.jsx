@@ -500,6 +500,11 @@ const dataHeader = {
       titulo: "Productos",
       url: "/productos",
     },
+        {
+      id: "pdf",
+      titulo: "PDF",
+      url: "/pdf",
+    },
     {
       id: "Ntiendas",
       titulo: "Nuestras Tiendas",
