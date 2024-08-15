@@ -7,15 +7,12 @@ import { groq } from "next-sanity";
 
 import { SanityProduct } from "@/config/inventory";
 import { cn } from "@/lib/utils";
-import { ProductFilters } from "@/components/product-filters";
-import { ProductGrid } from "@/components/product-grid";
-import { ProductSort } from "@/components/product-sort";
+
 
 import { Metadata } from "next";
 import { FiltroGlobal } from "@/utilits/filtro-products";
 import Descuentos from "@/config/descuentos";
-import MainPdf from "@/components/pdf/MainPdf";
-import { urlForImage } from "@/sanity/lib/image";
+
 import DescargarPdf from "@/components/pdf/DescargarPdf";
 interface Props {
   searchParams: {
