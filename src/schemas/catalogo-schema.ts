@@ -35,7 +35,7 @@ export const catalogo = defineType({
               title: 'Mes'
             },
             {
-              title: "Image (jpg,png,webp) 595pxx495px",
+              title: "Image (jpg,png,webp) 595x495",
               name: "imgdw",
               type: "image",
               validation: (rule) => rule.required(),
