@@ -1577,7 +1577,7 @@ let options = [
   },
     {
     id: 21,
-    title: "DESCARGAR CATALOGO",
+    title: "DESCARGAR CATÁLOGO ",
     icon: "",
     hideBorder: false,
     disabled: false,
