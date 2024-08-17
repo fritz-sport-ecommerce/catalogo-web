@@ -502,12 +502,12 @@ const dataHeader = {
     },
     {
       id: "pdf",
-      titulo: "DESCARGAR CATALOGO",
+      titulo: "DESCARGAR CATÁLOGO ",
       url: "/pdf",
     },
     {
       id: "Ntiendas",
-      titulo: "Ubicanos",
+      titulo: "Ubícanos",
       url: "/nuestras-tiendas",
     },
     // {
