@@ -18,7 +18,7 @@ export default function DescargarPdf({catalogo}) {
             catalogo.map(el=>(
                 <section key={el._key}  className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl">
 
-                    <div className='text-center xl:text-lg uppercase'>
+                    <div className='text-center xl:text-lg uppercase min-h-[57px]'>
                     {el?.titulo}
                     </div>
                 <div className="flex justify-between py-2 uppercase text-xs">
