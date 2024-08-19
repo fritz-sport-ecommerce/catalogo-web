@@ -233,6 +233,7 @@ const filters = [
       { value: "reebok", label: "reebok" },
       { value: "cat", label: "cat" },
       { value: "joma", label: "joma" },
+        { value: "kelme", label: "kelme" },
     ],
   },
   {
