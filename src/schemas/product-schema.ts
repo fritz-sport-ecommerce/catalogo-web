@@ -94,6 +94,7 @@ export const product = defineType({
           { title: "Cat", value: "cat" },
           { title: "Fritz Sport", value: "fritzsport" },
           { title: "joma", value: "joma" },
+                { title: "Kelme", value: "kelme" },
         ], // <-- predefined values
       },
     },
