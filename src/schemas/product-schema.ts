@@ -94,7 +94,8 @@ export const product = defineType({
           { title: "Cat", value: "cat" },
           { title: "Fritz Sport", value: "fritzsport" },
           { title: "joma", value: "joma" },
-                { title: "Kelme", value: "kelme" },
+                    { title: "Kelme", value: "kelme" },
+
         ], // <-- predefined values
       },
     },
@@ -163,6 +164,7 @@ export const product = defineType({
           { title: "Escolar", value: "escolar" },
           { title: "Pantalón", value: "pantalon" },
           { title: "Gorras", value: "gorras" },
+          { title: "Guantes", value: "guantes" },
           { title: "Shorts", value: "shorts" },
           { title: "Polos", value: "polos" },
           { title: "Sandalias", value: "sandalias" },
@@ -267,6 +269,16 @@ export const product = defineType({
       type: "number",
     },
     {
+      name: "pricemayorista",
+      title: "Precio Mayorista(*opcional)",
+      type: "number",
+    },
+    {
+      name: "priceemprendedor",
+      title: "Precio Emprendedor(*opcional)",
+      type: "number",
+    },
+    {
       name: "stock",
       title: "Stock Total - ( '0' no parece en el catalogo)",
       type: "number",
@@ -303,9 +315,14 @@ export const product = defineType({
         catalogo: false,
       },
     },
+    // {
+    //   name: "descuento (*al no tener descuento Global aplica )",
+    //   title: "Descuento Ecommerce",
+    //   type: "number",
+    // },
     {
-      name: "descuento",
-      title: "Descuento Ecommerce",
+      name: "descuentosobred",
+      title: "Descuento Sobre Descuento (*Ingora el descuento Global)",
       type: "number",
     },
     {
