@@ -140,7 +140,12 @@ export default async function Page({ searchParams }: Props) {
       if (products[0].stock === 0) {
         return [];
       }else{
-        return [products[0]]
+        if (products.length == 2 )  {
+          return [products[0]]
+        }else{
+          return products
+        }
+      
 
       }
     }else{
