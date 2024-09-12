@@ -230,6 +230,20 @@ export default function PaginaEmprende({ emprende }) {
                                 ))}
                               </ul>
                             </div>
+
+                                                    {emprende.pasos.empiezaahora.map((el, i) => (
+                          <a
+                            key={i}
+                            className="mr-5"
+                            href={`https://api.whatsapp.com/send/?phone=51${el.urlbutton}&text&type=phone_number&app_absent=0`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Button className="text-base rounded-none">
+                              {el.textbutton}
+                            </Button>
+                          </a>
+                        ))}
                           </div>
                         </div>
                       </div>
