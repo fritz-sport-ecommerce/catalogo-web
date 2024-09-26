@@ -33,14 +33,14 @@ export const metadata: Metadata = {
     siteName: "Fritz Sport",
     images: [
       {
-        url: `https://www.fzpremium.pe/ecommerce-share.jpeg`,
+        url: `${process.env.URL_DOMINIO}/ecommerce-share.jpeg`,
 
         width: 800,
         height: 600,
         alt: `Fritz Sport share Imagen`,
       },
       {
-        url: `https://www.fzpremium.pe/ecommerce-share.jpeg`,
+        url: `${process.env.URL_DOMINIO}/ecommerce-share.jpeg`,
 
         width: 1200,
         height: 630,
