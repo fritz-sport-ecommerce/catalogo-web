@@ -113,11 +113,13 @@ export default async function Page({ searchParams }: Props) {
           <div className="text-center text-xl uppercase xl:text-4xl">
             nuevos ingresos
           </div>
-          <CarouselProductRelacionados
-            generoSku={false}
-            nuevo={true}
-            products={newProducts}
+          <ContedorCarouselProduct
+             nuevo={true}
+            genero={"unisex"}
+            cantidad={"20"}
             descuentos={descuentos}
+            tipoCategoria={`&& tipo == "calzado" `}
+            outlet={false}
           />
         </div>
         <div className="my-10 xl:my-20">
@@ -146,7 +148,7 @@ export default async function Page({ searchParams }: Props) {
             genero={"unisex"}
             cantidad={"20"}
             descuentos={descuentos}
-            tipoCategoria={`&& marca == "adidas"&& razonsocial == "fritzduran" `}
+            tipoCategoria={`&& marca == "adidas"&& razonsocial == "fritzduran"  `}
             outlet={true}
           />
           <div className="flex justify-center w-full">
@@ -164,7 +166,7 @@ export default async function Page({ searchParams }: Props) {
             genero={"hombre"}
             cantidad={"20"}
             descuentos={descuentos}
-            tipoCategoria={`&& marca == "nike" `}
+            tipoCategoria={`&& marca == "nike"  `}
             outlet={false}
           />
           <div className="flex justify-center w-full">

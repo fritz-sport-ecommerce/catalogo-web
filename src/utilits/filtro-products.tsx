@@ -4,13 +4,13 @@ export function FiltroProducts(
   products: SanityProduct,
   razonsocial = "fritzsport"
 ) {
-  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined  && name match "${products.name}*"  && genero == "${products.genero}"`;
+  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined  && name match "${products.name}*"  && genero == "${products.genero}" && pricemayorista != undefined && priceemprendedor != undefined`;
 
   return productFilter;
 }
 
 export function FiltroGlobal(razonsocial = "fritzsport") {
-  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined   && images != null && tallas != undefined `;
+  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined   && images != null && tallas != undefined && pricemayorista != undefined && pricemayorista != undefined && priceemprendedor != undefined  `;
 
   return productFilter;
 }
@@ -19,7 +19,7 @@ interface Props {
   id?: string;
 }
 export function FiltroViewProduct(params: Props, razonsocial = "fritzsport") {
-  const productFilter = `*[_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals"  && slug.current == "${params.slug}" && sku == "${params.id}"][0]`;
+  const productFilter = `*[_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals"  && slug.current == "${params.slug}" && sku == "${params.id}" && pricemayorista != undefined && priceemprendedor != undefined][0]`;
 
   return productFilter;
 }
