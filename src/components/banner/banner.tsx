@@ -1,19 +1,27 @@
-import { useCallback, useState } from "react"
-import Image, { type ImageProps } from "next/image"
-import classNames from "classnames"
+"use client"
+import React, { useEffect, useRef, useState } from 'react';
 
-export type BannerSize = "l" | "m" | "s" | "xl" | "xs-large" | "xs-small"
+const images: string[] = [
+  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p',
+  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p',
+  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p',
+  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p'
+];
 
-export type BannerProps = {
-  className?: string
+const InfiniteCarousel: React.FC = () => {
+  return (
+    <div className="relative overflow-hidden w-full max-w-lg mx-auto">
+      <div className="carousel-wrapper">
+        <div className="carousel-inner">
+          {images.concat(images).map((image, i) => (
+            <div key={i} className="carousel-item">
+              <img src={image} alt={`Slide ${i}`} className="w-full h-auto object-cover" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-  children?: React.ReactNode
-}
-
-export function Banner({
-  className,
-
-  children,
-}: BannerProps) {
-  return <div className={className}>{children}</div>
-}
+export default InfiniteCarousel;

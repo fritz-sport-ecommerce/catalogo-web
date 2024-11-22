@@ -3,7 +3,7 @@ import { Poppins, Raleway } from "next/font/google";
 
 // import Header from "@/components/Header/Header";
 import "./globals.css";
-import { notFound } from "next/navigation";
+
 import ThemeProvider from "@/components/ThemeProvider/ThemeProvider";
 import { NextAuthProvider } from "@/components/AuthProvider/AuthProvider";
 import Toast from "@/components/Toast/Toast";
@@ -14,7 +14,8 @@ import { client } from "@/sanity/lib/client";
 import { SanitySlider } from "@/config/inventory";
 import { groq } from "next-sanity";
 import Footer from "@/components/footer-update/footer";
-
+import GoogleAnalytics from "@/app/(web)/GoogleAnalytics";
+import Script from "next/script";
 const raleway = Raleway({
   weight: ["800"],
   subsets: ["latin"],
@@ -63,6 +64,7 @@ whatsapp
 }`);
 
 
+
   return (
     <html lang="es">
       <head>
@@ -72,6 +74,31 @@ whatsapp
           crossOrigin="anonymous"
         />
         <link rel="icon" href="/favicon.ico" sizes="any" />
+
+                {/* Meta Pixel Script */}
+                <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '530492399885832');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          <img height="1" width="1" style={{ display: 'none' }}
+            src="https://www.facebook.com/tr?id=530492399885832&ev=PageView&noscript=1"
+          />
+        </noscript>
       </head>
       <body className={cn("min-h-screen bg-background  antialiased", raleway)}>
         <NextAuthProvider>
@@ -80,6 +107,7 @@ whatsapp
             <main className="font-normal">
               {/* <Header /> */}
               <SiteHeader />
+              <GoogleAnalytics />
               {children}
               <div className="fill-black">
                 <Footer />

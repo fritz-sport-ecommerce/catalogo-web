@@ -8,7 +8,7 @@ import { useCart } from "react-use-cart";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo/logo";
 import MultilevelSidebar from "@/components/multilevel-sidebar/multilevel-sidebar.component";
-import options from "@/components/multilevel-sidebar/multilevel-sidebar.data";
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import LoveFollow from "@/components/love-follow/love-follow";
 // import LoveFollowNavigation from "@/components/love-follow/love-follow-navigation";
@@ -17,17 +17,18 @@ interface Props {
   children: JSX.Element[] | JSX.Element;
   setActiveSearchDesk: Dispatch<SetStateAction<boolean>>;
   activeSearchDesk: Boolean;
+  open:Boolean
+  setOpen:Dispatch<SetStateAction<boolean>>;
 }
 export default function NavTop({
   children,
   setActiveSearchDesk,
   activeSearchDesk,
+  setOpen,
+  open
 }: Props) {
   const [search, setActiveSearch] = useState<boolean>(false);
-  const [open, setOpen] = useState(false);
-  const handleSidebarToggle = (isOpen: boolean) => {
-    setOpen(isOpen);
-  };
+
   const { totalItems } = useCart();
   const [client, setClient] = useState(false);
   useEffect(() => {
@@ -35,17 +36,17 @@ export default function NavTop({
   }, []);
 
   return (
-    <div className="flex items-center justify-around xl:block ">
+    <div className="relative flex items-center justify-around  xl:block ">
       {/* Buscador */}
       <div
-        className={`fixed ${
+        className={`absolute  w-full ${
           search
             ? "translate-y-[0rem] transition delay-150 ease-in"
             : "translate-y-[-25rem] transition delay-150 ease-in"
-        } top-0 z-[888] flex h-[20vh] w-[100vw] items-center  justify-center bg-gray-800/80 dark:bg-gray-800/80`}
+        } top-0 z-[888] flex h-[20vh]  items-center  justify-center bg-gray-800/80 dark:bg-gray-800/80`}
       >
         {
-          <div className="absolute flex h-full w-full items-center justify-around">
+          <div className="absolute xl:hidden flex h-full w-full items-center justify-around">
             {children}
             <button
               className=" absolute  right-5 top-3 xl:right-[35%] "
@@ -65,13 +66,13 @@ export default function NavTop({
           <div className="flex items-center xl:space-x-1">
             {/* dark mode */}
             <ThemeToggle />
-              {/* <div className="hidden xl:block">
-                <Link href={"/follows"}>
-                  <Button className=" z-10 hover:bg-blue-gray-600 p-0 bg-transparent  xl:px-2 px-1 py-[1px]">
-                    <Heart className="w-5 h-5 xl:h-5 xl:w-5 text-black dark:text-white" />
-                  </Button>
-                </Link>
-              </div> */}
+            <div className="hidden xl:block">
+              <Link href={"/follows"}>
+                <Button className=" z-10 hover:bg-blue-gray-600 p-0 bg-transparent  xl:px-2 px-1 py-[1px]">
+                  <Heart className="w-5 h-5 xl:h-5 xl:w-5 text-black dark:text-white" />
+                </Button>
+              </Link>
+            </div>
             {/* icono carrito */}
             <Link href="/carrito">
               <Button size="sm" variant="ghost">
@@ -138,31 +139,7 @@ export default function NavTop({
               )}
             </button>
 
-            <MultilevelSidebar
-              open={open}
-              options={options}
-              header={
-                <div className="flex w-full justify-center py-3">
-                  <Logo />
-                  <svg
-                    className="absolute right-3 top-3 h-6 w-6 cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    onClick={() => setOpen(!open)}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </div>
-              }
-              onToggle={handleSidebarToggle}
-            />
+  
 
             {/* {process.env.NODE_ENV === "development" && (
               <Link href={"/studio"}>

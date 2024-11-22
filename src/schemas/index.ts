@@ -12,6 +12,8 @@ import { product } from "./product-schema";
 import review from "./review";
 import user from "./user";
 import verificationToken from "./verificationToken";
+// import { test } from "./test";
+import { descuento_registro } from "./descuento-registro";
 
 export const schemaTypes = [
   user,
@@ -21,9 +23,11 @@ export const schemaTypes = [
   nuestras_tiendas,
   emprende,
   descuentos,
+  descuento_registro,
   pedidos,
   catalogo,
   account,
+  // test,
   // booking,
   // hotelRoom,
   // review,

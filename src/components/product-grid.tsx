@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { XCircle } from "lucide-react";
 
 import { SanityProduct } from "@/config/inventory";
+import Product from "./product/product-card/product";
 
-import Product from "./product/product";
 
 interface Props {
   products: SanityProduct[];
@@ -13,18 +13,63 @@ interface Props {
   outlet: boolean | undefined;
   descuentos: any;
 }
-
+function Loading() {
+  return (
+<div className="flex flex-col xl:py-20 py-10  px-0">
+  <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4   lg:col-span-3 lg:gap-x-8">
+  {Array.from({ length: 8 }).map((_, index) => (
+    <div
+      key={index}
+      className="w-full bg-gray-200 dark:bg-gray-700 rounded-md p-4 animate-pulse"
+    >
+      <div className="h-96 bg-gray-300 dark:bg-gray-600 rounded-md mb-4"></div>
+      <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded-md mb-2"></div>
+      <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded-md w-3/4"></div>
+    </div>
+  ))}
+</div>
+</div>
+  );
+}
 export function ProductGrid({
   products,
   generoSku,
   outlet = false,
   descuentos,
 }: Props) {
-  const articlesShown = 8;
+  const articlesShown = 16;
   const [loadMore, setLoadMore] = useState(articlesShown);
+  const [isLoading, setIsLoading] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastProductRef = useRef<HTMLDivElement | null>(null);
+
   const showMoreArticles = () => {
-    setLoadMore(loadMore + articlesShown);
+    if (isLoading) return;
+    setIsLoading(true);
+    setTimeout(() => { // Simulating a delay for loading more products
+      setLoadMore((prev) => Math.min(prev + articlesShown, products.length));
+      setIsLoading(false);
+    }, 500);
   };
+
+  useEffect(() => {
+    if (observer.current) observer.current.disconnect();
+
+    const callback = (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && !isLoading && loadMore < products.length) {
+        showMoreArticles();
+      }
+    };
+
+    observer.current = new IntersectionObserver(callback, { threshold: 1.0 });
+    if (lastProductRef.current) {
+      observer.current.observe(lastProductRef.current);
+    }
+
+    return () => {
+      if (observer.current) observer.current.disconnect();
+    };
+  }, [isLoading, loadMore, products.length]);
 
   if (products.length === 0) {
     return (
@@ -40,44 +85,23 @@ export function ProductGrid({
   }
 
   return (
-    <div className="flex flex-col">
-      <div className=" grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 lg:col-span-3 lg:gap-x-8">
+    <div className="flex flex-col w-full">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4  lg:col-span-3 lg:gap-x-8">
+
         {products.slice(0, loadMore).map((product, i) => (
-          <Product
-            key={i}
-            outlet={outlet}
-            products={product}
-            generoSku={false}
-            descuentos={descuentos}
-          />
+          <div key={i} ref={i === loadMore - 1 ? lastProductRef : null}>
+            <Product
+              outlet={outlet}
+              products={product}
+              generoSku={false}
+              descuentos={descuentos}
+            />
+          </div>
         ))}
       </div>
-      <div className="flex justify-center mt-5">
-        {loadMore < products?.length ? (
-          <button
-            type="button"
-            className="group relative overflow-hidden  bg-white px-2 py-3 text-sm md:text-base "
-            onClick={showMoreArticles}
-          >
-            <div className="duration-[350ms] absolute inset-0  w-3  bg-blue-gray-900   transition-all ease-out group-hover:w-full"></div>
-            <span className="relative uppercase text-black group-hover:text-white md:text-sm">
-              Ver Mas Productos
-            </span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="cursor-not-allowed  uppercase dark:bg-white bg-black px-2 py-3 text-sm text-[#FFF] dark:text-black opacity-80 md:text-sm"
-            onClick={showMoreArticles}
-            disabled
-          >
-            Todos los productos cargados
-          </button>
-        )}
-      </div>
+      {isLoading && <Loading />}
       <div className="mt-5 flex justify-center">
-        {loadMore > products?.length ? products?.length : loadMore} de{" "}
-        {products?.length} Productos
+        {loadMore > products.length ? products.length : loadMore} de {products.length} Productos
       </div>
     </div>
   );

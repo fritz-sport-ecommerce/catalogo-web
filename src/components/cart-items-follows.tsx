@@ -16,7 +16,7 @@ export function CartItemsFollows() {
         <p className="mb-4 mt-2 text-sm text-muted-foreground">
           Añade productos a tu lista de favoritos.
         </p>
-        <Link href="/productos">
+        <Link href="/tienda">
           <Button size="sm" className="relative">
             <Plus className="mr-2 h-4 w-4" />
             Agregar Productos

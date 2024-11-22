@@ -11,9 +11,7 @@ import { groq } from "next-sanity";
 
 // import { metadataPage } from "@/config/generateMetadata";
 import { SanityProduct } from "@/config/inventory";
-import { precioProduct } from "@/config/precio-product";
 
-import CarouselProductRelacionados from "@/components/carousel-product/carousel-product-relacionados";
 
 import { ProductGalleryDesk } from "@/components/product-gallery-desk";
 import { ProductInfo } from "@/components/product-info";
@@ -28,6 +26,9 @@ import { AccordionDetails } from "@/components/acordion-details/acordion-details
 import { FiltroGlobal, FiltroViewProduct } from "@/utilits/filtro-products";
 import { notFound } from "next/navigation";
 import Descuentos from "@/config/descuentos";
+import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
+import PrecioViewProductMovil from "@/components/product/product-view/precio-view-product-movil"
+import ToggleUserRole from "@/context/cambiarRol";
 
 interface Props {
   params: {
@@ -54,9 +55,10 @@ export default async function Page({ params }: Props) {
     marca,
     images,
     priceecommerce,
-              priceemprendedor,
-          pricemayorista,
-          tallascatalogo,
+    pricemayorista,
+    priceemprendedor,
+
+
     currency,
     description,
     sizes,
@@ -65,9 +67,8 @@ export default async function Page({ params }: Props) {
     colors,
     genero,
     tipo,
+    descuentosobred,
     descuento,
-             tipoproducto,
-
     tallas,
     preciomanual,
     "slug":slug.current
@@ -97,13 +98,11 @@ export default async function Page({ params }: Props) {
           images,
           marca,
           priceecommerce,
+             pricemayorista,
+    priceemprendedor,
           description,
-          priceemprendedor,
-          pricemayorista,
           descuento,
           tipo,
-          tallascatalogo,
-             tipoproducto,
           genero,
           detalles,
           descuento,
@@ -116,54 +115,22 @@ export default async function Page({ params }: Props) {
 
   const products = await productosGenero();
   let descuentos = await Descuentos();
+  let descuentoSobreD= product?.descuentosobred;
+
   return (
     <>
+      <div className="absolute xl:flex hidden z-3 w-full justify-center items-center bg-transparent py-1">
+
+<ToggleUserRole/>
+</div>
       <main className=" mb-0 xl:pt-16  z-[1]">
         <div className="">
           {/* Product */}
           {/* <PushIntereses users={user} product={product}></PushIntereses> */}
           <div className=" w-full xl:flex 2xl:pb-20">
             {/* precio y nombre */}
-            <div className=" sticky top-20  z-10 border-b-[1px]  border-blue-gray-300 bg-white text-black dark:bg-black dark:text-white xl:hidden">
-              {/* <div className=" xl:block">
-                <BreadcrumbsDefault product={product} />
-              </div> */}
-              <div className=" flex w-full items-center justify-center  px-4 py-2 ">
-                <h1 className="text-sm sm:text-lg font-bold text-center uppercase tracking-tight 2xl:text-3xl">
-                  {product?.name} - {product?.genero}
-                </h1>
-              </div>
-                <div className="">
-                  <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
-                 P. Ecommerce:   S/{product?.priceecommerce}
-                  </p>
-                  <br />
-                           <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
-                 P. Emprendedor:   S/{product?.priceemprendedor}
-                  </p>
-                  {
-                    product?.tipoproducto === "web" ? (<></>) : (
-                      <div>
-                      
-                  <br />
-                      <p className=" mr-2 font-semibold  tracking-tight   text-xs p-0 text-center">
-                 P. Mayorista:   S/{product?.pricemayorista}
-                  </p>
-                      </div>
+            <PrecioViewProductMovil product={product} descuentos={descuentos} descuentoSobreD={descuentoSobreD} ></PrecioViewProductMovil>
 
-                    )
-                  }
-                  {/* <p className="tracking-tight 2xl:text-3xl ">
-                    S/
-                    {precioProduct(
-                      product?.descuento,
-                      product?.priceecommerce,
-                      product?.preciomanual,
-                      descuentos
-                    )}
-                  </p> */}
-                </div>
-            </div>
             {/* Product gallery */}
             <div>
               {/* <div className="hidden border-b-[1px] border-blue-gray-300 text-black dark:text-white  xl:block  xl:border-none xl:border-transparent">
@@ -222,13 +189,34 @@ export default async function Page({ params }: Props) {
       </main>
 
       {/* <RoomReview roomId={product._id}></RoomReview> */}
-      <div className="mt-10">
-        <h5 className="text-center text-2xl uppercase">MAS PRODUCTOS</h5>
+      <div>
+        <div className="mt-10">
+          <h5 className="text-center text-2xl uppercase">
+            COMPLETA TU outfit{" "}
+          </h5>
 
-        <CarouselProductRelacionados
-          descuentos={descuentos}
-          products={products}
-        />
+          <ContedorCarouselProduct
+            genero={product.genero}
+            cantidad={"20"}
+            descuentos={descuentos}
+            tipoCategoria={`&& marca == "${product.marca}" && tipo == "ropa" && genero == "${product.genero}"`}
+            outlet={false}
+          />
+        </div>
+
+        <div className="mt-10">
+          <h5 className="text-center text-2xl uppercase">
+            QUIZÁ TAMBIÉN TE GUSTE..
+          </h5>
+
+          <ContedorCarouselProduct
+            genero={product.genero}
+            cantidad={"20"}
+            descuentos={descuentos}
+            tipoCategoria={`&& marca == "${product.marca}" && tipo == "calzado" && genero == "${product.genero}" && categories == "${product.categories}" `}
+            outlet={false}
+          />
+        </div>
       </div>
     </>
   );

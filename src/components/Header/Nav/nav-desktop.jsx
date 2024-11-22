@@ -5,13 +5,15 @@ import NavMenuDesktop from "./nav-menu-desktop";
 import NavMenuHoverDesktop from "./nav-menu-hover-desktop";
 import NavSearch from "./nav-search";
 import NavTop from "./nav-top";
+import ToggleUserRole from "@/context/cambiarRol";
+
 
 const dataHeader = {
   menuSubmenu: [
     // {
     //   id: "marcas",
     //   titulo: "Marcas",
-    //   url: "/productos?genero=mujer",
+    //   url: "/tienda?genero=mujer",
 
     //   infoNav: [
     //     {
@@ -19,17 +21,17 @@ const dataHeader = {
     //         {
     //           id: "1",
     //           title: "",
-    //           url: "/productos?genero=mujer",
+    //           url: "/tienda?genero=mujer",
     //         },
     //         {
     //           id: "3",
     //           title: "ADIDAS",
-    //           url: "/productos?marca=adidas",
+    //           url: "/tienda?marca=adidas",
     //         },
     //         {
     //           id: "5",
     //           title: "NIKE",
-    //           url: "/productos?marca=nike",
+    //           url: "/tienda?marca=nike",
     //         },
     //       ],
     //     },
@@ -38,7 +40,7 @@ const dataHeader = {
     // {
     //   id: "mujer",
     //   titulo: "Mujer",
-    //   url: "/productos?genero=mujer",
+    //   url: "/tienda?genero=mujer",
 
     //   infoNav: [
     //     {
@@ -46,27 +48,27 @@ const dataHeader = {
     //         {
     //           id: "1",
     //           title: "Ver Todas las Zapatillas",
-    //           url: "/productos?genero=mujer",
+    //           url: "/tienda?genero=mujer",
     //         },
     //         {
     //           id: "3",
     //           title: "Terrex",
-    //           url: "/productos?genero=mujer&category=terrex",
+    //           url: "/tienda?genero=mujer&category=terrex",
     //         },
     //         {
     //           id: "5",
     //           title: "Urbano",
-    //           url: "/productos?genero=mujer&category=urbano",
+    //           url: "/tienda?genero=mujer&category=urbano",
     //         },
     //         {
     //           id: "6",
     //           title: "Sandalias",
-    //           url: "/productos?genero=mujer&category=sandalias",
+    //           url: "/tienda?genero=mujer&category=sandalias",
     //         },
     //         {
     //           id: "7",
     //           title: "Calzado de Plataforma",
-    //           url: "/productos?genero=mujer&category=plataforma",
+    //           url: "/tienda?genero=mujer&category=plataforma",
     //         },
     //       ],
     //     },
@@ -75,32 +77,32 @@ const dataHeader = {
     //         {
     //           id: "9",
     //           title: " Ropa",
-    //           url: "/productos?genero=mujer&category=ropas",
+    //           url: "/tienda?genero=mujer&category=ropas",
     //         },
     //         {
     //           id: "10",
     //           title: "Polos",
-    //           url: "/productos?genero=mujer&category=polos",
+    //           url: "/tienda?genero=mujer&category=polos",
     //         },
     //         {
     //           id: "12",
     //           title: "Casacas",
-    //           url: "/productos?genero=mujer&category=casacas",
+    //           url: "/tienda?genero=mujer&category=casacas",
     //         },
     //         {
     //           id: "12",
     //           title: "Poleras",
-    //           url: "/productos?genero=mujer&category=poleras",
+    //           url: "/tienda?genero=mujer&category=poleras",
     //         },
     //         {
     //           id: "12",
     //           title: "Pantalones",
-    //           url: "/productos?genero=mujer&category=pantalones",
+    //           url: "/tienda?genero=mujer&category=pantalones",
     //         },
     //         {
     //           id: "12",
     //           title: "Buzos",
-    //           url: "/productos?genero=mujer&category=buzos",
+    //           url: "/tienda?genero=mujer&category=buzos",
     //         },
     //       ],
     //     },
@@ -109,22 +111,22 @@ const dataHeader = {
     //         {
     //           id: "13",
     //           title: "Accesorios",
-    //           url: "/productos?tipo=accesorios&genero=mujer",
+    //           url: "/tienda?tipo=accesorios&genero=mujer",
     //         },
     //         {
     //           id: "14",
     //           title: "Bolsos",
-    //           url: "/productos?tipo=accesorios&genero=mujer&category=bolsos",
+    //           url: "/tienda?tipo=accesorios&genero=mujer&category=bolsos",
     //         },
     //         {
     //           id: "15",
     //           title: "Mochilas",
-    //           url: "/productos?tipo=accesorios&genero=mujer&category=mochilas",
+    //           url: "/tienda?tipo=accesorios&genero=mujer&category=mochilas",
     //         },
     //         {
     //           id: "16",
     //           title: "Gorras",
-    //           url: "/productos?tipo=accesorios&genero=mujer&category=gorras",
+    //           url: "/tienda?tipo=accesorios&genero=mujer&category=gorras",
     //         },
     //       ],
     //     },
@@ -132,8 +134,8 @@ const dataHeader = {
     // },
     {
       id: "catalogo Emprendedor",
-      titulo: "Catalogo Emprendedor",
-      url: "/productos?tipoproducto=web&",
+      titulo: "Emprendedor",
+      url: "/tienda?tipoproducto=web&",
 
       infoNav: [
         // {
@@ -141,27 +143,27 @@ const dataHeader = {
         //     {
         //       id: "1",
         //       title: "Ver Todas las Zapatillas",
-        //       url: "/productos?tipoproducto=web&tipo=calzado",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado",
         //     },
         //     {
         //       id: "3",
         //       title: "Terrex",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=terrex",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=terrex",
         //     },
         //     {
         //       id: "5",
         //       title: "Urbano",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=urbano",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=urbano",
         //     },
         //     {
         //       id: "6",
         //       title: "Sandalias",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=sandalias",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=sandalias",
         //     },
         //     {
         //       id: "7",
         //       title: "Calzado de Plataforma",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=plataforma",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=plataforma",
         //     },
         //   ],
         // },
@@ -170,32 +172,32 @@ const dataHeader = {
         //     {
         //       id: "9",
         //       title: " Ropa",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=ropas",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=ropas",
         //     },
         //     {
         //       id: "10",
         //       title: "Polos",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=polos",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=polos",
         //     },
         //     {
         //       id: "12",
         //       title: "Casacas",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=casacas",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=casacas",
         //     },
         //     {
         //       id: "12",
         //       title: "Poleras",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=poleras",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=poleras",
         //     },
         //     {
         //       id: "12",
         //       title: "Pantalones",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=pantalones",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=pantalones",
         //     },
         //     {
         //       id: "12",
         //       title: "Buzos",
-        //       url: "/productos?tipoproducto=web&tipo=calzado&category=buzos",
+        //       url: "/tienda?tipoproducto=web&tipo=calzado&category=buzos",
         //     },
         //   ],
         // },
@@ -204,22 +206,22 @@ const dataHeader = {
         //     {
         //       id: "13",
         //       title: "Accesorios",
-        //       url: "/productos?tipo=accesorios&genero=mujer",
+        //       url: "/tienda?tipo=accesorios&genero=mujer",
         //     },
         //     {
         //       id: "14",
         //       title: "Bolsos",
-        //       url: "/productos?tipo=accesorios&genero=mujer&category=bolsos",
+        //       url: "/tienda?tipo=accesorios&genero=mujer&category=bolsos",
         //     },
         //     {
         //       id: "15",
         //       title: "Mochilas",
-        //       url: "/productos?tipo=accesorios&genero=mujer&category=mochilas",
+        //       url: "/tienda?tipo=accesorios&genero=mujer&category=mochilas",
         //     },
         //     {
         //       id: "16",
         //       title: "Gorras",
-        //       url: "/productos?tipo=accesorios&genero=mujer&category=gorras",
+        //       url: "/tienda?tipo=accesorios&genero=mujer&category=gorras",
         //     },
         //   ],
         // },
@@ -228,17 +230,17 @@ const dataHeader = {
             {
               id: "13",
               title: "Adidas Temporada",
-              url: "/productos?tipoproducto=web&razonsocial=fritzsport&marca=adidas",
+              url: "/tienda?tipoproducto=web&razonsocial=fritzsport&marca=adidas",
             },
             {
               id: "14",
               title: "Adidas Liquidación",
-              url: "/productos?tipoproducto=web&razonsocial=fritzduran&marca=adidas",
+              url: "/tienda?tipoproducto=web&razonsocial=fritzduran&marca=adidas",
             },
             {
               id: "14",
               title: "Nike",
-              url: "/productos?tipoproducto=web&razonsocial=fritzduran&marca=nike",
+              url: "/tienda?tipoproducto=web&razonsocial=fritzduran&marca=nike",
             },
 
           ],
@@ -247,8 +249,8 @@ const dataHeader = {
     },
     {
       id: "catalogo Mayorista",
-      titulo: "Catalogo Mayorista",
-      url: "/productos?tipoproducto=catalogo&",
+      titulo: "Mayorista",
+      url: "/tienda?tipoproducto=catalogo&",
 
       infoNav: [
         // {
@@ -256,27 +258,27 @@ const dataHeader = {
         //     {
         //       id: "1",
         //       title: "Ver Todas las Zapatillas",
-        //       url: "/productos?tipoproducto=catalogo",
+        //       url: "/tienda?tipoproducto=catalogo",
         //     },
         //     {
         //       id: "3",
         //       title: "Terrex",
-        //       url: "/productos?tipoproducto=catalogo&category=terrex",
+        //       url: "/tienda?tipoproducto=catalogo&category=terrex",
         //     },
         //     {
         //       id: "5",
         //       title: "Urbano",
-        //       url: "/productos?tipoproducto=catalogo&category=urbano",
+        //       url: "/tienda?tipoproducto=catalogo&category=urbano",
         //     },
         //     {
         //       id: "6",
         //       title: "Sandalias",
-        //       url: "/productos?tipoproducto=catalogo&category=sandalias",
+        //       url: "/tienda?tipoproducto=catalogo&category=sandalias",
         //     },
         //     {
         //       id: "7",
         //       title: "Calzado de Plataforma",
-        //       url: "/productos?tipoproducto=catalogo&category=plataforma",
+        //       url: "/tienda?tipoproducto=catalogo&category=plataforma",
         //     },
         //   ],
         // },
@@ -285,32 +287,32 @@ const dataHeader = {
         //     {
         //       id: "9",
         //       title: " Ropa",
-        //       url: "/productos?tipoproducto=catalogo&category=ropas",
+        //       url: "/tienda?tipoproducto=catalogo&category=ropas",
         //     },
         //     {
         //       id: "10",
         //       title: "Polos",
-        //       url: "/productos?tipoproducto=catalogo&category=polos",
+        //       url: "/tienda?tipoproducto=catalogo&category=polos",
         //     },
         //     {
         //       id: "12",
         //       title: "Casacas",
-        //       url: "/productos?tipoproducto=catalogo&category=casacas",
+        //       url: "/tienda?tipoproducto=catalogo&category=casacas",
         //     },
         //     {
         //       id: "12",
         //       title: "Poleras",
-        //       url: "/productos?tipoproducto=catalogo&category=poleras",
+        //       url: "/tienda?tipoproducto=catalogo&category=poleras",
         //     },
         //     {
         //       id: "12",
         //       title: "Pantalones",
-        //       url: "/productos?tipoproducto=catalogo&category=pantalones",
+        //       url: "/tienda?tipoproducto=catalogo&category=pantalones",
         //     },
         //     {
         //       id: "12",
         //       title: "Buzos",
-        //       url: "/productos?tipoproducto=catalogo&category=buzos",
+        //       url: "/tienda?tipoproducto=catalogo&category=buzos",
         //     },
         //   ],
         // },
@@ -319,22 +321,22 @@ const dataHeader = {
         //     {
         //       id: "13",
         //       title: "Accesorios",
-        //       url: "/productos?tipoproducto=catalogo&tipo=accesorios",
+        //       url: "/tienda?tipoproducto=catalogo&tipo=accesorios",
         //     },
         //     {
         //       id: "14",
         //       title: "Bolsos",
-        //       url: "/productos?tipoproducto=catalogo&tipo=accesorios&category=bolsos",
+        //       url: "/tienda?tipoproducto=catalogo&tipo=accesorios&category=bolsos",
         //     },
         //     {
         //       id: "15",
         //       title: "Mochilas",
-        //       url: "/productos?tipoproducto=catalogo&tipo=accesorios&category=mochilas",
+        //       url: "/tienda?tipoproducto=catalogo&tipo=accesorios&category=mochilas",
         //     },
         //     {
         //       id: "16",
         //       title: "Gorras",
-        //       url: "/productos?tipoproducto=catalogo&tipo=accesorios&category=gorras",
+        //       url: "/tienda?tipoproducto=catalogo&tipo=accesorios&category=gorras",
         //     },
         //   ],
         // },
@@ -343,17 +345,17 @@ const dataHeader = {
             {
               id: "13",
               title: "Adidas Temporada",
-              url: "/productos?tipoproducto=catalogo&razonsocial=fritzsport&marca=adidas",
+              url: "/tienda?tipoproducto=catalogo&razonsocial=fritzsport&marca=adidas",
             },
             {
               id: "14",
               title: "Adidas Liquidación",
-              url: "/productos?tipoproducto=catalogo&razonsocial=fritzduran&marca=adidas",
+              url: "/tienda?tipoproducto=catalogo&razonsocial=fritzduran&marca=adidas",
             },
             {
               id: "14",
               title: "Nike",
-              url: "/productos?tipoproducto=catalogo&razonsocial=fritzduran&marca=nike",
+              url: "/tienda?tipoproducto=catalogo&razonsocial=fritzduran&marca=nike",
             },
 
           ],
@@ -363,29 +365,29 @@ const dataHeader = {
     // {
     //   id: "Hombre",
     //   titulo: "Hombre",
-    //   url: "/productos?genero=hombre",
+    //   url: "/tienda?genero=hombre",
     //   infoNav: [
     //     {
     //       categoria: [
     //         {
     //           id: "1",
     //           title: "Ver Todas las Zapatillas",
-    //           url: "/productos?tipo=calzado&genero=hombre",
+    //           url: "/tienda?tipo=calzado&genero=hombre",
     //         },
     //         {
     //           id: "3",
     //           title: "Terrex",
-    //           url: "/productos?tipo=calzado&genero=hombre&category=terrex",
+    //           url: "/tienda?tipo=calzado&genero=hombre&category=terrex",
     //         },
     //         {
     //           id: "5",
     //           title: "Urbano",
-    //           url: "/productos?tipo=calzado&genero=hombre&category=urbano",
+    //           url: "/tienda?tipo=calzado&genero=hombre&category=urbano",
     //         },
     //         {
     //           id: "6",
     //           title: "Sandalias",
-    //           url: "/productos?tipo=calzado&genero=hombre&category=sandalias",
+    //           url: "/tienda?tipo=calzado&genero=hombre&category=sandalias",
     //         },
     //       ],
     //     },
@@ -394,32 +396,32 @@ const dataHeader = {
     //         {
     //           id: "9",
     //           title: " Ropa",
-    //           url: "/productos?tipo=ropa&genero=hombre",
+    //           url: "/tienda?tipo=ropa&genero=hombre",
     //         },
     //         {
     //           id: "10",
     //           title: "Polos",
-    //           url: "/productos?tipo=ropa&genero=hombre&category=polos",
+    //           url: "/tienda?tipo=ropa&genero=hombre&category=polos",
     //         },
     //         {
     //           id: "12",
     //           title: "Casacas",
-    //           url: "/productos?tipo=ropa&genero=hombre&category=casacas",
+    //           url: "/tienda?tipo=ropa&genero=hombre&category=casacas",
     //         },
     //         {
     //           id: "12",
     //           title: "Poleras",
-    //           url: "/productos?tipo=ropa&genero=hombre&category=poleras",
+    //           url: "/tienda?tipo=ropa&genero=hombre&category=poleras",
     //         },
     //         {
     //           id: "12",
     //           title: "Pantalones",
-    //           url: "/productos?tipo=ropa&genero=hombre&category=pantalones",
+    //           url: "/tienda?tipo=ropa&genero=hombre&category=pantalones",
     //         },
     //         {
     //           id: "12",
     //           title: "Buzos",
-    //           url: "/productos?tipo=ropa&genero=hombre&category=buzos",
+    //           url: "/tienda?tipo=ropa&genero=hombre&category=buzos",
     //         },
     //       ],
     //     },
@@ -428,18 +430,18 @@ const dataHeader = {
     //         {
     //           id: "13",
     //           title: "Accesorios",
-    //           url: "/productos?tipo=accesorios&genero=hombre",
+    //           url: "/tienda?tipo=accesorios&genero=hombre",
     //         },
 
     //         {
     //           id: "15",
     //           title: "Mochilas",
-    //           url: "/productos?tipo=accesorios&genero=hombre&category=mochilas",
+    //           url: "/tienda?tipo=accesorios&genero=hombre&category=mochilas",
     //         },
     //         {
     //           id: "16",
     //           title: "Gorras",
-    //           url: "/productos?tipo=accesorios&genero=hombre&category=gorras",
+    //           url: "/tienda?tipo=accesorios&genero=hombre&category=gorras",
     //         },
     //       ],
     //     },
@@ -449,26 +451,26 @@ const dataHeader = {
     // {
     //   id: "ninos",
     //   titulo: "Niños",
-    //   url: "/productos?genero=niños",
+    //   url: "/tienda?genero=niños",
     //   infoNav: [
     //     {
     //       categoria: [
     //         {
     //           id: "35",
     //           title: "Calzado Niños",
-    //           url: "/productos?tipo=calzado&genero=niños",
+    //           url: "/tienda?tipo=calzado&genero=niños",
     //         },
     //         {
     //           id: "36",
     //           title: "Zapatillas",
-    //           url: "/productos?tipo=calzado&genero=niños",
+    //           url: "/tienda?tipo=calzado&genero=niños",
     //         },
 
     //         {
     //           id: "369",
     //           title: "Sandalias",
 
-    //           url: "/productos?tipo=calzado&genero=niños&category=sandalias",
+    //           url: "/tienda?tipo=calzado&genero=niños&category=sandalias",
     //         },
     //       ],
     //     },
@@ -478,17 +480,17 @@ const dataHeader = {
     //         {
     //           id: "35",
     //           title: "Calzado Niños",
-    //           url: "/productos?tipo=calzado&genero=niños",
+    //           url: "/tienda?tipo=calzado&genero=niños",
     //         },
     //         {
     //           id: "36",
     //           title: "Zapatillas",
-    //           url: "/productos?tipo=calzado&genero=niños",
+    //           url: "/tienda?tipo=calzado&genero=niños",
     //         },
     //         {
     //           id: "39",
     //           title: "Sandalias",
-    //           url: "/productos?tipo=calzado&genero=niños&category=sandalias",
+    //           url: "/tienda?tipo=calzado&genero=niños&category=sandalias",
     //         },
     //       ],
     //     },
@@ -497,8 +499,8 @@ const dataHeader = {
 
     {
       id: "tienda",
-      titulo: "Productos",
-      url: "/productos",
+      titulo: "Tienda",
+      url: "/tienda",
     },
     {
       id: "pdf",
@@ -518,7 +520,7 @@ const dataHeader = {
   ],
 };
 
-export function NavNavigation({
+export function NavDesktop({
   children,
   setActiveSearchDesk,
   activeSearchDesk,
@@ -542,22 +544,27 @@ export function NavNavigation({
   };
 
   return (
-    <ul className="flex w-full items-center justify-around">
-      <div>{children}</div>
-      <div className=" grid grid-flow-col items-center gap-x-10 2xl:gap-x-16">
-        <NavMenuDesktop
-          handleHover={handleHover}
-          setAndler={setAndler}
-          dataHeader={dataHeader}
-          activeHoverNavDesktop={activeHoverNavDesktop}
-        />
+    <div className="relative w-full">
+    <ul className="flex w-full items-center justify-around ">
+       
+            <div>{children}</div>
+            <div className=" grid grid-flow-col items-center gap-x-10 2xl:gap-x-16">
+              <NavMenuDesktop
+                handleHover={handleHover}
+                setAndler={setAndler}
+                dataHeader={dataHeader}
+                activeHoverNavDesktop={activeHoverNavDesktop}
+              />
+           
+
       </div>
+ 
       <div className="xl:hidden">
         <NavTop>
           <NavSearch />
         </NavTop>
       </div>
-      <div className="hidden xl:flex">
+      <div className="hidden xl:flex pr-10">
         <NavTop
           setActiveSearchDesk={setActiveSearchDesk}
           activeSearchDesk={activeSearchDesk}
@@ -571,5 +578,11 @@ export function NavNavigation({
         hoverMenu={hoverMenu}
       />
     </ul>
+    {/* <div className="absolute flex w-full justify-center items-center bg-transparent ">
+
+        <ToggleUserRole></ToggleUserRole>
+    </div> */}
+
+    </div>
   );
 }

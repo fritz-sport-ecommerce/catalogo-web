@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 import {
   Accordion,
@@ -72,8 +73,7 @@ const filters = [
       { label: "Escolar", value: "escolar" },
       { label: "Pantalón", value: "pantalon" },
       { label: "Gorras", value: "gorras" },
-      { label: "Guantes", value: "guantes" },
-        { label: "Originals", value: "originals" },
+            { label: "Guantes", value: "guantes" },
       { label: "Shorts", value: "shorts" },
       { label: "Polos", value: "polos" },
       { label: "Sandalias", value: "sandalias" },
@@ -231,10 +231,12 @@ const filters = [
       { value: "adidas", label: "adidas" },
       { value: "nike", label: "nike" },
       { value: "puma", label: "puma" },
+      { value: "Umbro", label: "umbro" },
+
       { value: "reebok", label: "reebok" },
       { value: "cat", label: "cat" },
       { value: "joma", label: "joma" },
-        { value: "kelme", label: "kelme" },
+         { value: "kelme", label: "kelme" },
     ],
   },
   {
@@ -252,14 +254,37 @@ const filters = [
       { value: "amarillo", label: "amarillo" },
     ],
   },
+];  
+
+const subFiltersNiños = [
+  { value: "bebe", label: "Bebés" },
+  { value: "joven", label: "Jóvenes" },
+  { value: "ninonina", label: "Niño/Niña" },
 ];
 
 export function ProductFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [isNiñosSelected, setIsNiñosSelected] = useState(false);
+  const params = new URLSearchParams(
+    searchParams.toString()
+  );
+  // Detectar si "Niños" está activado
+  useEffect(() => {
+    const genero = searchParams.get("genero");
+    setIsNiñosSelected(genero === "niños");
+    console.log(genero != "niños");
+    
+    if (genero != "niños") {
+      params.delete("subgenero")
+      router.replace(`/tienda/?${params.toString()}`);
+    }
+  }, [searchParams]);
+
   const searchValues = Array.from(searchParams.entries());
+//
   return (
-    <form className="sticky top-20 ">
+    <form className="sticky top-20">
       <h3 className="sr-only">Categories</h3>
 
       {filters.map((section, i) => (
@@ -276,11 +301,11 @@ export function ProductFilters() {
               </span>
             </AccordionTrigger>
             <AccordionContent>
-              <div className=" space-y-4  ">
+              <div className="space-y-4">
                 {section.options.map((option, optionIdx) => (
                   <div
                     key={option.value}
-                    className={`flex items-center space-x-2 `}
+                    className={`flex items-center space-x-2`}
                   >
                     <Checkbox
                       id={`filter-${section.id}-${optionIdx}`}
@@ -296,8 +321,8 @@ export function ProductFilters() {
                           event.currentTarget.dataset.state === "checked";
                         checked
                           ? params.delete(section.id)
-                          : params.set(section.id, option.value);
-                        router.replace(`productos/?${params.toString()}`);
+                          : params.set(section.id, option.value) ;
+                        router.replace(`/tienda/?${params.toString()}`);
                       }}
                     />
                     <label
@@ -311,6 +336,47 @@ export function ProductFilters() {
               </div>
             </AccordionContent>
           </AccordionItem>
+
+          {/* Mostrar subfiltro si Niños está activado */}
+          {section.id === "genero" && isNiñosSelected && (
+            <div className="ml-6 mt-2">
+              <h4 className="text-sm font-medium uppercase mb-2">Subfiltro Niños</h4>
+              <div className="space-y-2">
+                {subFiltersNiños.map((subOption, subIdx) => (
+                  <div
+                    key={subOption.value}
+                    className="flex items-center space-x-2 py-1 uppercase"
+                  >
+                    <Checkbox
+                      id={`subgenero-${subIdx}`}
+                      checked={searchValues.some(
+                        ([key, value]) =>
+                          key === "subgenero" &&
+                          value === subOption.value
+                      )}
+                      onClick={(event) => {
+                        const params = new URLSearchParams(
+                          searchParams.toString()
+                        );
+                        const checked =
+                          event.currentTarget.dataset.state === "checked";
+                        checked
+                          ? params.delete("subgenero")
+                          : params.set("subgenero", subOption.value);
+                        router.replace(`/tienda/?${params.toString()}`);
+                      }}
+                    />
+                    <label
+                      htmlFor={`subgenero-${subIdx}`}
+                      className="text-sm font-medium leading-none"
+                    >
+                      {subOption.label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </Accordion>
       ))}
     </form>

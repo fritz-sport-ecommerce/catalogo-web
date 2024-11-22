@@ -22,6 +22,19 @@ export const pedidos = defineType({
         ], // <-- predefined values
       },
     }),
+    defineField({
+      title: "Rol de Compra Mayorista",
+      name: "rol_compra",
+      type: "string",
+
+      validation: (rule) => rule.required(),
+      options: {
+        list: [
+          { title: "emprendedor", value: "emprendedor" },
+          { title: "mayorista", value: "mayorista" },
+        ], // <-- predefined values
+      },
+    }),
     {
       name: "id_payer",
       title: "id_payer",

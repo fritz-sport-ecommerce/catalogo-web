@@ -37,6 +37,7 @@ export function AccordionDescription({ product }: Props) {
     <>
       <div className="mb-16 flex flex-col justify-center">
         <div className="flex max-w-5xl flex-col ">
+
           <div className="px-10 text-black dark:text-white">
             <div className="flex flex-col items-center justify-around gap-5 xl:flex-row">
               <div>
@@ -46,7 +47,7 @@ export function AccordionDescription({ product }: Props) {
                 <div className="xl:pr-10 ">{product.description}</div>
               </div>
               <div>
-                <img
+               <img
                   src={
                     product.images[1]
                       ? urlForImage(product.images[1]).url()

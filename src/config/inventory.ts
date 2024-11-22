@@ -48,9 +48,7 @@ export interface InventoryNuestrasTiendas
   images: Image[];
 }
 export interface SanityProduct extends Omit<InventoryProduct, "images"> {
-  tipoproducto: string;
-  priceemprendedor: any;
-  pricemayorista: any;
+  descuentofritzsport: any;
   descuentosobred: any;
   categories: string;
   detalles: any;
@@ -58,6 +56,10 @@ export interface SanityProduct extends Omit<InventoryProduct, "images"> {
   stock: number;
   razonsocial: string | undefined;
   priceecommerce: number;
+  pricemayorista: number;
+  priceemprendedor: number;
+
+
   preciomanual: number | undefined;
   sku: any;
   tallas: any;

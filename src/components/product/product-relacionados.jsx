@@ -2,18 +2,26 @@ import React from "react";
 import Link from "next/link";
 import { urlForImage } from "@/sanity/lib/image";
 
-import { precioProduct } from "@/config/precio-product";
-
 export default function ProductRelacionados({
   products,
   nuevo = false,
   generoSku = true,
   descuentos,
-  outlet = false,
+  outlet =false,
 }) {
-  let razonsocial = outlet
-    ? descuentos.descuentooutlet
-    : descuentos.descuentofritzsport;
+
+  let razonsocial 
+  if (outlet) {
+    razonsocial = descuentos.descuentooutlet
+  }else{
+    razonsocial = descuentos.descuentofritzsport
+
+  }
+  
+
+
+let descuentoSobreD= products?.descuentosobred
+
   return (
     <>
       <Link
@@ -22,11 +30,11 @@ export default function ProductRelacionados({
           outlet
             ? `https://www.fritzsportoutlet.pe/products/${products.slug}/${products.sku}`
             : `/products/${products.slug}/${products.sku}`
-        } `}
-        className="group z-10 text-sm  flex flex-col justify-center items-start border-y-[1px] border-l-[1px] px-1 xl:p-3 border-blue-gray-300  dark:border-none"
+        }`}
+        className="group z-10 text-sm  border-y-[1px] border-l-[1px]  p-3 border-blue-gray-300 dark:border-none"
       >
-        <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md    group-hover:opacity-75 ">
-          {products.images && (
+        <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md  group-hover:opacity-75 ">
+          {products.images && products.images[0] ? (
             <img
               width={800}
               height={800}
@@ -37,8 +45,34 @@ export default function ProductRelacionados({
               }
               alt=""
             />
-          )}
+          ):
+          
+          (<></>)
+          
+          }
+          {outlet && descuentoSobreD > 0  ? (
+            <>
+              <div className="absolute right-0 top-4 z-10 ">
+                <div className=" xl:mt-1 text-xs text-white ">
+                  {/* <div className="flex flex-col">
+                    <>
+                      <span className="flex justify-center text-[8px] xl:text-xs bg-black xl:px-3 xl:py-1">
+                        -{descuentoSobreD > 0 ? descuentoSobreD : descuentos.descuentooutlet }%
+                      </span>
 
+                      <span className="mt-1 bg-red-500 text-[8px] xl:text-xs xl:px-3 xl:py-1 uppercase px-1 flex justify-center">
+                        oferta
+                      </span>
+                    </>
+                  </div> */}
+                </div>
+              </div>
+            </>
+          ): (<>
+          
+    
+          
+          </>)}
           {/* <LoveFollow /> */}
           {/* {products.descuento ? (
          
@@ -51,34 +85,65 @@ export default function ProductRelacionados({
               </div>
             </>
           )} */}
+          {nuevo && (
+            <div className="absolute left-0 xl:top-4 top-1 bg-black px-2 py-1">
+              <h4 className=" xl:text-xs text-white ">new</h4>
+            </div>
+          )}
+        </div>
+        <div className=" flex flex-col justify-around h-1/6">
+        {generoSku && (
+            <h3 className="xl:mt-4 font-medium capitalize  text-xs">
+            {products.marca} - {products.genero}
+          </h3>
+        )}
+          <h3 className="mt-2 font-medium uppercase xl:text-sm text-xs">
+          {products.name} {products.genero}
+        </h3>
+
+        <div className="flex">
+          {razonsocial > 0 || products.descuento ? (
+            <>
+              {razonsocial ? (
+                <span className="mr-2 mt-2 font-semibold text-[#767677] line-through">
+                  S/{products.priceecommerce}
+                </span>
+              ) : (
+                <></>
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          <div className="flex w-full flex-col items-center justify-center ">
+            <div className="flex items-center justify-between w-full">
+            <div>Precio Mayorista:</div>
+                  <div className="xl:text-lg font-bold text-[#B73228]">
+                    S/
+                    {products.pricemayorista}
+                  </div>
+
+            </div>
+              <div className="flex items-center justify-between w-full">
+              <div>Precio Emprendedor:</div>
+                    <div className="xl:text-base font-bold ">
+                      S/
+                      {products.priceemprendedor}
+                    </div>
+
+              </div>
+            <div className="flex items-center justify-between w-full">
+            <div>Precio Retail:</div>
+                  <div className="xl:text-base font-bold ">
+                    S/
+                    {products.priceecommerce}
+                  </div>
+
+            </div>
+          </div>
         </div>
 
-        <h3 className="xl:mt-4 font-medium capitalize  text-xs">
-          {products.marca} - {products.genero}
-        </h3>
-
-        <h3 className="mt-2 font-medium uppercase xl:text-sm text-xs">
-          {products.name}
-        </h3>
-        <div className="border-t-[1px] border-blue-gray-300 mt-2">
-          <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Retail:</span> S/{products?.priceecommerce}
-          </div>
-          <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Emprendedor:</span> S/{products?.priceemprendedor}
-          </div>
-          {
-            products.tipoproducto === "web" ? (
-
-                   <></>
-            ) : (
-              <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-                    <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista}
-              </div>
-            )
-          }
-
-          </div>
+        </div>
         {/* <p className="mt-2 font-medium">S/{products.descuento}</p> */}
       </Link>
       {/* <button

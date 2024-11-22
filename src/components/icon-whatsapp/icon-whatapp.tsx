@@ -13,10 +13,145 @@ interface Props {
 export default function IconWhatapp({ urlWhatsApp }: Props) {
   return (
     <>
-   
+      <ModalPreguntasFrecuentes>
+        <>
+          <div className="bg-white">
+            <div className=" overflow-y-scroll xl:h-[60vh] h-[80vh] xl:w-[40vw] w-full xl:p-8 xl:py-5 p-2">
+              <div>
+                {/* <div className="font-extrabold pt-5 pb-2">
+                  TIENDAS Y HORARIOS DE ATENCIÓN
+                </div>
+                <p className="text-xs xl:text-base">
+                  Contamos con 3 Tiendas y nuestro Canal Online
+                  www.fritzsport.pe. Flagship Acacias - Miraflores -
+                  Dirección: Calle Las Acacias 310 Miraflores - Lima - Horarios
+                  de Atención: Lunes a sábado de 11 am a 7 pm, Domingo de 12 am
+                  a 7 pm FV Secret Store - San Isidro - Dirección: Calle Miguel
+                  Dasso 126. Tienda 205 - 2do Piso San Isidro - Lima - Horarios
+                  de Atención: Lunes a viernes de 11am a 7pm Sábado de 11am a
+                  7pm
+                </p> */}
+
+                <div className="font-extrabold pt-5 pb-2">MEDIOS DE PAGO</div>
+                <p className="text-xs xl:text-base ">
+                  Contamos con diversos medios de pago. - Pago con tarjeta de
+                  crédito o débito al finalizar tu compra en el carrito. Visa /
+                  Mastercard / AMEX / Dinners.
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿CUÁNTO DEMORA EN LLEGAR MI PEDIDO?
+                </div>
+                <p className="text-xs xl:text-base">
+                  De 3 hasta 10 días hábiles según el destino de entrega. -
+                  Entregas de 5 a 7 días hábiles: Cercado de lima, Magdalena,
+                  San Miguel, Jesús María, Lince, Pueblo Libre, Miraflores, San
+                  Borja, Chorrillos, Callao, Barranco, Surquillo, Surco, Breña,
+                  San Luis, San Isidro, Santa Anita, La Victoria, Ate, La
+                  Molina, Carabayllo, Comas, Independencia, Los Olivos, San
+                  Martín de Porres, Ventanilla (Hasta Refinería), Rímac, San
+                  Juan de Miraflores y Callao. - Entregas de 7 a 10 días
+                  hábiles: Provincias del País. - Recojos en tienda de 3 a 5
+                  días hábiles.
+                </p>
+                <p className="text-xs xl:text-base">
+                  Nuestros tiempos pueden variar según coyunturas y casos
+                  extraordinarios. Los días hábiles son considerados de Lunes a
+                  Viernes, no cuentan fines de semana ni feriados. Atención al
+                  cliente:{" "}
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300"
+                  >
+                    consultas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿SI COMPRO CON EL MÉTODO RECOJO EN TIENDA PUEDO IR HOY MISMO?
+                </div>
+                <p className="text-xs xl:text-base">
+                  La opción de recojo en tienda para una compra por
+                  www.fritzsport.pe, recibirás una llamada cuando tu pedido esté
+                  listo para que puedes pasar a recoger el producto.Cualquier detalle
+                  adicional por favor comunícate con
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    consultas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  CAMBIOS Y DEVOLUCIONES
+                </div>
+                <p className="text-xs xl:text-base">
+                  Cuentas con 7 días para poder realizar cambio y/o devoluciones
+                  posteriores a la entrega. Atención al cliente:{" "}
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    consultas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿TODOS SUS PRODUCTOS SON 100% ORIGINALES?
+                </div>
+                <p className="text-xs xl:text-base">
+                  Sí, trabajamos directamente con las marcas globales para
+                  ofrecerles nuestros productos en calidad y precio retail de
+                  las marcas.
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿TODOS LOS PRODUCTOS DE TIENDA SE ENCUENTRAN EN WEB?
+                </div>
+                <p className="text-xs xl:text-base">
+                  La web contiene todos los productos de nuestras marcas.
+                  Cualquier detalle estamos a tu disposición en
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    Preguntas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿POR QUÉ MI COMPRA FUE CANCELADA?
+                </div>
+                <p className="text-xs xl:text-base">
+                  Si tu compra fuera cancelada, por favor comunícate con
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    consulta sobre tu pedido
+                  </a>{" "}
+                  para que te puedan brindar mayor detalle.
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      </ModalPreguntasFrecuentes>
       <Link
         href="/emprende"
-        className="z-header  sticky-0 fixed bottom-20 right-5 z-[999] flex items-center justify-center xl:bottom-[100px] xl:right-16 "
+        className="z-header  sticky-0 fixed bottom-16 left-6 z-[999] flex items-center justify-center xl:bottom-[80px] xl:left-16 "
         rel="noreferrer"
       >
         <div className=" relative mb-[6vh] mr-1 flex  h-[50px] cursor-pointer  items-center  justify-end rounded-r-full    pl-1 md:w-10">
@@ -27,8 +162,7 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth="1.5"
-              stroke="#9D9D9D"
-              className="h-8 w-8"
+              className="h-8 w-8 stroke-orange-500"
             >
               <path
                 strokeLinecap="round"
@@ -36,7 +170,7 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
                 d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
               />
             </svg>
-            <span className=" hidden text-[#9D9D9D] xl:block xl:text-sm">
+            <span className=" hidden text-orange-500 xl:block xl:text-sm font-semibold">
               Emprende
             </span>
           </div>

@@ -24,12 +24,12 @@ export default function GiaDeTallasZapatillas({ dataTallasZapatillas }) {
         <tbody>
           {dataTallasZapatillas?.TABLE_ROWS.map(
             ({ TITLE, ADIDAS, REEBOK, NIKE, CAT, FILA }, index) => (
-              <tr key={index} className="">
+              <tr key={index} className="text-black dark:text-white">
                 <td className="">
                   <div
                     variant="small"
                     color="blue-gray"
-                    className="font-normal hover:bg-blue-gray-800 border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
+                    className="font-normal hover:bg-blue-gray-600 hover:text-white border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
                   >
                     {TITLE}
                   </div>
@@ -38,7 +38,7 @@ export default function GiaDeTallasZapatillas({ dataTallasZapatillas }) {
                   <div
                     variant="small"
                     color="blue-gray"
-                    className="font-normal hover:bg-blue-gray-800 border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
+                    className="font-normal hover:bg-blue-gray-600 hover:text-white border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
                   >
                     {ADIDAS}
                   </div>
@@ -47,7 +47,7 @@ export default function GiaDeTallasZapatillas({ dataTallasZapatillas }) {
                   <div
                     variant="small"
                     color="blue-gray"
-                    className="font-normal hover:bg-blue-gray-800 border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
+                    className="font-normal hover:bg-blue-gray-600 hover:text-white border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
                   >
                     {REEBOK}
                   </div>
@@ -56,7 +56,7 @@ export default function GiaDeTallasZapatillas({ dataTallasZapatillas }) {
                   <div
                     variant="small"
                     color="blue-gray"
-                    className="font-normal hover:bg-blue-gray-800 border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
+                    className="font-normal hover:bg-blue-gray-600 hover:text-white border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
                   >
                     {NIKE}
                   </div>
@@ -65,7 +65,7 @@ export default function GiaDeTallasZapatillas({ dataTallasZapatillas }) {
                   <div
                     variant="small"
                     color="blue-gray"
-                    className="font-normal hover:bg-blue-gray-800 border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
+                    className="font-normal hover:bg-blue-gray-600 hover:text-white border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
                   >
                     {CAT}
                   </div>
@@ -75,7 +75,7 @@ export default function GiaDeTallasZapatillas({ dataTallasZapatillas }) {
                     <div
                       variant="small"
                       color="blue-gray"
-                      className="font-normal hover:bg-blue-gray-800 border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
+                      className="font-normal hover:bg-blue-gray-600 hover:text-white border-[1px]  2xl:px-1 2xl:py-1 flex justify-center 2xl:text-xs text-sm h-full text-center"
                     >
                       {FILA}
                     </div>

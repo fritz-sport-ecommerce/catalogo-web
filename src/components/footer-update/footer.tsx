@@ -56,7 +56,7 @@ const FooterMobil = () => {
           </AccordionContent>
         </AccordionItem>
         {/* cuenta */}
-        {/* <AccordionItem value={`item-}`}>
+        <AccordionItem value={`item-}`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
             <span className="w-full  ">
               <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
@@ -90,7 +90,7 @@ const FooterMobil = () => {
               </div>
             </div>
           </AccordionContent>
-        </AccordionItem> */}
+        </AccordionItem>
         {/* información */}
         <AccordionItem value={`item-}`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
@@ -197,43 +197,43 @@ const FooterMobil = () => {
           >
             <path
               d="M40.977 30.6457C40.0727 30.1903 39.3185 29.4844 38.8044 28.612C35.9206 29.1857 32.9953 29.5258 30.0568 29.6289C26.3558 29.6289 23.3699 29.4532 24.5895 26.0046C25.8091 22.556 29.0474 15.4485 30.1829 14.0186C31.3184 12.5887 32.8688 10.7796 33.6315 10.8644C34.5778 10.9695 36.3467 12.1478 36.1481 12.8977C35.9589 13.6127 35.0194 15.1751 33.401 14.0626"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M32.8633 14.8391C33.2219 14.2389 33.6563 13.6875 34.1559 13.1985"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M35.9394 13.4064C36.5071 13.2621 37.5794 13.9882 36.9744 14.7336C36.2094 15.4774 35.2175 15.9438 34.1566 16.0584C33.5318 16.114 31.3599 16.0374 31.3599 16.0374C30.4347 17.6355 30.645 20.0748 30.5608 22.2196C30.5176 23.4865 30.2172 24.7314 29.6777 25.8785C33.3786 24.1542 39.687 22.8505 43.5001 23.4813"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M7.02344 30.6457C7.92777 30.1903 8.68197 29.4844 9.19604 28.612C12.0798 29.1857 15.0052 29.5258 17.9436 29.6289C21.6446 29.6289 24.6305 29.4532 23.4109 26.0046C22.1913 22.556 18.953 15.4485 17.8175 14.0186C16.682 12.5887 15.1316 10.7796 14.3689 10.8644C13.4226 10.9695 11.6537 12.1478 11.8523 12.8977C12.0415 13.6127 12.981 15.1751 14.5994 14.0626"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M15.1363 14.8391C14.7778 14.2389 14.3433 13.6875 13.8438 13.1985"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M12.0607 13.4064C11.493 13.2621 10.4202 13.9882 11.0257 14.7336C11.7907 15.4774 12.7827 15.9438 13.8435 16.0584C14.4683 16.114 16.6402 16.0374 16.6402 16.0374C17.5654 17.6355 17.3551 20.0748 17.4393 22.2196C17.4825 23.4865 17.7829 24.7314 18.3224 25.8785C14.6215 24.1542 8.3131 22.8505 4.5 23.4813"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M32.1805 11.742C26.8515 10.0858 21.1453 10.086 15.8164 11.7426"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
             <path
               d="M10.9168 13.9893C6.9758 16.4599 4.5 20.0299 4.5 23.9999C4.5 31.4557 13.23 37.4999 24 37.4999C34.77 37.4999 43.5 31.4557 43.5 23.9999C43.5 20.0294 41.0241 16.4592 37.0828 13.989"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
 
@@ -260,7 +260,7 @@ const FooterMobil = () => {
         </div>
       </div>
 
-      {/* <LibroReclamacionesRedes /> */}
+      <LibroReclamacionesRedes />
       <div className="flex justify-center w-full ">
         <div className="flex justify-center text-xs flex-col items-center">
           <span>
@@ -322,7 +322,7 @@ export default function Footer() {
                       </Link>
                     </ul>
                     {/* cuenta */}
-                    {/* <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4 text-sm">
+                    <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4 text-sm">
                       <div className="uppercase">Cuenta</div>
                       <Link href={"/auth"}>
                         <div
@@ -350,7 +350,7 @@ export default function Footer() {
                           Soporte
                         </div>
                       </Link>
-                    </ul> */}
+                    </ul>
                     {/* Información */}
                     <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4 text-sm">
                       <div className="uppercase">Información</div>
@@ -433,43 +433,43 @@ export default function Footer() {
                         >
                           <path
                             d="M40.977 30.6457C40.0727 30.1903 39.3185 29.4844 38.8044 28.612C35.9206 29.1857 32.9953 29.5258 30.0568 29.6289C26.3558 29.6289 23.3699 29.4532 24.5895 26.0046C25.8091 22.556 29.0474 15.4485 30.1829 14.0186C31.3184 12.5887 32.8688 10.7796 33.6315 10.8644C34.5778 10.9695 36.3467 12.1478 36.1481 12.8977C35.9589 13.6127 35.0194 15.1751 33.401 14.0626"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M32.8633 14.8391C33.2219 14.2389 33.6563 13.6875 34.1559 13.1985"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M35.9394 13.4064C36.5071 13.2621 37.5794 13.9882 36.9744 14.7336C36.2094 15.4774 35.2175 15.9438 34.1566 16.0584C33.5318 16.114 31.3599 16.0374 31.3599 16.0374C30.4347 17.6355 30.645 20.0748 30.5608 22.2196C30.5176 23.4865 30.2172 24.7314 29.6777 25.8785C33.3786 24.1542 39.687 22.8505 43.5001 23.4813"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M7.02344 30.6457C7.92777 30.1903 8.68197 29.4844 9.19604 28.612C12.0798 29.1857 15.0052 29.5258 17.9436 29.6289C21.6446 29.6289 24.6305 29.4532 23.4109 26.0046C22.1913 22.556 18.953 15.4485 17.8175 14.0186C16.682 12.5887 15.1316 10.7796 14.3689 10.8644C13.4226 10.9695 11.6537 12.1478 11.8523 12.8977C12.0415 13.6127 12.981 15.1751 14.5994 14.0626"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M15.1363 14.8391C14.7778 14.2389 14.3433 13.6875 13.8438 13.1985"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M12.0607 13.4064C11.493 13.2621 10.4202 13.9882 11.0257 14.7336C11.7907 15.4774 12.7827 15.9438 13.8435 16.0584C14.4683 16.114 16.6402 16.0374 16.6402 16.0374C17.5654 17.6355 17.3551 20.0748 17.4393 22.2196C17.4825 23.4865 17.7829 24.7314 18.3224 25.8785C14.6215 24.1542 8.3131 22.8505 4.5 23.4813"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M32.1805 11.742C26.8515 10.0858 21.1453 10.086 15.8164 11.7426"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                           <path
                             d="M10.9168 13.9893C6.9758 16.4599 4.5 20.0299 4.5 23.9999C4.5 31.4557 13.23 37.4999 24 37.4999C34.77 37.4999 43.5 31.4557 43.5 23.9999C43.5 20.0294 41.0241 16.4592 37.0828 13.989"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           />
                         </svg>
 
@@ -498,7 +498,7 @@ export default function Footer() {
                   </div>
                 </div>
 
-                {/* <LibroReclamacionesRedes /> */}
+                <LibroReclamacionesRedes />
                 <div className="py-5 border-t-[1px] border-black dark:border-white"></div>
 
                 <div className="flex justify-center w-full ">

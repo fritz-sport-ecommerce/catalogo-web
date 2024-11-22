@@ -15,7 +15,7 @@ export default async function ContedorCarouselProduct({
   const productosGenero = async (genero, cantidad, tipoCategoria) => {
     const order = `| order(_id) [0...${cantidad}]`;
 
-    const productFilter = FiltroGlobal("fritzduran");
+    const productFilter = FiltroGlobal(outlet ? "fritzduran": "fritzsport");
 
     const generoFilterHombre = genero ? `&& genero match "${genero}"  ` : "";
     const categoria = tipoCategoria
@@ -33,6 +33,8 @@ export default async function ContedorCarouselProduct({
           images,
           marca,
           priceecommerce,
+             pricemayorista,
+    priceemprendedor,
           description,
           genero,
           descuento,
@@ -41,8 +43,8 @@ export default async function ContedorCarouselProduct({
           categories,
           stock,
           preciomanual,
-          pricemayorista,
-          priceemprendedor,
+          razonsocial,
+          descuentosobred,
           "slug":slug.current
         }`);
 

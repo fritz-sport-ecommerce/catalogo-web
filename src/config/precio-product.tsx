@@ -3,15 +3,18 @@ export function precioProduct(
   precioEcommerce: number | string | undefined | null,
   precioManual: number | string | undefined,
   descuentos: any,
-  outlet: boolean | undefined | null = false
+  descuentoSobreDescuento:  number  | undefined = 0,
+  outlet: boolean = false,
+  
 ) {
   let razonSocial;
+  let resultado: Number;
   if (outlet) {
     razonSocial = descuentos.descuentooutlet;
   } else {
-    razonSocial = descuentos.descuentofritzsport;
+    razonSocial = descuentos?.descuentofritzsport;
   }
-  let resultado: Number;
+
   if (precioManual) {
     if (Number(precioManual) < 20) {
       return (resultado = 999);
@@ -27,17 +30,54 @@ export function precioProduct(
       if (
         descuentos?.descuentofritzsport ||
         razonSocial === 0 ||
-        descuentos?.descuentooutlet
+        descuentos?.descuentooutlet ||
+        descuentoSobreDescuento > 0
       ) {
         if (razonSocial === 0) {
-          return precioEcommerce;
+          if(descuentoSobreDescuento > 0){
+            const operation = (Number(descuentoSobreDescuento) / 100) * Number(precio);
+            resultado = Number(precio) - operation;
+    
+            if (Number(resultado) <= 20) {
+              return 999;
+            } else {
+              return Number(resultado.toFixed(0));
+            }
+          }else{
+
+            return precioEcommerce; 
+          }
         } else {
-          const operation = (Number(razonSocial) / 100) * Number(precio);
-          resultado = Number(precio) - operation;
-          if (Number(resultado) <= 20) {
-            return 999;
-          } else {
-            return Number(resultado.toFixed(0));
+          if(descuentoSobreDescuento > 0){
+            const operation = (Number(descuentoSobreDescuento) / 100) * Number(precio);
+            resultado = Number(precio) - operation;
+    
+            if (Number(resultado) <= 20) {
+              return 999;
+            } else {
+              return Number(resultado.toFixed(0));
+            }
+          }else{
+
+            if(outlet){
+              const operation = (Number(razonSocial ) / 100) * Number(precio);
+              resultado = Number(precio) - operation;
+              if (Number(resultado) <= 20) {
+                return 999;
+              } else {
+                return Number(resultado.toFixed(0));
+              }
+            }else{
+              const operation = (Number(razonSocial) / 100) * Number(precio);
+              resultado = Number(precio) - operation;
+              if (Number(resultado) <= 20) {
+                return 999;
+              } else {
+                return Number(resultado.toFixed(0));
+              }
+            }
+
+        
           }
         }
       } else {
@@ -53,3 +93,4 @@ export function precioProduct(
     }
   }
 }
+

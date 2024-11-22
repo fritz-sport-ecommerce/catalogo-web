@@ -1,16 +1,16 @@
-import mercadopago from "mercadopago";
+// import mercadopago from "mercadopago";
 
 import { seedSanityData } from "@/lib/seed";
 
 export async function POST(req) {
-  mercadopago.configure({
-    access_token: `${process.env.ACCESS_TOKEN_MERCADO}`,
-  });
+  // mercadopago.configure({
+  //   access_token: `${process.env.ACCESS_TOKEN_MERCADO}`,
+  // });
   // console.log(data)
 
   try {
     const data = await req.json();
-
+  
     // console.log(data)
     // tes
     // let productosCantidad = data.productos.map((el) => {
@@ -26,69 +26,71 @@ export async function POST(req) {
 
     //   return productos
     // })
-    let preference = {
-      items: data.productos,
-      payer: {
-        first_name: data.nombres,
-        last_name: data.apellido,
-        email: data.email,
-        phone: {
-          area_code: "51",
-          number: 987654321,
-        },
-        address: {},
-      },
-      identification: {
-        number: data.documento,
-        type: "DNI",
-      },
-      shipments: {
-        receiver_address: {
-          zip_code: "121212",
-          state_name: data.distrito,
-          city_name: "Lima",
-          street_name: data.distrito,
-          street_number: 3003,
-        },
-      },
+    // let preference = {
+    //   items: data.productos,
+    //   payer: {
+    //     first_name: data.nombres,
+    //     last_name: data.apellido,
+    //     email: data.email,
+    //     phone: {
+    //       area_code: "51",
+    //       number: 987654321,
+    //     },
+    //     address: {},
+    //   },
+    //   identification: {
+    //     number: data.documento,
+    //     type: "DNI",
+    //   },
+    //   shipments: {
+    //     receiver_address: {
+    //       zip_code: "121212",
+    //       state_name: data.distrito,
+    //       city_name: "Lima",
+    //       street_name: data.distrito,
+    //       street_number: 3003,
+    //     },
+    //   },
 
-      back_urls: {
-        success: `https://www.fritzsport.pe/exito`,
-        failure: `https://www.fritzsport.pe/`,
-        pending: `https://www.fritzsport.pe/`,
-      },
+    //   back_urls: {
+    //     success: `https://www.fritzsport.pe/exito`,
+    //     failure: `https://www.fritzsport.pe/`,
+    //     pending: `https://www.fritzsport.pe/`,
+    //   },
 
-      // installments: 1,
-      payment_methods: {
-        excluded_payment_methods: [
-          {
-            id: "amex",
-          },
-        ],
-        excluded_payment_types: [
-          {
-            id: "atm",
-          },
-        ],
-        installments: 1,
-      },
-      auto_return: "approved",
+    //   // installments: 1,
+    //   payment_methods: {
+    //     excluded_payment_methods: [
+    //       {
+    //         id: "amex",
+    //       },
+    //     ],
+    //     excluded_payment_types: [
+    //       {
+    //         id: "atm",
+    //       },
+    //     ],
+    //     installments: 1,
+    //   },
+    //   auto_return: "approved",
 
-      // notification_url: `${process.env.URL_DOMINIO}/api/exito`,
-    };
+    //   // notification_url: `${process.env.URL_DOMINIO}/api/exito`,
+    // };
 
-    const response = await mercadopago.preferences.create(preference);
+    // const response = await mercadopago.preferences.create(preference);
     // envio mongo db
 
-    if (response.status === 201) {
+    if (data) {
       // const newPedido = new NewPedido(dataEnvioMongoUser)
       // const savePedido = await newPedido.save()
       // console.log(savePedido)
+    
       let dataEnvioMongoUser = {
         tipoEntrega: data.tipoEntrega,
         razon: data.razon,
-        id_payer: response.body.id,
+        id_payer: "0",
         id_mercado_pago: "01",
+        rol_compra:data.rol_compra,
         estado: data.estado,
         nombres: data.nombres,
         apellidos: data.apellido,
@@ -108,11 +110,12 @@ export async function POST(req) {
       };
 
       const dato = await seedSanityData(dataEnvioMongoUser);
-
+      console.log(dato);
+      
       return new Response(
         JSON.stringify({
-          url: response.body.init_point,
-          id_payer: response.body.id,
+          url: "http://localhost:3000/nuevo-pedido",
+          id_payer: "0",
         }),
         {
           // return new Response(JSON.stringify({ url: "test" }), {
@@ -132,7 +135,7 @@ export async function POST(req) {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     return new Response(JSON.stringify({ error: "ocurrio un error" }), {
       // return new Response(JSON.stringify({ url: "test" }), {
       status: 401,

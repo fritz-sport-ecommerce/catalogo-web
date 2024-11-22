@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { urlForImage } from "@/sanity/lib/image";
 import { X } from "lucide-react";
@@ -9,6 +9,7 @@ import { useCart } from "react-use-cart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CartItemsEmpty } from "@/components/cart-items-empty";
+import RoleContext from "@/context/roleContext";
 
 export function CartItems() {
   const [clientState, setClientState] = useState(false);
@@ -17,6 +18,22 @@ export function CartItems() {
   }, []);
   //test
   const { items, removeItem } = useCart();
+  const { userRole } = useContext(RoleContext);
+
+
+  const deleteProduct = (product)=>{
+    if(userRole==="mayorista"){
+      let itemsMayorista =    items.filter(item=> item.objectID === product.objectID)
+
+      itemsMayorista.map(item=>{
+        removeItem(item.id)
+      })
+
+    }else{
+      removeItem(product.id)
+    }
+   
+  }
   return (
     <>
       {clientState && (
@@ -57,40 +74,23 @@ export function CartItems() {
                         </Link>
                       </h3>
                     </div>
-                    <div className="border-t-[1px] border-blue-gray-300 mt-2">
-          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Retail:</span> S/{el?.priceecommerce}
-          </div>
-          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Emprendedor:</span> S/{el?.priceemprendedor}
-          </div>
-          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Mayorista:</span> S/{el?.pricemayorista}
-          </div>
-
-          </div>
-                    {/* <p className="mt-1 text-sm font-medium">
+                    <p className="mt-1 text-sm font-medium">
                       Precio por unidad: S/{el.price}
-                    </p> */}
+                    </p>
 
-                
+                    <p className="mt-1 text-sm font-medium">
+                      Talla: {/* @ts-ignore */}
+                      <strong>{el.talla}</strong>
+                    </p>
                   </div>
 
                   <div className="mt-4 flex items-center  sm:mt-0 sm:pr-9">
                     <span className="mr-3"> Cantidad:</span>
-                    <label htmlFor={`quantity-`} className="sr-only">
-                      Quantity, Name
-                    </label>
-                    <Input
-                      id={`quantity-`}
-                      name={`quantity-`}
-                      type="number"
-                      className="w-16"
-                      value={el.quantity}
-                    />
+                
+                      <div>{el.quantity}</div>
                     <div className=" right-0 top-0  ">
                       <Button
-                        onClick={() => removeItem(el.id)}
+                        onClick={() => deleteProduct(el)}
                         variant="ghost"
                         type="button"
                         className="-mr-2 inline-flex p-2"
@@ -106,7 +106,10 @@ export function CartItems() {
                   <Clock className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>Se envía en 1 semana</span>
                 </p> */}
-          
+                <p className="mt-4 flex space-x-2 text-sm">
+                  {/* <Clock className="h-5 w-5 shrink-0" aria-hidden="true" /> */}
+                  <span>Precio total: S/{el.itemTotal} </span>
+                </p>
               </div>
             </div>
           ))}

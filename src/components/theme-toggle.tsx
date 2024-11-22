@@ -20,7 +20,7 @@ export function ThemeToggle() {
   return (
     <>
       <ul className=" items-center xl:ml-5 flex">
-        {/* <li className="mr-2 ml-5  xl:block hidden">
+        <li className="mr-2 ml-5  xl:block hidden">
           {session?.user ? (
             <Link href={`/users/${session.user.id}`}>
               {session.user.image ? (
@@ -42,7 +42,7 @@ export function ThemeToggle() {
               <FaUserCircle size={22} className="cursor-pointer" />
             </Link>
           )}
-        </li> */}
+        </li>
         <li className="mr-2 ml-5">
           {darkTheme ? (
             <MdOutlineLightMode

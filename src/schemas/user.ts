@@ -16,6 +16,13 @@ const user = {
       //   hidden: true,
     }),
     defineField({
+      name: "newuser",
+       type: 'boolean',
+      title: "nuevo usuario",
+      // initialValue:true,
+    }),
+    
+    defineField({
       name: "name",
       title: "Name",
       type: "string",
@@ -104,6 +111,9 @@ const user = {
       description: "A brief dsecription about the user",
     }),
   ],
+  initialValue: {
+    newuser: true
+  }
 };
 
 export default user;

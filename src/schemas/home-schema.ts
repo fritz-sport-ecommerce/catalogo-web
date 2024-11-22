@@ -25,7 +25,7 @@ export const home = defineType({
           name: "Slide",
           fields: [
             {
-              title: "Image Desktop (jpg,png,webp) 1940x765",
+      title: "Image Desktop (jpg,png,webp) 2100x900",
               name: "imgdeskt",
               type: "image",
               validation: (rule) => rule.required(),
@@ -276,18 +276,18 @@ export const home = defineType({
         },
       ],
     },
+    defineField({
+      name: "activemodal",
+       type: 'boolean',
+      title: "Activar Modal",
+      
+    }),
     {
       title: "Promo Home",
       type: "object",
       name: "promo",
+      
       fields: [
-        {
-          title: "Activar Promo",
-          name: "activebuttontitle",
-          type: "boolean",
-          initialValue: true,
-          validation: (rule) => rule.required(),
-        },
         {
           title: "Image(jpg,png,webp) 640x640",
           name: "imgdeskt",
@@ -297,11 +297,19 @@ export const home = defineType({
             hotspot: true, // <-- Defaults to false
           },
         },
+        defineField({
+          name: "activeurl",
+           type: 'boolean',
+          title: "Activar Enlace de Imagen",
+          
+        }),
         {
           title: "Url",
           name: "urlslider",
           type: "string",
           validation: (rule) => rule.required(),
+           hidden: ({ parent }) => !parent?.activeurl,
+
         },
         {
           title: "Descripción Imagen",
@@ -310,6 +318,8 @@ export const home = defineType({
           validation: (rule) => rule.required(),
         },
       ],
+      hidden: ({ parent }) => !parent?.activemodal,
+
     },
     {
       title: "Video Url",
@@ -324,4 +334,7 @@ export const home = defineType({
       validation: (rule) => rule.required(),
     },
   ],
+  initialValue: {
+    activemodal: false
+  }
 });

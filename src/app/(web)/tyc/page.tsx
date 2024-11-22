@@ -80,10 +80,10 @@ export default function index() {
             la compra en la tienda seleccionada. Transcurrido este plazo sin que
             el cliente o tercero autorizado haya procedido con el retiro, se
             entenderá que el cliente ha desistido de la compra y por lo cual
-            Marathon procederá a anular dicho pedido y a realizar la devolución
+            Fritz Sport procederá a anular dicho pedido y a realizar la devolución
             del monto pagado a través de una Nota de Crédito, la cual será
             enviada al correo electrónico registrado en nuestra plataforma. El
-            Cliente acepta expresamente esta anulación y autoriza a Marathon a
+            Cliente acepta expresamente esta anulación y autoriza a Fritz Sport a
             realizarla, sin restricción alguna y bajo su entera responsabilidad
           </p>
 

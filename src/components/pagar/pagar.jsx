@@ -114,7 +114,7 @@ export default function PaginaPagar() {
                       {" "}
                       ENVÍO A DESTINO
                       <br />
-                      <span>plazo máximo en 3 dias</span>
+                      <span>Envió a Destino Previa Coordinación</span>
                     </h2>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -133,7 +133,7 @@ export default function PaginaPagar() {
                   </div>
                 </label>
                 {/* recojo */}
-                <label>
+                {/* <label>
                   <input
                     checked={tipoEntrega === "recojo"}
                     onChange={(e) => setTipoEntrega(e.target.value)}
@@ -168,7 +168,7 @@ export default function PaginaPagar() {
                       />
                     </svg>
                   </div>
-                </label>
+                </label> */}
                 {/* recojo en tienda */}
                 {/* <label>
                     <input

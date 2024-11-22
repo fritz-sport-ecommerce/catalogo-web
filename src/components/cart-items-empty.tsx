@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { Plus, XCircle } from "lucide-react";
+import Link from "next/link"
+import { Plus, XCircle } from "lucide-react"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 
 export function CartItemsEmpty() {
   return (
@@ -16,7 +16,7 @@ export function CartItemsEmpty() {
         <p className="mb-4 mt-2 text-sm text-muted-foreground">
           Añade productos a tu carrito.
         </p>
-        <Link href="/productos">
+        <Link href="/tienda">
           <Button size="sm" className="relative">
             <Plus className="mr-2 h-4 w-4" />
             Agregar Productos
@@ -24,5 +24,5 @@ export function CartItemsEmpty() {
         </Link>
       </div>
     </div>
-  );
+  )
 }

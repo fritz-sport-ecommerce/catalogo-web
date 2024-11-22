@@ -13,13 +13,13 @@ export default function ModalPreguntasFrecuentes({ children }: AuxProps) {
     <div>
       <Button
         onClick={() => setActiveModal(!activeModal)}
-        className="z-header bg-transparent hover:bg-transparent sticky-0 fixed bottom-6 left-0 z-10 flex items-center justify-center xl:bottom-[0px] xl:left-16 "
+        className="z-header bg-transparent hover:bg-transparent sticky-0 fixed bottom-6 left-0 z-10 flex items-center justify-center xl:bottom-[0px] xl:left-14 "
         rel="noreferrer"
       >
         <div className=" relative mb-[6vh] mr-1 flex items-center justify-center  h-[50px] cursor-pointer   rounded-r-full    pl-1 md:w-10">
-          <span className="absolute h-[30px] w-[30px] animate-ping rounded-full bg-black  dark:bg-white xl:h-[50px] xl:w-[50px]"></span>
+          <span className="absolute h-[30px] w-[30px]  rounded-full  dark:bg-white xl:h-[50px] xl:w-[50px]"></span>
           <div>
-            <Book className="h-8 w-8 stroke-[#9D9D9D]" />
+            <Book className="h-8 w-8 stroke-[#9D9D9D] " />
           </div>
           <span className=" text-[10px] text-[#9D9D9D] bg-black dark:bg-white px-1 rounded-md py-1 xl:block xl:text-xs">
             Preguntas <br /> Frecuentes

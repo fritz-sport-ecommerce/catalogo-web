@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 
+
 export const product = defineType({
   name: "product",
   title: "Products",
@@ -13,7 +14,7 @@ export const product = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     }),
-
+    
     {
       name: "slug",
       title: "slug",
@@ -49,22 +50,49 @@ export const product = defineType({
       type: "array",
       of: [{ type: "string" }],
     },
-
     {
-      title: "Genero",
-      name: "genero",
-      type: "string",
-
-      validation: (rule) => rule.required(),
+      title: 'Género',
+      name: 'genero',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
       options: {
         list: [
-          { title: "Hombre", value: "hombre" },
-          { title: "Mujer", value: "mujer" },
-          { title: "Niños", value: "niños" },
-          { title: "Unisex", value: "unisex" },
-        ], // <-- predefined values
+          { title: 'Hombre', value: 'hombre' },
+          { title: 'Mujer', value: 'mujer' },
+          { title: 'Unisex', value: 'unisex' },
+          { title: 'Niños', value: 'niños' },
+        ],
       },
     },
+
+    // defineField({
+    //   title: 'Subgénero',
+    //   name: 'subgenero',
+    //   type: 'string',
+    //   options: {
+    //     list: [
+    //       { title: 'Hombre', value: 'hombre' },
+    //       { title: 'Mujer', value: 'mujer' },
+    //     ],
+    //   },
+    //   hidden: ({ parent }) => !parent?.genero || parent.genero !== 'unisex',
+    // }),
+
+    defineField({
+      title: 'Subgénero Niños',
+      name: 'subgenero_ninos',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Bebe', value: 'bebe' },
+          { title: 'Niño/Niña', value: 'ninonina' },
+          { title: 'Joven', value: 'joven' },
+
+        ],
+      },
+      hidden: ({ parent }) => !parent?.genero || parent.genero !== 'niños',
+    }),
+
     {
       title: "Tipo",
       name: "tipo",
@@ -90,6 +118,8 @@ export const product = defineType({
           { title: "Adidas", value: "adidas" },
           { title: "Nike", value: "nike" },
           { title: "Puma", value: "puma" },
+          { title: "Umbro", value: "umbro" },
+
           { title: "Reebok", value: "reebok" },
           { title: "Cat", value: "cat" },
           { title: "Fritz Sport", value: "fritzsport" },
@@ -191,6 +221,10 @@ export const product = defineType({
           { title: "Adidas Gazelle", value: "gazelle" },
           { title: "Adidas Campus", value: "campus" },
           { title: "Adidas Rivalry", value: "rivalry" },
+          { title: "Adidas Top Ten", value: "top_ten" },
+          { title: "Adidas Adifom Climacool", value: "adifom_climacool" },
+
+
           { title: "Adidas Spezial", value: "spezial" },
           { title: "Adidas Adi2000", value: "adi2000" },
           { title: "Adidas Adilette", value: "adilette" },
@@ -204,11 +238,52 @@ export const product = defineType({
           { title: "Adidas GRAPHICS ", value: "graphics" },
           { title: "Adidas TREFOIL ESSENTIALS ", value: "trefoilessentials" },
           { title: "Nike Air Max Excee", value: "airmaxexcee" },
+          
           { title: "Nike Air Force 1", value: "airforce1" },
+          { title: "Nike Air Force l lvl 8 3 BG", value: "airforce1_lvl_8_3_bg" },
+
           { title: "Nike Air Max SC", value: "airmaxsc" },
+          { title: "Nike Air Plus Drift", value: "airmax_plus_drift" },
+
           { title: "Nike Air Max 90", value: "airforcemax90" },
+          { title: "Nike Air Max 1 ESS BTS", value: "airforcemax_1_ess_bts" },
+
+          
+         
           { title: "Nike Air Jordan", value: "airjordan" },
+          { title: "Nike Air Jordan 1 mid", value: "airjordan_1_mid" },
+
+          { title: "Nike Air Jordan 1 Low", value: "airjordan_1_low" },
+
+          { title: "Nike Air Jordan 1 W LOW SE", value: "airjordan_1_w_low_se" },
+          
+          { title: "Nike Air Jordan 4 RM", value: "airjordan_4_rm" },
+          { title: "Nike Air Jordan 6 WMNS RET", value: "airjordan_6_wmns_ret" },
+
+
+          { title: "Nike WMNS Air Jordan 1 MM", value: "airjordan_wmns_1_mm" },
+
+          { title: "Nike WMNS Air Jordan 3 MM", value: "airjordan_wmns_3_mm" },
+          { title: "Nike WMNS Air Jordan 4 RM", value: "airjordan_wmns_4_wm" },
+
+          
+
           { title: "Nike Dunk", value: "dunk" },
+          { title: "Nike Dunk Low Prm", value: "dunk_low_prm" },
+          { title: "Nike Dunk Low Retro S", value: "dunk_low_retro_s" },
+
+          { title: "Nike Jordan MVP", value: "jordan_mvp" },
+          { title: "Nike W AF1 Shadow", value: "w_af1_shadow" },
+         
+          { title: "Nike Jordan SPIZIKE LOW", value: "jordan_spizike_low" },
+          { title: "Nike Jordan SPIZIKE LOW BG", value: "jordan_spizike_low_bg" },
+          { title: "Nike Jordan 3 Retro", value: "jordan_3_retro" },
+          { title: "Nike Jordan 3 Retro BG", value: "jordan_3_retro_bg" },
+
+
+          { title: "Nike Jordan TATUM 2", value: "jordan_tatum_2" },
+
+
         ], // <-- predefined values
       },
     },
@@ -330,5 +405,6 @@ export const product = defineType({
       title: "Popularidad",
       type: "number",
     },
+    
   ],
 });

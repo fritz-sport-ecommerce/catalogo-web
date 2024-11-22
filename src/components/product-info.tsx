@@ -1,17 +1,17 @@
 "use client";
 
-import { Key, useEffect, useState } from "react";
+import { Key, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { urlForImage } from "@/sanity/lib/image";
 import { groq } from "next-sanity";
-import { Image } from "sanity";
 
 import { SanityProduct } from "@/config/inventory";
 import { precioProduct } from "@/config/precio-product";
 
 import ProductAddToCart from "./product-add-to-cart";
 import { FiltroProducts } from "@/utilits/filtro-products";
+import RoleContext from "@/context/roleContext";
 
 interface Props {
   product: SanityProduct;
@@ -19,10 +19,7 @@ interface Props {
 }
 
 export function ProductInfo({ product, descuentos }: Props) {
-  const [data, setData] = useState([]);
-  // const [hoverImage, setHoverImage] = useState(
-  //   urlForImage(product.images[0].asset._ref).url()
-  // )
+  const [data, setData] = useState<SanityProduct[]>([]);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,70 +29,58 @@ export function ProductInfo({ product, descuentos }: Props) {
     client
       .fetch(
         groq`${filter} {
-      _id,
-      _createdAt,
-      name,
-      sku,
-      images,
-      currency,
-      priceecommerce,
-      description,
-      genero,
-      categories,
-      marca,
-      tallas,
-      tipoproducto,
-      stock,
-      descuento,
-      preciomanual,
-      "slug":slug.current
-    }`
+          _id,
+      
+          sku,
+          images,
+        
+          "slug": slug.current
+        }`
       )
-      .then((data) => {
-        setData(data);
+      .then((fetchedData) => {
+        // Filtrar productos que tengan el mismo SKU que el producto principal
+        const uniqueProducts = fetchedData.filter(
+          (relatedProduct:any) => relatedProduct.sku !== product.sku
+        );
+
+        setData(uniqueProducts);
         setLoading(false);
       });
   }, [product?.sku]);
+
+  const descuentoSobreD = product?.descuentosobred;
+  const { userRole } = useContext(RoleContext);
   return (
-    <div className=" h-full w-full  px-5     lg:mt-0  lg:px-2 xl:mt-0 xl:px-3 2xl:sticky 2xl:top-44  2xl:mt-0 2xl:max-w-lg 2xl:px-5">
-      <div className=" w-full ">
+    <div className="h-full w-full px-5 lg:mt-0 lg:px-2 xl:mt-0 xl:px-3 2xl:sticky 2xl:top-44 2xl:mt-0 2xl:max-w-lg 2xl:px-5">
+      <div className="w-full">
         <div className="">
-          <h1 className="hidden text-3xl font-bold uppercase tracking-tight xl:block">
+          <h1 className="hidden text-3xl font-bold uppercase w-full tracking-tight xl:block">
             {product?.name} - {product?.genero}
           </h1>
-   
-
-          <h6 className="text-md tracking-tight">Marca: {product.marca}</h6>
-          <h5 className="text-md tracking-tight">Sku: {product.sku}</h5>
-    <div className="flex flex-col items-start my-3 ">
-                  <p className=" mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
-                <span className="font-medium">Precio Retail:</span>    S/{product?.priceecommerce}
-                  </p>
-                  <p className="mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
-                  <span className="font-medium">Precio Emprendedor:</span>        S/{product?.priceemprendedor}
-                  </p>
-                  {
-                    product?.tipoproducto === "web" ? (
-                      <></>
-                    ):
-                    <>
-                    
-                      <p className=" mr-2 mb-2 font-semibold  tracking-tight   text-xl p-0 text-center">
-                      <span className="font-medium">Precio Mayorista:</span>        S/{product?.pricemayorista}
-                  </p>
-                    
-                    </>
-                  }
-                 
- 
-             
-                </div>
-          {/* <div className="mt-6">
-            <h3 className="sr-only">Description</h3>
-            <div className="space-y-6 text-justify text-base 2xl:hidden">
-              {product.description}
+          <div className="mt-3 hidden xl:block">l
+            <h2 className="sr-only">Product information</h2>
+            <div className="mb-3 flex items-center justify-between w-ful gap-x-2">
+            {userRole === "emprendedor" ? "PRECIO EMPRENDEDOR:" :"PRECIO MAYORISTA:"}
+        
+              <p className={`text-3xl tracking-tight ${userRole === "emprendedor" ? "text-black dark:text-white " :"text-red-500"} font-semibold `}>
+                S/
+                {userRole === "emprendedor" ? product?.priceemprendedor : product?.pricemayorista}
+              </p>
             </div>
-          </div> */}
+
+            <div className="mb-5 flex items-center justify-between gap-x-2">
+            PRECIO RETAIL:
+        
+              <p className="text-2xl tracking-tight ">
+                S/
+                { product?.priceecommerce}
+              </p>
+            </div>
+          </div>
+
+          <h6 className="text-md tracking-tight">Marca: {product?.marca}</h6>
+          <h5 className="text-md tracking-tight">Sku: {product?.sku}</h5>
+
           {data.length > 0 && <div className="mt-5 font-bold">Colores:</div>}
           <div className="mt-2 flex gap-1">
             {data?.map(
@@ -103,22 +88,21 @@ export function ProductInfo({ product, descuentos }: Props) {
                 id: Key | null | undefined;
                 slug: any;
                 sku: any;
-                images: { asset: { _ref: Image } }[];
+                images: any;
               }) => (
                 <Link key={el.id} href={`/products/${el.slug}/${el.sku}`}>
-                  <img
-                    // onMouseEnter={() =>
-                    //   setHoverImage(urlForImage(el.images[0].asset._ref).url())
-                    // }
-                    // onMouseLeave={() =>
-                    //   setHoverImage(urlForImage(product.images[0].asset._ref).url())
-                    // }
-                    width={70}
-                    height={70}
-                    className="relative"
-                    src={urlForImage(el.images[0].asset._ref).url()}
-                    alt=""
-                  />
+                  {
+                    el.images && el.images[0] && el.images[0]?.asset && (
+                      <img
+                        width={70}
+                        height={70}
+                        className="relative"
+                        src={urlForImage(el.images[0]?.asset._ref).url()}
+                        alt=""
+                      />
+
+                    )
+                  }
                 </Link>
               )
             )}

@@ -7,11 +7,7 @@ import { Button } from "../ui/button";
 import Cabecera from "./cabecera";
 import { ProductGridTab } from "./product-grid-tab";
 
-export default function MainTab({
-  dataCabeceraTab,
-  dataProductTab,
-  descuentos,
-}) {
+export default function MainTab({ dataCabeceraTab, dataProductTab,descuentos }) {
   const [dataTab, setDataTab] = useState(dataProductTab.productosAll);
   const [genero, setGenero] = useState("tienda");
   const handler = (value) => {
@@ -41,13 +37,10 @@ export default function MainTab({
     <div className="mt-10 flex h-full w-full justify-center">
       <div className="flex  flex-col ">
         <Cabecera dataCabeceraTab={dataCabeceraTab} handler={handler} />
-        <ProductGridTab
-          products={dataTab}
-          descuentos={descuentos}
-        ></ProductGridTab>
+        <ProductGridTab products={dataTab} descuentos={descuentos}></ProductGridTab>
         <div className="mt-5 flex w-full justify-center">
           <Link
-            href={`/productos${genero === "tienda" ? `` : `?genero=${genero}`}`}
+            href={`/tienda${genero === "tienda" ? `` : `?genero=${genero}`}`}
           >
             <Button className="uppercase rounded-none">Ver Mas</Button>
           </Link>

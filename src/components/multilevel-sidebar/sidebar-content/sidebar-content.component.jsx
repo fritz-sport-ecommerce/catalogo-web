@@ -20,9 +20,9 @@ const SidebarContent = (props) => {
   const { data: session } = useSession();
   return (
     <div {...sidebarProps}>
-      <div className="sidebar-main-content sidebar-parent h-full bg-white text-lg font-semibold dark:bg-black">
+      <div className="sidebar-main-content sidebar-parent  bg-white text-lg font-semibold dark:bg-black">
         {headerContent}
-        <div className="sidebar-body">
+        <div className="sidebar-body ">
           <ul>
             {options.map((list, index) => {
               return (
@@ -42,7 +42,7 @@ const SidebarContent = (props) => {
                           {list.icon && list.icon}
                           <span
                             className={`${
-                              list.title === "SALE" && "text-red-500"
+                              list.title === "OUTLET" && "text-red-500"
                             }`}
                           >
                             {list.title}
@@ -78,7 +78,7 @@ const SidebarContent = (props) => {
           </ul>
         </div>
         {/* session */}
-        {/* <div className="flex w-full justify-center  absolute bottom-7">
+        <div className="flex w-full justify-center  absolute bottom-7">
           <div className="flex">
             {session?.user ? (
               <div className="flex flex-col items-center justify-center gap-y-6">
@@ -126,7 +126,7 @@ const SidebarContent = (props) => {
               </div>
             )}
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

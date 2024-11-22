@@ -13,6 +13,21 @@ export const homefz = defineType({
       type: "string",
       initialValue: "Home Page",
     }),
+    defineField({
+      name: "active_banner",
+       type: 'boolean',
+      title: "Activar Banner top",
+      
+    }),
+    {
+      title: "Info Banner Top",
+      name: "banner_top",
+      type: "array",
+      of: [{ type: "string" }],
+      hidden: ({ parent }) => !parent?.active_banner,
+
+    },
+
     // slider
     {
       name: "slider",
@@ -98,6 +113,96 @@ export const homefz = defineType({
         },
       ],
     },
+    defineField({
+      name: "active_carousel_promo",
+       type: 'boolean',
+      title: "Activar Carousel Promo",
+      
+    }),
+    {
+      name: "carousel_promo",
+      title: "Carousel Promo",
+      type: "array",
+      of: [
+        {
+          title: "Carousel promo",
+          type: "object",
+          name: "carousel_promo",
+          fields: [
+            {
+              title: "Image Desktop (jpg,png,webp) 2304x459",
+              name: "imgdeskt",
+              type: "image",
+              validation: (rule) => rule.required(),
+              options: {
+                hotspot: true, // <-- Defaults to false
+              },
+            },
+
+
+            {
+              title: "Image Mobil (jpg,png,webp) 557x314",
+              name: "imgmob",
+              type: "image",
+              options: {
+                hotspot: true, // <-- Defaults to false
+              },
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Descripción Img",
+              name: "description_img",
+              type: "string",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Url Imagen",
+              name: "url_img",
+              type: "string",
+              validation: (rule) => rule.required(),
+            },
+            // {
+            //   title: "Titulo",
+            //   name: "titulo",
+            //   type: "string",
+            //   validation: (rule) => rule.required(),
+            // },
+            // {
+            //   title: "Subtitulo",
+            //   name: "subtitulo",
+            //   type: "string",
+            //   validation: (rule) => rule.required(),
+            // },
+            // {
+            //   title: "Activar Botón con titulo",
+            //   name: "activebuttontitle",
+            //   type: "boolean",
+            //   initialValue: false,
+            //   validation: (rule) => rule.required(),
+            // },
+            // {
+            //   title: "Btntext",
+            //   name: "btntext",
+            //   type: "string",
+            //   validation: (rule) => rule.required(),
+            // },
+            // {
+            //   title: "Link",
+            //   name: "link",
+            //   type: "string",
+            //   validation: (rule) => rule.required(),
+            // },
+            // {
+            //   title: "Image PNG 2000x2000",
+            //   name: "img2",
+            //   type: "image",
+            // },
+          ],
+        },
+      ],
+      hidden: ({ parent }) => !parent?.active_carousel_promo,
+    },
+
     // {
     //   name: "bannergenero",
     //   title: "Genero",
@@ -262,4 +367,7 @@ export const homefz = defineType({
       validation: (rule) => rule.required(),
     },
   ],
+  initialValue: {
+    active_carousel_promo: false
+  }
 });

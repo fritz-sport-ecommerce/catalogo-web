@@ -13,7 +13,7 @@ export const catalogo = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     }),
-        {
+     {
       name: "catalogospdf",
       title: "Lista de Catalogos PDF",
       type: "array",
@@ -23,9 +23,6 @@ export const catalogo = defineType({
           title: ' PDF',
           name: 'pdf',
           type: 'file',
-           options: {
-            accept: 'application/pdf'
-          },
           fields: [
             {
               name: 'titulo',
@@ -38,7 +35,7 @@ export const catalogo = defineType({
               title: 'Mes'
             },
             {
-              title: "Image (jpg,png,webp) 595x495",
+              title: "Image (jpg,png,webp) 595pxx495px",
               name: "imgdw",
               type: "image",
               validation: (rule) => rule.required(),
@@ -60,7 +57,9 @@ export const catalogo = defineType({
                   { title: "Reebok", value: "reebok" },
                   { title: "Cat", value: "cat" },
                   { title: "Fritz Sport", value: "fritzsport" },
-                  { title: "joma", value: "joma" },
+                  { title: "Joma", value: "joma" },
+                  { title: "Kelme", value: "kelme" },
+                           // { title: "Kelme", value: "kelme" },
                 ], // <-- predefined values
               },
             },
@@ -77,7 +76,7 @@ export const catalogo = defineType({
     },
     {
       name: "slider",
-      title: "Slider catalogo",
+      title: "slidercatalogo",
       type: "array",
       of: [
         {
@@ -125,36 +124,6 @@ export const catalogo = defineType({
               type: "string",
               validation: (rule) => rule.required(),
             },
-            // {
-            //   title: "Subtitulo",
-            //   name: "subtitulo",
-            //   type: "string",
-            //   validation: (rule) => rule.required(),
-            // },
-            // {
-            //   title: "Activar Botón con titulo",
-            //   name: "activebuttontitle",
-            //   type: "boolean",
-            //   initialValue: false,
-            //   validation: (rule) => rule.required(),
-            // },
-            // {
-            //   title: "Btntext",
-            //   name: "btntext",
-            //   type: "string",
-            //   validation: (rule) => rule.required(),
-            // },
-            // {
-            //   title: "Link",
-            //   name: "link",
-            //   type: "string",
-            //   validation: (rule) => rule.required(),
-            // },
-            // {
-            //   title: "Image PNG 2000x2000",
-            //   name: "img2",
-            //   type: "image",
-            // },
           ],
         },
       ],
@@ -180,45 +149,117 @@ export const catalogo = defineType({
                   { title: "Adidas", value: "adidas" },
                   { title: "Nike", value: "nike" },
                   { title: "Puma", value: "puma" },
+                  { title: "Umbro", value: "umbro" },
+
                   { title: "Reebok", value: "reebok" },
                   { title: "Cat", value: "cat" },
                   { title: "Fritz Sport", value: "fritzsport" },
-                  { title: "joma", value: "joma" },
+                  { title: "Joma", value: "joma" },
+                   { title: "Kelme", value: "kelme" },
                 ], // <-- predefined values
               },
             },
             {
-              title: "Imagen Portada Marca General(png,webp)",
+              title: "Imagen Portada Marca General (png,webp)2480x3505px ",
               name: "imgmarca",
               type: "image",
               validation: (rule) => rule.required(),
             },
             {
-              title: "Imagen Fondo Producto(png,webp) 2480pxx3505px",
-              name: "imgfondo",
+              title: "Imagen Portada Temporada General (png,webp)2480x3505px ",
+              name: "fritzsport",
               type: "image",
               validation: (rule) => rule.required(),
             },
             {
-              title: "Imagen Portada Hombre General(png,webp)",
+              title: "Imagen Portada Liquidacón General (png,webp)2480x3505px ",
+              name: "fritzduran",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            // info pdf img
+            {
+              name: "export_pdf_info",
+              title: "EXPORT PDF INFO",
+              type: "object", // Cambiar de "document" a "object"
+           
+              fields:[
+        
+                {
+                  title: "Imagen Fondo PDF(png,jpg) 2480px/3505px",
+                  name: "imgfondo",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Imagen Fondo Precio Principal(png,jpg) 765px/75px",
+                  name: "fondo_precio_principal",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Imagen Fondo Tallas(png,jpg) 752px/146px",
+                  name: "fondo_tallas",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Imagen Fondo Marca(png,jpg) 416px/221px",
+                  name: "fondo_marca",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Imagen Fondo Descuento(png,jpg) 617px/244px",
+                  name: "fondo_descuento",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                },
+              ],
+              options: {
+                collapsible: true, // Permite que este campo sea colapsable para mayor organización.
+                collapsed: false,  // Define si está abierto por defecto.
+              },
+            },
+        
+            {
+              title: "Imagen Portada Hombre General(png,webp)2480x3505px",
               name: "imghombre",
               type: "image",
               validation: (rule) => rule.required(),
             },
             {
-              title: "Imagen Portada Mujer General(png,webp)",
+              title: "Imagen Portada Mujer General(png,webp)2480x3505px",
               name: "imgmujer",
               type: "image",
               validation: (rule) => rule.required(),
             },
             {
-              title: "Imagen Portada Niños General(png,webp)",
+              title: "Imagen Portada Niños General(png,webp)2480x3505px",
               name: "imgninos",
               type: "image",
               validation: (rule) => rule.required(),
             },
             {
-              title: "Imagen Portada Unisex General(png,webp)",
+              title: "Imagen Portada Bebés General(png,webp)2480x3505px",
+              name: "imgbebes",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Nino/Niña General(png,webp)2480x3505px",
+              name: "imgninonina",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Joven General(png,webp)2480x3505px",
+              name: "imgjoven",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Unisex General(png,webp)2480x3505px",
               name: "imgunisex",
               type: "image",
               validation: (rule) => rule.required(),
@@ -235,7 +276,134 @@ export const catalogo = defineType({
                   name: "categoria",
                   fields: [
                     {
-                      title: "Marca",
+                      title: "Portada Categoria",
+                      name: "category",
+                      type: "string",
+                      validation: (rule) => rule.required(),
+
+                      options: {
+                        list: [
+                          { title: "Mochilas", value: "mochilas" },
+                          { title: "Urbano", value: "urbano" },
+                          { title: "Casacas", value: "casacas" },
+                          { title: "Bolsos", value: "bolsos" },
+                          { title: "Medias", value: "medias" },
+                          { title: "Chimpunes", value: "chimpunes" },
+                          { title: "Plataforma", value: "plataforma" },
+                          { title: "Pelotas ", value: "pelotas" },
+                          { title: "Terrex", value: "terrex" },
+                          { title: "Originals", value: "originals" },
+                          { title: "Camisetas", value: "camisetas" },
+                          { title: "Toma todo", value: "tomatodos" },
+                          { title: "Buzos", value: "buzos" },
+                          { title: "Escolar", value: "escolar" },
+                          { title: "Pantalón", value: "pantalon" },
+                          { title: "Gorras", value: "gorras" },
+                          { title: "Guantes", value: "guantes" },
+                          { title: "Shorts", value: "shorts" },
+                          { title: "Polos", value: "polos" },
+                          { title: "Sandalias", value: "sandalias" },
+                          { title: "Running", value: "running" },
+                          { title: "Poleras", value: "poleras" },
+                          { title: "Tenis", value: "tenis" },
+                          { title: "Básket", value: "basquet" },
+                          { title: "Training ", value: "training" },
+                        ], // <-- predefined values
+                      },
+                    },
+                    {
+                      title: "Imagen Portada Categoría General(png,webp)",
+                      name: "imgcategoria",
+                      type: "image",
+                      validation: (rule) => rule.required(),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "catalogoclient",
+      title: "Portadas Catalogo Clientes",
+      type: "array",
+      of: [
+        {
+          title: "Marca",
+          type: "object",
+          name: "marca",
+          fields: [
+            {
+              title: "Marca",
+              name: "marca",
+              type: "string",
+              validation: (rule) => rule.required(),
+
+              options: {
+                list: [
+                  { title: "Adidas", value: "adidas" },
+                  { title: "Nike", value: "nike" },
+                  { title: "Puma", value: "puma" },
+                  { title: "Reebok", value: "reebok" },
+                  { title: "Cat", value: "cat" },
+                  { title: "Fritz Sport", value: "fritzsport" },
+                  { title: "Joma", value: "joma" },
+                   { title: "Kelme", value: "kelme" },
+                ], // <-- predefined values
+              },
+            },
+            {
+              title: "Imagen Portada Marca General (png,webp)2480x3505px ",
+              name: "imgmarca",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+
+            {
+              title: "Imagen Fondo Producto(png,webp) 2480pxx3505px",
+              name: "imgfondo",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Hombre General(png,webp)2480x3505px",
+              name: "imghombre",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Mujer General(png,webp)2480x3505px",
+              name: "imgmujer",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Niños General(png,webp)2480x3505px",
+              name: "imgninos",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              title: "Imagen Portada Unisex General(png,webp)2480x3505px",
+              name: "imgunisex",
+              type: "image",
+              validation: (rule) => rule.required(),
+            },
+
+            {
+              name: "categorias",
+              title: "Categorias",
+              type: "array",
+              of: [
+                {
+                  title: "Categoría",
+                  type: "object",
+                  name: "categoria",
+                  fields: [
+                    {
+                      title: "Portada Categoria",
                       name: "category",
                       type: "string",
                       validation: (rule) => rule.required(),
@@ -247,6 +415,7 @@ export const catalogo = defineType({
                           { title: "Urbano", value: "urbano" },
                           { title: "Casacas", value: "casacas" },
                           { title: "Bolsos", value: "bolsos" },
+                          { title: "Guantes", value: "guantes" },
                           { title: "Medias", value: "medias" },
                           { title: "Chimpunes", value: "chimpunes" },
                           { title: "Peloteras", value: "peloteras" },

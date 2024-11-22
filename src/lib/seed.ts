@@ -10,6 +10,7 @@ export async function seedSanityData(data: {
   productos: any;
   comprobante: any;
   id_payer: any;
+  rol_compra:any;
   id_mercado_pago: any;
   nombres: any;
   apellidos: any;
@@ -58,6 +59,7 @@ export async function seedSanityData(data: {
     razon: data.razon,
     id_mercado_pago: data.id_mercado_pago,
     nombres: data.nombres,
+    rol_compra:data.rol_compra,
     apellidos: data.apellidos,
     email: data.email,
     documento: data.documento,

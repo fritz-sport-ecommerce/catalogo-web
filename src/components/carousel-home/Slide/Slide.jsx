@@ -9,7 +9,7 @@ import { urlForImage } from "@/sanity/lib/image";
 const Slide = (props) => {
   const { className } = props;
   if (!props.slide) return <div>cargando....</div>;
-
+// s
   return (
     <div className={className}>
       {/* {props.img2 && (

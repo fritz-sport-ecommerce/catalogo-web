@@ -4,7 +4,7 @@ import { XCircle } from "lucide-react"
 
 import { SanityProduct } from "@/config/inventory"
 
-import Product from "../product/product"
+import Product from "../product/product_2"
 import CarouselProductTabs from "./carousel-product-tabs"
 
 interface Props {

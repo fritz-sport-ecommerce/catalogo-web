@@ -161,7 +161,7 @@ export default function PedidosTabsUser() {
                               </svg>
                             </div>
                             <span className="ml-10">
-                              Preparación para entregar
+                              Coordinar Envió
                             </span>
                           </div>
 

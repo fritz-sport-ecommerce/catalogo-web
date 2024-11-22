@@ -84,7 +84,7 @@
 @media (min-width: 1025px) {
   /* big landscape tablets, laptops, and desktops */
   .carouselbanner {
-    margin-top: 31vh;
+    margin-top: 48vh;
     min-height: 280px;
   }
 }
