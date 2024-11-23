@@ -141,7 +141,7 @@ export default function FormPagar({ tipoEntrega }) {
   useEffect(() => {
     setDomLoaded(true);
   }, []);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(items.length >= 3 && userRole === "emprendedor" || items.length >= 6 && userRole === "mayorista" ? false : true);
   const [ubigeoDepartamento, setUbigeoDepartamento] = useState(0);
   const [departamento, setDepartamento] = useState([]);
   const [provincia, setProvincia] = useState([]);
@@ -338,7 +338,7 @@ switch (userRole) {
   case "emprendedor":
 // emprendedor condicion para comprar
 
-    if (items.length <= 3 && userRole === "emprendedor") {
+    if (items.length >= 3 && userRole === "emprendedor") {
       setValidate(true);
       setIsModalOpen(false)
       
@@ -352,7 +352,7 @@ switch (userRole) {
     break;
     case "mayorista":
       // mayorista condicion para comprar
-      if (items.length <= 6 && userRole === "mayorista") {
+      if (items.length >= 6 && userRole === "mayorista") {
         setValidate(true);
         setIsModalOpen(false)
         
@@ -370,6 +370,7 @@ switch (userRole) {
 
     break;
 }
+
 
 
 
@@ -413,7 +414,7 @@ switch (userRole) {
             <div className="flex flex-col items-center justify-center">
               <div className="flex  mb-3 items-center">
               <AiOutlineShoppingCart size={24} className="text-blue-500 mr-3" />
-                <p> Necesitas mínimo <strong>{userRole === "mayorista"? "6 pares seriados":"3 pares" }</strong> para comprar como {userRole === "mayorista"? "Mayorista":"3 pares"}.</p>
+                <p> Necesitas mínimo <strong>{userRole === "mayorista"? "6 pares seriados":"3 pares" }</strong> para comprar como <span className="uppercase font-semibold"> {userRole}</span>.</p>
 
               </div>
 
