@@ -81,7 +81,7 @@ function Loading({ disableLoadAddProduct = true }) {
     </div>
   );
 }
-export default function FormPagar() {
+export default function FormPagar({userData}) {
   const { data: session } = useSession();
   const [dataUser, setDataUser] = useState({});
   //   console.log(session?.user.id);
@@ -90,22 +90,22 @@ export default function FormPagar() {
   }
 
   const [allValues, setAllValues] = useState({
-    nombre: `${dataUser?.name}`,
-    apellido: `${dataUser?.apellidos}`,
-    email: `${dataUser.email}`,
-    documento: `${dataUser.documento}`,
-    telefono: `${dataUser.telefono}`,
-    direccion: `${dataUser.direccion}`,
+    nombre: `${userData?.name ?? ""}`,
+    apellido: `${userData?.apellidos ?? ""}`,
+    email: `${userData?.email ?? ""}`,
+    documento: `${userData?.documento ?? ""}`,
+    telefono: `${userData?.telefono ?? ""}`,
+    direccion: `${userData?.direccion ?? ""}`,
     comprobante: "Boleta",
-    ruc: `${dataUser.factura}`,
-    departamento: `${dataUser.departamento}`,
-    provincia: `${dataUser.provincia}`,
-    distrito: `${dataUser.distrito}`,
-    adicional: `${dataUser.infadi}`,
+    ruc: `${userData?.factura ?? ""}`,
+    departamento: `${userData?.departamento ?? ""}`,
+    provincia: `${userData?.provincia ?? ""}`,
+    distrito: `${userData?.distrito ?? ""}`,
+    adicional: `${userData?.infadi ?? ""}`,
     checkTerminos: false,
     estado: "pendiente",
     razon: "Fritz Sport",
-    userId: session?.user.id,
+    userId: userData?._id,
   });
 
   const changeHandler = (e) => {
@@ -122,32 +122,32 @@ export default function FormPagar() {
     setDomLoaded(true);
   }, []);
   // traer data usuario
-  useEffect(() => {
-    client
-      .fetch(groq`*[_type == "user" && _id match "${session?.user.id}"] [0]`)
-      .then((el) => {
-        setAllValues({
-          nombre: el?.name ? el?.name : "",
-          apellido: el?.apellidos ? el?.apellidos : "",
-          email: el?.email ? el?.email : "",
-          documento: el?.documento ? el?.documento : "",
-          telefono: el?.telefono ? el?.telefono : "",
-          direccion: el?.direccion ? el?.direccion : "",
-          comprobante: "Boleta",
-          ruc: el?.factura ? el?.factura : "",
-          departamento: el?.departamento ? el?.departamento : "",
-          provincia: el?.provincia ? el?.provincia : "",
-          distrito: el?.distrito ? el?.distrito : "",
-          adicional: el?.infadi ? el?.infadi : "",
-          checkTerminos: false,
-          estado: "pendiente",
-          razon: "Fritz Sport",
-          userId: session?.user.id,
-        });
-      });
+  // useEffect(() => {
+  //   client
+  //     .fetch(groq`*[_type == "user" && _id match "${session?.user.id}"] [0]`)
+  //     .then((el) => {
+  //       setAllValues({
+  //         nombre: el?.name ? el?.name : "",
+  //         apellido: el?.apellidos ? el?.apellidos : "",
+  //         email: el?.email ? el?.email : "",
+  //         documento: el?.documento ? el?.documento : "",
+  //         telefono: el?.telefono ? el?.telefono : "",
+  //         direccion: el?.direccion ? el?.direccion : "",
+  //         comprobante: "Boleta",
+  //         ruc: el?.factura ? el?.factura : "",
+  //         departamento: el?.departamento ? el?.departamento : "",
+  //         provincia: el?.provincia ? el?.provincia : "",
+  //         distrito: el?.distrito ? el?.distrito : "",
+  //         adicional: el?.infadi ? el?.infadi : "",
+  //         checkTerminos: false,
+  //         estado: "pendiente",
+  //         razon: "Fritz Sport",
+  //         userId: session?.user.id,
+  //       });
+  //     });
 
-    //
-  }, [session?.user.id]);
+  //   //
+  // }, [session?.user.id]);
 
   useEffect(() => {
     let resultDep = departamentos?.find(

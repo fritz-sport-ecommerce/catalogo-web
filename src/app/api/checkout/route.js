@@ -84,11 +84,12 @@ export async function POST(req) {
       // const newPedido = new NewPedido(dataEnvioMongoUser)
       // const savePedido = await newPedido.save()
       // console.log(savePedido)
+    console.log(data);
     
       let dataEnvioMongoUser = {
         tipoEntrega: data.tipoEntrega,
         razon: data.razon,
-        id_payer: "0",
+        id_payer: data.id_pago,
         id_mercado_pago: "01",
         rol_compra:data.rol_compra,
         estado: data.estado,
@@ -114,7 +115,7 @@ export async function POST(req) {
       
       return new Response(
         JSON.stringify({
-          url: "http://localhost:3000/nuevo-pedido",
+          url: `http://localhost:3000/nuevo-pedido?id_p=${data.id_pago}`,
           id_payer: "0",
         }),
         {

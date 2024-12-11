@@ -1,5 +1,5 @@
 "use client";
-
+import { v4 as uuidv4 } from 'uuid';
 import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import RoleContext from "@/context/roleContext";
-import ModalDesk from "../modal/Modal";
+
 import ReusableModal from "../modal/reusable-modal";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
@@ -89,7 +89,7 @@ function Loading({ disableLoadAddProduct = true }) {
 }
 export default function FormPagar({ tipoEntrega }) {
   const { userRole } = useContext(RoleContext);
-
+  const uuid = uuidv4();
 
   const router = useRouter();
   const { data: session } = useSession();
@@ -165,7 +165,7 @@ export default function FormPagar({ tipoEntrega }) {
           distrito: el?.distrito ? el?.distrito : "",
           adicional: el?.infadi ? el?.infadi : "",
           checkTerminos: false,
-          estado: "pagado",
+          estado: "pendiente",
           razon: "CATALOGO",
           userId: session?.user.id,
         });
@@ -219,6 +219,7 @@ export default function FormPagar({ tipoEntrega }) {
       productos: productosCantidad,
       tipoEntrega: tipoEntrega,
       id_mercado_pago: "01",
+      id_pago:uuid,
       razon: allValues.razon,
       estado: allValues.estado,
       nombres: allValues.nombre,
@@ -886,7 +887,7 @@ switch (userRole) {
           >
             {items.length === 0
               ? "No tienes Productos en el Carrito"
-              : "Realizar pedido"}
+              : "COMPRAR"}
             <Loading disableLoadAddProduct={loading} />
           </button>
         )}

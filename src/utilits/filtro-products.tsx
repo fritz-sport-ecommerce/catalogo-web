@@ -4,7 +4,7 @@ export function FiltroProducts(
   products: SanityProduct,
   razonsocial = "fritzsport"
 ) {
-  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined  && name match "${products.name}*"  && genero == "${products.genero}" && pricemayorista != undefined && priceemprendedor != undefined`;
+  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined  && name match "${products.name}*"  && genero == "${products.genero}" && pricemayorista != undefined && priceemprendedor != undefined && pricemayorista != 0 && priceemprendedor != 0`;
 
   return productFilter;
 }

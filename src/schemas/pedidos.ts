@@ -129,6 +129,11 @@ export const pedidos = defineType({
       type: "string",
     },
     {
+      title: "comporbante de Pago",
+      name: "comprobante_img",
+      type: "image",
+    },
+    {
       name: "productos",
       title: "Productos",
       type: "array",

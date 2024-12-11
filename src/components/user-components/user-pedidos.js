@@ -1,35 +1,23 @@
 "use client";
 
-import { client } from "@/sanity/lib/client";
 
-import { useSession } from "next-auth/react";
-import { groq } from "next-sanity";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import React, {  useState } from "react";
+import ModalDesk from "../modal/Modal";
+import { urlForImage } from "@/sanity/lib/image";
 
-export default function PedidosTabsUser() {
-  const [dataPedidos, setDataPedidos] = useState([]);
-  const { data: session } = useSession();
-  useEffect(() => {
-    if (session?.user.id) {
-      client
-        .fetch(
-          groq`*[_type == "pedidos" && estado != "pendiente" && userId match "${session?.user.id}"] | order(_createdAt desc)`
-        )
-        .then((result) => {
-          setDataPedidos(result);
-        });
-    }
-  }, []);
+export default function PedidosTabsUser({dataPedidos}) {
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [isLastStep, setIsLastStep] = React.useState(false);
-  const [isFirstStep, setIsFirstStep] = React.useState(false);
 
-  const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
-  const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
+
+
+
+const [isOpen, setIsOpen] = useState(false)
+
+
   return (
     <div>
-      {dataPedidos.length > 0 && (
+      {dataPedidos  && (
         <div className="grid grid-flow-row gap-y-5">
           {dataPedidos.map((el, i) => (
             <div
@@ -280,6 +268,41 @@ export default function PedidosTabsUser() {
                     </>
                   )}
                 </div>
+                {/* comprobante de pago */}
+              
+                {
+                  el.comprobante_img ? (
+                <>
+                <button onClick={()=>setIsOpen(true)} className="bg-green-800 py-2 text-md uppercase  cursor-pointer text-white">ver boleta de pago</button>
+                  <ModalDesk isOpen={isOpen} onClose={() => setIsOpen(false)}>
+                    <div className="p-2 flex flex-col relative w-full items-center">
+                    <Link  className="w-full" href={`/nuevo-pedido?id_p=${el?.id_payer}&?user=${el?.userId}`}>
+                        <button className="text-white flex items-center bg-green-800 py-2 px-3 text-md uppercase absolute cursor-pointer right-0 top-0 z-50">
+                    <svg className="mr-1 stroke-white" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                          
+                          Editar</button>
+                    </Link>
+                      <img
+                        src={urlForImage(el.comprobante_img?.asset?._ref).url()}
+                        alt="Vista previa"
+                        className="xl:w-[500px] h-[500px] w-full rounded-lg shadow"
+                      />
+                 
+                    </div>
+                    </ModalDesk>
+                </>
+                
+                  ):(
+                    <Link href={`/nuevo-pedido?id_p=${el.id_payer}&?user=${el.userId}?`}>
+                      <div className="w-full flex bg-orange-50 justify-center">
+                        <button className="w-full bg-red-800 py-2 text-md uppercase  cursor-pointer text-white"  >Completar Pago</button>
+
+                      </div>
+                    </Link>
+                  )
+                }
+      
+             
               </div>
               <div className="grid grid-columns-1 tailwind w-full p-5 gap-1">
                 {el.productos?.map((producto, i) => (

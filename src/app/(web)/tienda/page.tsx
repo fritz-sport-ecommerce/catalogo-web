@@ -109,7 +109,7 @@ export default async function Page({ searchParams }: Props) {
     ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" && categories != "originals" `
     : "";
 
-    const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}] | order(_createdAt desc)`;
+    const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}&& pricemayorista != 0 && priceemprendedor != 0] | order(_createdAt desc)`;
  
     
   async function fetchNextPage() {

@@ -35,7 +35,7 @@ export default function ProductAddToCart({ product, descuentos }) {
 
   const functionAddToCardMayorista = (tallas,product) =>{
 
-    const tallasDisponibles = tallas.filter((talla) => talla.stock > 0 && !talla.talla.includes("-")).filter((talla) => talla.stock > 0 && !talla.talla.includes("x")).filter((producto) => !producto.talla.includes("X"));
+    const tallasDisponibles = tallas.filter((talla) => talla.stock > 0 ).filter((talla) => talla.stock > 0 && !talla.talla.includes("x")).filter((producto) => !producto.talla.includes("X"));
 
     
     tallasDisponibles.forEach(talla => {
@@ -159,7 +159,7 @@ export default function ProductAddToCart({ product, descuentos }) {
           Tallas: <strong>{selectSize.talla || ""}</strong>
         </p>
         {cliente &&
-          product.tallas.filter((producto) => !producto.talla.includes("-")).filter((producto) => !producto.talla.includes("X")).filter((producto) => !producto.talla.includes("x")).map(({ talla, stock, _key }) => (
+          product.tallas.filter((producto) =>  !producto.talla.includes("X")).filter((producto) => !producto.talla.includes("x")).map(({ talla, stock, _key }) => (
             <Button
               onClick={() => selectTalla(talla, _key, stock)}
               key={_key}

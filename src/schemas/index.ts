@@ -9,11 +9,10 @@ import { homefz } from "./home-schema-fz";
 import { nuestras_tiendas } from "./nuestras-tiendas-schema";
 import { pedidos } from "./pedidos";
 import { product } from "./product-schema";
-import review from "./review";
-import user from "./user";
 import verificationToken from "./verificationToken";
 // import { test } from "./test";
 import { descuento_registro } from "./descuento-registro";
+import user from "./user";
 
 export const schemaTypes = [
   user,

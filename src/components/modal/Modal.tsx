@@ -19,7 +19,7 @@ const ModalDesk = ({ isOpen, onClose, children }: ModalProps) => {
     <div className="fixed inset-0  z-50 flex items-center justify-center bg-black bg-opacity-50 "
     onClick={handleOverlayClick}
     >
-      <div className="dark:bg-gray-800 bg-white p-0 rounded-lg shadow-lg relative w-full max-w-4xl flex justify-center overflow-y-auto h-[60vh] ">
+      <div className="dark:bg-gray-800 bg-white p-0 rounded-lg shadow-lg relative w-full max-w-4xl flex justify-center overflow-y-auto h-[65vh] ">
    
         {children}
       </div>

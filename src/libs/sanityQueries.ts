@@ -43,32 +43,9 @@ export const getRoom = groq`*[_type == "hotelRoom" && slug.current == $slug][0] 
     type
 }`;
 
-export const getUserBookingsQuery = groq`*[_type == 'booking' && user._ref == $userId] {
-    _id,
-    hotelRoom -> {
-        _id,
-        name,
-        slug,
-        price
-    },
-    checkinDate,
-    checkoutDate,
-    numberOfDays,
-    adults,
-    children,
-    totalPrice,
-    discount
-}`;
+export const getUserBookingsQuery = groq`*[_type == 'pedidos' && estado != "pendiente" && userId == $userId] | order(_createdAt desc)`;
 
-export const getUserDataQuery = groq`*[_type == 'user' && _id == $userId][0] {
-    _id,
-    name,
-    email,
-    isAdmin,
-    about,
-    _createdAt,
-    image,
-}`;
+export const getUserDataQuery = groq`*[_type == 'user' && _id == $userId][0] `;
 
 export const getRoomReviewsQuery = groq`*[_type == "review" && hotelRoom._ref == $roomId] {
     _createdAt,
