@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 import { authOptions } from "@/libs/auth";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { redirect} from "next/navigation";
 export const metadata: Metadata = {
   openGraph: {
     title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
@@ -34,8 +34,10 @@ export const metadata: Metadata = {
 export default async function page() {
   const session = await getServerSession(authOptions);
 
+
   if (!session) {
-    return new NextResponse("Authentication required", { status: 400 });
+      redirect("/auth")
+
   }
   // Check if user is authorized to perform the action
   // if (userRole !== "admin") {
