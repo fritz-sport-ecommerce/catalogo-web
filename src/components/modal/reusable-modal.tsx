@@ -50,7 +50,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({ isOpen, onClose, children
             
           </div>
           <div className="flex justify-center 2-full">
-            <Link href="/tienda">
+            {/* <Link href="/tienda">
               <button
                
                 className="px-4 py-2 uppercase bg-green-500 text-white rounded hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
@@ -59,8 +59,18 @@ const ReusableModal: React.FC<ReusableModalProps> = ({ isOpen, onClose, children
                   Comprar Mas
               </button>
             
+            </Link> */}
+            <Link target="_blank" href="/ https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0">
+              <button
+               
+                className="px-4 py-2 uppercase bg-green-500 text-white rounded hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+              >
+                <AiOutlineShoppingCart size={18} />
+                 Escríbenos
+              </button>
+            
             </Link>
-
+           
           </div>
         </div>
 
