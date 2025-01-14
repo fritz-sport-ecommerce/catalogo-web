@@ -19,7 +19,7 @@ interface ModalProps {
 
   onClose: () => void;
 }
-
+// test
 export default function ProductSearch({ onClose }: ModalProps) {
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement> | any) => {
