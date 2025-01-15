@@ -63,7 +63,7 @@ export default function PrecioViewProductMovil({product,descuentos,descuentoSobr
         
               <p className="text-base tracking-tight ">
                 S/
-                { product?.priceecommerce}
+                { product?.priceecommerce.toFixed()}
               </p>
             </div>
   </div>

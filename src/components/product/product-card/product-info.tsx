@@ -59,7 +59,7 @@ export default function ProductInfo({dataProduct,descuento,products,descuentos,d
                 Precio Retail:
             </div>
               <div className={`dark:text-white text-black font-bold text-base`} >
-              S/{ dataProduct.priceecommerce}
+              S/{ dataProduct.priceecommerce.toFixed()}
               </div>
 
           </div>
@@ -68,7 +68,7 @@ export default function ProductInfo({dataProduct,descuento,products,descuentos,d
                 Precio Emprendedor:
             </div>
               <div className={`dark:text-white text-black font-bold text-base`} >
-              S/{ dataProduct.priceemprendedor}
+              S/{ dataProduct.priceemprendedor.toFixed()}
               </div>
 
           </div>
@@ -77,7 +77,7 @@ export default function ProductInfo({dataProduct,descuento,products,descuentos,d
                 Precio Mayorista:
             </div>
               <div className={` text-red-500 font-bold text-lg`} >
-              S/{ dataProduct.pricemayorista}
+              S/{ dataProduct.pricemayorista.toFixed()}
               </div>
 
           </div>
