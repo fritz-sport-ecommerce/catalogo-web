@@ -45,14 +45,14 @@ export function CartSummary() {
             </div>
           </dl>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <Link href={"/pagar"}>
               <Button className="w-full font-semibold rounded-none uppercase">
-                {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
+           
                 Pagar
               </Button>
             </Link>
-          </div>
+          </div> */}
         </section>
       )}
     </>
