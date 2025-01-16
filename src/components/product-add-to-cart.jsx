@@ -260,7 +260,7 @@ export default function ProductAddToCart({ product, descuentos }) {
    
 
 
-
+{/* 
       <form
         className=" flex items-center mt-4 "
         onSubmit={(e) => e.preventDefault()}
@@ -290,7 +290,7 @@ export default function ProductAddToCart({ product, descuentos }) {
           )}
         </div>
         <LoveFollow view={false} product={product} />
-      </form>
+      </form> */}
     </div>
   );
 }
