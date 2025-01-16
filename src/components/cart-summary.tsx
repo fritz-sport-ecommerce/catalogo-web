@@ -45,7 +45,7 @@ export function CartSummary() {
             </div>
           </dl>
 
-          {/* <div className="mt-6">
+          {/* <div className="mt-6 p-1">
             <Link href={"/pagar"}>
               <Button className="w-full font-semibold rounded-none uppercase">
            
