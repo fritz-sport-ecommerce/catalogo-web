@@ -26,7 +26,7 @@ export default function ProductAddToCart({ product, descuentos }) {
   });
   const [activeAddProduct, setActiveAddProduct] = useState(true);
   const [stock, setStock] = useState(
-    product.tallas.every(
+    product.tallas?.every(
       (el) => el.stock === 0 || el.stock === undefined || el.stock === null
     )
   );
@@ -159,7 +159,7 @@ export default function ProductAddToCart({ product, descuentos }) {
           Tallas: <strong>{selectSize.talla || ""}</strong>
         </p>
         {cliente &&
-          product.tallas.filter((producto) =>  !producto.talla.includes("X")).filter((producto) => !producto.talla.includes("x")).map(({ talla, stock, _key }) => (
+          product.tallas?.filter((producto) =>  !producto.talla.includes("X")).filter((producto) => !producto.talla.includes("x")).map(({ talla, stock, _key }) => (
             <Button
               onClick={() => selectTalla(talla, _key, stock)}
               key={_key}

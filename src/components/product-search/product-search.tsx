@@ -6,6 +6,7 @@ import Descuentos from "@/config/descuentos";
 import { SanityProduct } from "@/config/inventory";
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
+import Link from "next/link";
 
 interface Product {
   _id: string;
@@ -14,8 +15,20 @@ interface Product {
   imageUrl: string;
   descuentos: [];
 }
+interface ModalProps {
 
-export default function ProductSearch() {
+  onClose: () => void;
+}
+// test
+export default function ProductSearch({ onClose }: ModalProps) {
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement> | any) => {
+
+    
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
   const [query, setQuery] = useState<string>("");
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const [descuentosProduct, setDescuentos] = useState<SanityProduct>();
@@ -74,26 +87,33 @@ export default function ProductSearch() {
   };
 
   return (
-    <div className="relative w-full flex justify-center">
-      <div className="w-5/12">
+    <div   className="flex-col flex p-3 w-full justify-center items-center">
+      <div className="w-5/6 ">
         <input
           type="text"
           placeholder="Buscar productos..."
           value={query}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none text-black"
+          className="w-full p-2 border border-gray-300 rounded-none focus:outline-none text-black"
         />
       </div>
-      <div className="absolute top-full left-0 w-full bg-white dark:bg-black border rounded-md max-h-72 overflow-y-auto mt-0 shadow-lg">
+      <div className=" left-0 w-full   rounded-sm h-auto overflow-y-auto mt-0 shadow-lg">
         {isLoading && (
-          <div className="flex justify-center items-center h-full">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-500"></div>
+          <div className="flex justify-center items-center h-full w-full">
+            <div className="animate-spin rounded-full h-8 w-8 "></div>
           </div>
         )}
         {suggestions.length > 0 && (
-          <ul className="grid xl:grid-cols-4 gap-y-1 grid-cols-2 text-[3px] mx-auto container">
+          <>
+          <div className="flex w-full justify-center my-2">
+            <Link href={`/tienda?search=${query}`}>
+              <button onClick={handleOverlayClick}  className="uppercase dark:bg-black dark:text-white border-black dark:border-transparent border-[1px] dark:border-none px-3 py-2 text-xs">ver todo </button>
+            </Link>
+          </div>
+          <ul onClick={handleOverlayClick}  className="grid xl:grid-cols-4 gap-y-2 grid-cols-2 text-[3px] mx-auto container w-full">
             {suggestions.map((product) => (
               <ProductSearchCard
+              
                 key={product._id}
                 descuentos={descuentosProduct}
                 products={product}
@@ -102,6 +122,7 @@ export default function ProductSearch() {
               />
             ))}
           </ul>
+          </>
         )}
       </div>
     </div>

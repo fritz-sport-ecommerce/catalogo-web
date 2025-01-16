@@ -115,7 +115,7 @@ export async function POST(req) {
       
       return new Response(
         JSON.stringify({
-          url: `http://localhost:3000/nuevo-pedido?id_p=${data.id_pago}`,
+          url: `${process.env.URL_DOMINIO}/nuevo-pedido?id_p=${data.id_pago}`,
           id_payer: "0",
         }),
         {

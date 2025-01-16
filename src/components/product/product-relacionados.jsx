@@ -78,7 +78,7 @@ let descuentoSobreD= products?.descuentosobred
         </h3>
 
 
-          <div className="flex w-full h-full flex-col mt-3 items-end justify-end  ">
+          <div className="flex w-full h-full flex-col mt-3 items-end justify-start xl:justify-center 2xl:gap-y-2 ">
             <div className="flex items-center justify-between w-full">
             <div>Precio Mayorista:</div>
                   <div className="xl:text-lg font-bold text-[#B73228]">

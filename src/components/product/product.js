@@ -163,10 +163,10 @@ export default function Product({
           </h3>
           <div className="border-t-[1px] border-blue-gray-300 mt-2">
           <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Retail:</span> S/{products?.priceecommerce}
+          <span className="font-medium">Precio Retail:</span> S/{products?.priceecommerce.toFixed()}
           </div>
           <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Emprendedor:</span> S/{products?.priceemprendedor}
+          <span className="font-medium">Precio Emprendedor:</span> S/{products?.priceemprendedor.toFixed()}
           </div>
           {
             products.tipoproducto === "web" ? (
@@ -174,7 +174,7 @@ export default function Product({
                    <></>
             ) : (
               <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-                    <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista}
+                    <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista.toFixed()}
               </div>
             )
           }

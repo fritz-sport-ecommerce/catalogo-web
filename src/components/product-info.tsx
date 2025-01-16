@@ -73,7 +73,7 @@ export function ProductInfo({ product, descuentos }: Props) {
         
               <p className="text-2xl tracking-tight ">
                 S/
-                { product?.priceecommerce}
+                { product?.priceecommerce.toFixed()}
               </p>
             </div>
           </div>

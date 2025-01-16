@@ -406,20 +406,21 @@ switch (userRole) {
 
 
 
-  if(isModalOpen){
+  if(true){
     return (
     <>
         
     
           <ReusableModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <div className="flex flex-col items-center justify-center">
-              <div className="flex  mb-3 items-center">
+            Por el momento no estamos aceptando Compras en Nuestra Tienda
+              {/* <div className="flex  mb-3 items-center">
               <AiOutlineShoppingCart size={24} className="text-blue-500 mr-3" />
                 <p> Necesitas mínimo <strong>{userRole === "mayorista"? "6 pares seriados":"3 pares" }</strong> para comprar como <span className="uppercase font-semibold"> {userRole}</span>.</p>
 
               </div>
 
-                  <p>solo tienes {items.length} productos <span>en tu carrito</span></p>
+                  <p>solo tienes {items.length} productos <span>en tu carrito</span></p> */}
 
             </div>
           </ReusableModal>

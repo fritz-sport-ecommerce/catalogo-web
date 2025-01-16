@@ -4,7 +4,7 @@ export default function UserViewPedidos({data}:any) {
   console.log(data);
   
   return (
-    <div className="grid grid-columns-1 tailwind w-full p-5 gap-1 ">
+    <div className=" tailwind w-full p-5 gap-1 ">
 
 
         <div className='sticky z-50 top-0 right-0 border-[1px] dark:border-white border-black py-2 flex justify-center bg-white text-black'>

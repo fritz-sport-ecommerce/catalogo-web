@@ -246,7 +246,7 @@ export default async function Page({ searchParams }: Props) {
               </div>
             </div>
             <ProductGrid
-            start={start}
+               start={start}
               descuentos={descuentos}
               outlet={false}
               products={products}

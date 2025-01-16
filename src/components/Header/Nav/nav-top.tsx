@@ -7,21 +7,18 @@ import { useCart } from "react-use-cart";
 
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo/logo";
-import MultilevelSidebar from "@/components/multilevel-sidebar/multilevel-sidebar.component";
 
 import { ThemeToggle } from "@/components/theme-toggle";
-import LoveFollow from "@/components/love-follow/love-follow";
 // import LoveFollowNavigation from "@/components/love-follow/love-follow-navigation";
 
 interface Props {
-  children: JSX.Element[] | JSX.Element;
   setActiveSearchDesk: Dispatch<SetStateAction<boolean>>;
   activeSearchDesk: Boolean;
   open:Boolean
   setOpen:Dispatch<SetStateAction<boolean>>;
 }
 export default function NavTop({
-  children,
+ 
   setActiveSearchDesk,
   activeSearchDesk,
   setOpen,
@@ -45,17 +42,7 @@ export default function NavTop({
             : "translate-y-[-25rem] transition delay-150 ease-in"
         } top-0 z-[888] flex h-[20vh]  items-center  justify-center bg-gray-800/80 dark:bg-gray-800/80`}
       >
-        {
-          <div className="absolute xl:hidden flex h-full w-full items-center justify-around">
-            {children}
-            <button
-              className=" absolute  right-5 top-3 xl:right-[35%] "
-              onClick={() => setActiveSearch(!search)}
-            >
-              <X className={"w-18 h-8 text-white"} />
-            </button>
-          </div>
-        }
+
       </div>
       <div className="xl:hidden">
         <Logo />
@@ -86,7 +73,7 @@ export default function NavTop({
             {/* icono Buscador */}
             <Button
               className="xl:hidden p-1"
-              onClick={() => setActiveSearch(!search)}
+              onClick={() => setActiveSearchDesk(!activeSearchDesk)}
               size="sm"
               variant="ghost"
             >

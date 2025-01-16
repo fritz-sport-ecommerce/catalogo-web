@@ -2,16 +2,15 @@
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/logo/logo";
 import { NavDesktop } from "./Nav/nav-desktop";
-import NavSearch from "./Nav/nav-search";
 import NavTop from "./Nav/nav-top";
 
 import options from "@/components/multilevel-sidebar/multilevel-sidebar.data";
 import MultilevelSidebar from "../multilevel-sidebar/multilevel-sidebar.component";
 import ProductSearch from "../product-search/product-search";
-import ToggleUserRole from "@/context/cambiarRol";
+import ModalDesk from "../modal/Modal";
 
 export function SiteHeader() {
-  const [activeSearchDesk, setActiveSearchDesk] = useState<boolean>(true);
+  const [activeSearchDesk, setActiveSearchDesk] = useState<boolean>(false);
 
   // Estado para el header
   const [showHeader, setShowHeader] = useState(true);
@@ -69,10 +68,10 @@ export function SiteHeader() {
             open={open}
             setActiveSearchDesk={setActiveSearchDesk}
             activeSearchDesk={activeSearchDesk}
-          >
+          />
+               
+         
 
-                 <ProductSearch></ProductSearch>
-          </NavTop>
         </div>
 
         <div className="max-w-6/6 mx-auto hidden h-full items-center justify-around space-x-4 sm:space-x-0 xl:flex xl:h-full">
@@ -84,11 +83,11 @@ export function SiteHeader() {
           </NavDesktop>
         </div>
 
-        <div className={`flex w-full justify-center ${activeSearchDesk && "hidden"}`}>
-        <ProductSearch></ProductSearch>
-        </div>
-        
+   
+
+     
       </header>
+
       {/* Sidebar */}
       <MultilevelSidebar
         open={open}
@@ -115,6 +114,12 @@ export function SiteHeader() {
         }
         onToggle={handleSidebarToggle}
       />
+
+         
+      <ModalDesk isOpen={activeSearchDesk}  onClose={() => setActiveSearchDesk(false)}>
+                  <ProductSearch onClose={() => setActiveSearchDesk(false)}></ProductSearch>
+
+              </ModalDesk>
     </>
   );
 }
