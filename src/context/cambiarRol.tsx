@@ -20,7 +20,7 @@ const ToggleUserRole: React.FC = () => {
   return (
     <div className="flex xl:w-3/6 z-[999]  w-full justify-around">
       <div className="flex px-2 py-1 justify-center gap-x-2 items-center uppercase dark:border-white border-black text-black dark:text-white bg-white dark:bg-black rounded-sm">
-        <p className="text-xs xl:text-xs 2xl:text-sm">COMPRAR COMO:</p>
+        <p className="text-xs xl:text-xs 2xl:text-sm">VER COMO:</p>
         <select
           value={userRole}
           onChange={handleRoleChange}
