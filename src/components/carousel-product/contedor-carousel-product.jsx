@@ -51,7 +51,7 @@ export default async function ContedorCarouselProduct({
     return products;
   };
   const products = await productosGenero(genero, cantidad, tipoCategoria);
-  // console.log(products)
+  // console.log(products)s
 
   return (
     <div className="">
