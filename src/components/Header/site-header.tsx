@@ -116,10 +116,10 @@ export function SiteHeader() {
       />
 
          
-      <ModalDesk isOpen={activeSearchDesk}  onClose={() => setActiveSearchDesk(false)}>
+      {/* <ModalDesk isOpen={activeSearchDesk}  onClose={() => setActiveSearchDesk(false)}>
                   <ProductSearch onClose={() => setActiveSearchDesk(false)}></ProductSearch>
 
-              </ModalDesk>
+              </ModalDesk> */}
     </>
   );
 }

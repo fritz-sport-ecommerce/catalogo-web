@@ -12,7 +12,7 @@ export default function ModalHorarios({ children }: AuxProps) {
   return (
     <div>
       <button
-        className=" bg-black p-5 py-2 capitalize  dark:bg-white "
+        className=" bg-black p-5 py-2 capitalize  dark:bg-white text-white dark:text-black "
         onClick={() => setActiveModal(!activeModal)}
       >
         Ver Horarios

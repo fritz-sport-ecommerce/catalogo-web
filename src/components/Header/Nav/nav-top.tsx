@@ -53,15 +53,15 @@ export default function NavTop({
           <div className="flex items-center xl:space-x-1">
             {/* dark mode */}
             <ThemeToggle />
-            <div className="hidden xl:block">
+            {/* <div className="hidden xl:block">
               <Link href={"/follows"}>
                 <Button className=" z-10 hover:bg-blue-gray-600 p-0 bg-transparent  xl:px-2 px-1 py-[1px]">
                   <Heart className="w-5 h-5 xl:h-5 xl:w-5 text-black dark:text-white" />
                 </Button>
               </Link>
-            </div>
+            </div> */}
             {/* icono carrito */}
-            <Link href="/carrito">
+            {/* <Link href="/carrito">
               <Button size="sm" variant="ghost">
                 <ShoppingBag className="h-5 w-5" />
                 <span className="ml-2 text-sm font-bold">
@@ -69,9 +69,9 @@ export default function NavTop({
                 </span>
                 <span className="sr-only">Cart</span>
               </Button>
-            </Link>
+            </Link> */}
             {/* icono Buscador */}
-            <Button
+            {/* <Button
               className="xl:hidden p-1"
               onClick={() => setActiveSearchDesk(!activeSearchDesk)}
               size="sm"
@@ -88,7 +88,7 @@ export default function NavTop({
             >
               <Search className={"h-5 xl:w-5"} />
               <span className="sr-only">Buscar</span>
-            </Button>
+            </Button> */}
             {/* <LoveFollowNavigation></LoveFollowNavigation> */}
 
             {/* burger menu */}

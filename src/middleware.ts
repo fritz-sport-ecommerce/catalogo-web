@@ -22,7 +22,7 @@ export async function middleware(req: Request) {
 
   if (modo_mantenimiento) {
     if (!url.includes("/mantenimiento") && !url.includes("/studio") && !url.includes("/emprende") && !url.includes("/nuestras-tiendas")&& !url.includes("/pdf")) {
-      const redirectUrl = new URL("/mantenimiento", req.url);
+      const redirectUrl = new URL("/pdf", req.url);
       return NextResponse.redirect(redirectUrl);
     }
   }

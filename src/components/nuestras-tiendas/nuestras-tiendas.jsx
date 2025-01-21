@@ -46,71 +46,7 @@ export default function NuestrasTiendas({ nuestrasTiendas }) {
       <section className="blog body-font mb-20 text-black">
         <div className="container mx-auto  px-5">
           <div className="flex h-2/6 items-center">
-            <section className="w-full bg-cover bg-center ">
-              <div className="relative flex h-full w-full items-center justify-center ">
-                <div className="container absolute mx-auto text-center text-white">
-                  <h1 className="mb-6 text-3xl font-bold sm:text-3xl xl:text-5xl">
-                    {" "}
-                    {nuestrasTiendas.name}
-                  </h1>
-                </div>
-                {/* video desktop */}
-                <video
-                  muted={true}
-                  webkit-playsinline={true}
-                  playsInline={true}
-                  preload="auto"
-                  autoPlay={true}
-                  loop={true}
-                  className="laptop:h-full hidden  w-[100vw] xl:block"
-                >
-                  <source
-                    src={`https://www.fritzsport.pe/adidas-video.mp4`}
-                    type="video/mp4"
-                  />
-                  <track
-                    src="captions_en.vtt"
-                    kind="captions"
-                    srcLang="en"
-                    label="english_captions"
-                  />
-                  <track
-                    src="captions_es.vtt"
-                    kind="captions"
-                    srcLang="es"
-                    label="spanish_captions"
-                  />
-                </video>
-                {/* video mobil */}
-
-                <video
-                  muted={true}
-                  webkit-playsinline={true}
-                  playsInline={true}
-                  preload="auto"
-                  autoPlay={true}
-                  loop={true}
-                  className="h-full w-[100vw]  xl:hidden"
-                >
-                  <source
-                    src={`https://www.fritzsport.pe/adidas-video.mp4`}
-                    type="video/mp4"
-                  />
-                  <track
-                    src="captions_en.vtt"
-                    kind="captions"
-                    srcLang="en"
-                    label="english_captions"
-                  />
-                  <track
-                    src="captions_es.vtt"
-                    kind="captions"
-                    srcLang="es"
-                    label="spanish_captions"
-                  />
-                </video>
-              </div>
-            </section>
+       
           </div>
           {/*  */}
           <h5 className=" text-center text-xl font-semibold text-black dark:text-white sm:mt-16 sm:text-xl xl:mb-32 xl:mt-20 xl:text-3xl">
@@ -145,7 +81,7 @@ export default function NuestrasTiendas({ nuestrasTiendas }) {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <button className=" bg-black p-5 py-2 capitalize  dark:bg-white ">
+                        <button className=" bg-black p-5 py-2 capitalize  dark:bg-white text-white dark:text-black">
                           {el.ubicanosboton}
                         </button>
                       </Link>
@@ -160,7 +96,7 @@ export default function NuestrasTiendas({ nuestrasTiendas }) {
                               {el.horarios.map((horario, i) => (
                                 <div
                                   key={i}
-                                  className="my-2 w-full  border-b-2 text-center"
+                                  className="my-2 w-full  border-b-2 text-center text-white"
                                 >
                                   {horario}
                                 </div>
