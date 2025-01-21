@@ -47,7 +47,7 @@ export default function ProductSearch({ onClose }: ModalProps) {
         lower(tipo) match $input || 
         lower(genero) match $input || 
         lower(categories) match $input
-      )] {
+      )  && categories != "originals"] {
         _id,
         name,
         sku,
@@ -66,7 +66,7 @@ export default function ProductSearch({ onClose }: ModalProps) {
         tallas,
         preciomanual,
         "slug": slug.current
-      } [0..10] | order(name asc)`,
+      } [0..10]  | order(name asc)`,
       { input: `${input}*` }
     );
 
