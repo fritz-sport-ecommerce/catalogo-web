@@ -22,7 +22,7 @@ export default async function ContedorCarouselProduct({
       ?  tipoCategoria
       : generoFilterHombre;
 
-    const filter = `*[${productFilter}${categoria}] | order(_createdAt desc)[0..100]`;
+    const filter = `*[${productFilter}${categoria} && categories != "originals"] | order(_createdAt desc)[0..100]`;
     console.log(filter);
     // await seedSanityData()
     const products = await client.fetch(`${filter} ${order} {
