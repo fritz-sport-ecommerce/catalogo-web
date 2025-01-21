@@ -16,7 +16,7 @@ async function fetchMaintenanceMode() {
 export async function middleware(req: Request) {
   const url = req.url;
 
-  // Obtener el estado de mantenimiento (cacheado)
+  // Obtener el estado de mantenimiento (cacheado) s
   const modo_mantenimiento = await getMaintenanceMode(fetchMaintenanceMode);
   // Redirigir si está en modo mantenimientoo
 
