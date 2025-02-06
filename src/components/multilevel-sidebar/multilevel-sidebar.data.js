@@ -1583,14 +1583,14 @@ let options = [
     disabled: false,
     to: "/pdf",
   },
-  {
-    id: 25,
-    title: "Nuestras Tiendas",
-    icon: "",
-    hideBorder: false,
-    disabled: false,
-    to: "nuestras-tiendas",
-  },
+  // {
+  //   id: 25,
+  //   title: "Nuestras Tiendas",
+  //   icon: "",
+  //   hideBorder: false,
+  //   disabled: false,
+  //   to: "nuestras-tiendas",
+  // },
 
   // {
   //   id: 28,

@@ -7,20 +7,16 @@ export default function ProductRelacionados({
   nuevo = false,
   generoSku = true,
   descuentos,
-  outlet =false,
+  outlet = false,
 }) {
-
-  let razonsocial 
+  let razonsocial;
   if (outlet) {
-    razonsocial = descuentos.descuentooutlet
-  }else{
-    razonsocial = descuentos.descuentofritzsport
-
+    razonsocial = descuentos.descuentooutlet;
+  } else {
+    razonsocial = descuentos.descuentofritzsport;
   }
-  
 
-
-let descuentoSobreD= products?.descuentosobred
+  let descuentoSobreD = products?.descuentosobred;
 
   return (
     <>
@@ -41,14 +37,10 @@ let descuentoSobreD= products?.descuentosobred
               }
               alt=""
             />
-          ):
-          
-          (<></>)
-          
-          }
-   
-          
-    
+          ) : (
+            <></>
+          )}
+
           {/* <LoveFollow /> */}
           {/* {products.descuento ? (
          
@@ -68,43 +60,38 @@ let descuentoSobreD= products?.descuentosobred
           )}
         </div>
         <div className=" flex flex-col justify-around h-2/6">
-        {generoSku && (
+          {generoSku && (
             <h3 className="xl:mt-4 font-medium capitalize  text-xs">
-            {products.marca} - {products.genero}
-          </h3>
-        )}
+              {products.marca} - {products.genero}
+            </h3>
+          )}
           <h3 className="mt-2 font-semibold uppercase  xl:text-sm text-sm">
-          {products.name} {products.genero}
-        </h3>
-
+            {products.name} {products.genero}
+          </h3>
 
           <div className="flex w-full h-full flex-col mt-3 items-end justify-start xl:justify-center 2xl:gap-y-2 ">
             <div className="flex items-center justify-between w-full">
-            <div>Precio Mayorista:</div>
-                  <div className="xl:text-lg font-bold text-[#B73228]">
-                    S/
-                    {products?.pricemayorista.toFixed()}
-                  </div>
-
-            </div>
-              <div className="flex items-center justify-between w-full">
-              <div>Precio Emprendedor:</div>
-                    <div className="xl:text-base font-bold ">
-                      S/
-                      {products?.priceemprendedor.toFixed()}
-                    </div>
-
+              <div>Precio Mayorista:</div>
+              <div className="xl:text-lg font-bold text-[#B73228]">
+                S/
+                {products?.pricemayorista.toFixed()}
               </div>
+            </div>
             <div className="flex items-center justify-between w-full">
-            <div>Precio Retail:</div>
-                  <div className="xl:text-base font-bold ">
-                    S/
-                    {products?.priceecommerce.toFixed()}
-                  </div>
-
+              <div>Precio Emprendedor:</div>
+              <div className="xl:text-base font-bold ">
+                S/
+                {products?.priceemprendedor.toFixed()}
+              </div>
+            </div>
+            <div className="flex items-center justify-between w-full">
+              <div>Precio Retail:</div>
+              <div className="xl:text-base font-bold ">
+                S/
+                {products?.priceecommerce.toFixed()}
+              </div>
             </div>
           </div>
-
         </div>
         {/* <p className="mt-2 font-medium">S/{products.descuento}</p> */}
       </Link>
@@ -120,7 +107,7 @@ let descuentoSobreD= products?.descuentosobred
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             clip-rule="evenodd"
             d="M9.125 10.875V18H10.375V10.875H18V9.625H10.375V2H9.125V9.625H2V10.875H9.125Z"
           ></path>

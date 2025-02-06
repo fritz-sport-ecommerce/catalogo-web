@@ -19,7 +19,6 @@ import Descuentos from "@/config/descuentos";
 
 
 
-
 interface Props {
   searchParams: {
     start?: string;

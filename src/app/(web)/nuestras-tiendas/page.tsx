@@ -1,11 +1,12 @@
-import { client } from "@/sanity/lib/client"
+import NuestrasTiendas from "@/components/nuestras-sede/nuestras-sede";
+import { client } from "@/sanity/lib/client";
 
-import NuestrasTiendas from "@/components/nuestras-tiendas/nuestras-tiendas"
 
-import { groq } from "next-sanity"
+import { groq } from "next-sanity";
 
 export const metadata = {
-  title: "Nuestras Tiendas Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+  title:
+    "Nuestras Tiendas Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
   description:
     "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
   openGraph: {
@@ -30,15 +31,25 @@ export const metadata = {
       },
     ],
   },
-}
+};
 
 export default async function page() {
   const nuestrasTiendas = await client.fetch(
-    groq`*[_type == "nuestrastiendas"]`
-  )
+    groq`*[_type == "nuestrastiendas"][0]`
+  );
+
+
   return (
     <div>
-      <NuestrasTiendas nuestrasTiendas={nuestrasTiendas[0]} />
+      <NuestrasTiendas
+        videoPrincipalDesk={nuestrasTiendas.videohomedesk}
+        videoPrincipalMob={nuestrasTiendas.videohomemob}
+        videoPrincipalTablet={nuestrasTiendas.videoPrincipalTablet}
+        titulosede={nuestrasTiendas.sedes.titulosede}
+        sedes={nuestrasTiendas.sedes}
+        sedes_mayorista={nuestrasTiendas.sedes_mayorista}
+        activeVideo={nuestrasTiendas.activarVideo}
+      />
     </div>
-  )
+  );
 }

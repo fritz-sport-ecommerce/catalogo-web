@@ -9,7 +9,7 @@ import { Logo } from "../logo/logo";
 import LibroReclamacionesRedes from "../Footer/libro-reclamaciones-redes";
 
 const date = new Date();
-const FooterMobil = () => {
+const FooterMobil = ({tiendas}:any) => {
   return (
     <div className="block xl:hidden">
       <div className="flex w-full justify-center items-center">
@@ -29,17 +29,22 @@ const FooterMobil = () => {
           <AccordionContent>
             <div className=" flex  gap-y-5  justify-center">
               <div className="flex flex-col items-start gap-y-5">
-                <Link
-                  href={"https://maps.app.goo.gl/h54ryBi9SqHQkQUW6"}
-                  target="_blank"
-                >
-                  <div className={`flex flex-col  items-start justify-start `}>
-                    Tienda - Miguel Grau
-                    <span className="text-xs text-blue-gray-300 mt-1">
-                      Cercado de Lima
-                    </span>
-                  </div>
-                </Link>
+                {tiendas?.sedes?.map((sede:any) => (
+                  <Link
+                    key={sede._key}
+                    href={sede.urlubicacion}
+                    target="_blank"
+                  >
+                    <div
+                      className={`flex flex-col text-sm items-start justify-start `}
+                    >
+                      {sede.direccion}
+                      {/* <span className="text-xs text-blue-gray-300 mt-1">
+                              Cercado de Lima
+                            </span> */}
+                    </div>
+                  </Link>
+                ))}
                 <Link
                   href={"https://maps.app.goo.gl/iUxXwFKqF2BAEGhC7"}
                   target="_blank"
@@ -276,12 +281,12 @@ const FooterMobil = () => {
   );
 };
 
-export default function Footer() {
+export default function Footer({ tiendas }:any) {
   return (
     <div>
       <div>
         <div>
-          <FooterMobil></FooterMobil>
+          <FooterMobil tiendas={tiendas}></FooterMobil>
           <div className="xl:block hidden ">
             <div className="flex justify-center">
               <div>
@@ -294,32 +299,42 @@ export default function Footer() {
                     {/* tiendas */}
                     <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4">
                       <div className="uppercase text-sm">Tiendas</div>
-                      <Link
-                        href={"https://maps.app.goo.gl/h54ryBi9SqHQkQUW6"}
-                        target="_blank"
-                      >
-                        <div
-                          className={`flex flex-col text-sm items-start justify-start `}
+                      {tiendas?.sedes?.map((sede:any) => (
+                        <Link
+                          key={sede._key}
+                          href={sede.urlubicacion}
+                          target="_blank"
                         >
-                          Tienda - Miguel Grau
-                          <span className="text-xs text-blue-gray-300 mt-1">
-                            Cercado de Lima
-                          </span>
-                        </div>
-                      </Link>
-                      <Link
-                        href={"https://maps.app.goo.gl/iUxXwFKqF2BAEGhC7"}
-                        target="_blank"
-                      >
-                        <div
-                          className={`flex flex-col  text-sm items-start justify-start  `}
+                          <div
+                            className={`flex flex-col text-sm items-start justify-start `}
+                          >
+                            {sede.direccion}
+                            {/* <span className="text-xs text-blue-gray-300 mt-1">
+                              Cercado de Lima
+                            </span> */}
+                          </div>
+                        </Link>
+                      ))}
+                    </ul>
+                    {/* tiendas Mayorista */}
+                    <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4">
+                      <div className="uppercase text-sm">Tiendas</div>
+                      {tiendas?.sede_mayorista?.map((sede:any) => (
+                        <Link
+                          key={sede._key}
+                          href={sede.urlubicacion}
+                          target="_blank"
                         >
-                          Tienda - Tumbes
-                          <span className="text-xs text-blue-gray-300 mt-1">
-                            Av. República del Perú 373, 24101
-                          </span>
-                        </div>
-                      </Link>
+                          <div
+                            className={`flex flex-col text-sm items-start justify-start `}
+                          >
+                            {sede.direccion}
+                            {/* <span className="text-xs text-blue-gray-300 mt-1">
+                              Cercado de Lima
+                            </span> */}
+                          </div>
+                        </Link>
+                      ))}
                     </ul>
                     {/* cuenta */}
                     <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4 text-sm">

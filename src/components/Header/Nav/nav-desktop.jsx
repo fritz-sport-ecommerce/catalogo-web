@@ -507,11 +507,11 @@ const dataHeader = {
       titulo: "DESCARGAR CATÁLOGO ",
       url: "/pdf",
     },
-    {
-      id: "Ntiendas",
-      titulo: "Ubícanos",
-      url: "/nuestras-tiendas",
-    },
+    // {
+    //   id: "Ntiendas",
+    //   titulo: "Ubícanos",
+    //   url: "/nuestras-tiendas",
+    // },
     // {
     //   id: "outlet",
     //   titulo: "SALE",

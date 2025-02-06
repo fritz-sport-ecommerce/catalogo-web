@@ -14,13 +14,15 @@ interface Props {
   cuentasBancarias?: any;
 }
 
-const UploadPayment = ({ pedido,cuentasBancarias }: Props) => {
+const UploadPayment = ({ pedido, cuentasBancarias }: Props) => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [comprobanteExistente, setComprobanteExistente] = useState(pedido?.comprobante_img)
+  const [comprobanteExistente, setComprobanteExistente] = useState(
+    pedido?.comprobante_img
+  );
 
   const router = useRouter();
 
@@ -38,8 +40,8 @@ const UploadPayment = ({ pedido,cuentasBancarias }: Props) => {
   const removeFile = () => {
     setFile(null);
     setPreviewUrl(null);
-    if(comprobanteExistente){
-      setComprobanteExistente(null)
+    if (comprobanteExistente) {
+      setComprobanteExistente(null);
     }
   };
 
@@ -101,13 +103,12 @@ const UploadPayment = ({ pedido,cuentasBancarias }: Props) => {
                 _type: "reference",
               },
             },
-            estado:"pagado"
+            estado: "pagado",
           })
           .commit();
 
         setSuccess(true);
         alert("Comprobante enviado con éxito.");
-      
       } else {
         alert("Pedido no encontrado.");
       }
@@ -118,7 +119,7 @@ const UploadPayment = ({ pedido,cuentasBancarias }: Props) => {
       setLoading(false);
     }
   };
-const [activeViewProduct, setActiveViewProduct] = useState(false)
+  const [activeViewProduct, setActiveViewProduct] = useState(false);
   return (
     <>
       <h1 className="text-2xl mt-10 xl:text-3xl font-semibold text-gray-800 text-center dark:text-gray-200">
@@ -129,9 +130,17 @@ const [activeViewProduct, setActiveViewProduct] = useState(false)
           <h3 className="text-xl uppercase xl:text-3xl font-semibold text-green-500 text-center dark:text-green-500">
             Total a pagar: S/{pedido?.cart_total}
           </h3>
-          <button className="bg-black py-2 px-3 text-white rounded-md" onClick={()=>setActiveViewProduct(true)}>Ver detalles</button>
-          <ModalDesk isOpen={activeViewProduct} onClose={() => setActiveViewProduct(false)}>
-              <UserViewPedidos data={pedido}/>
+          <button
+            className="bg-black py-2 px-3 text-white rounded-md"
+            onClick={() => setActiveViewProduct(true)}
+          >
+            Ver detalles
+          </button>
+          <ModalDesk
+            isOpen={activeViewProduct}
+            onClose={() => setActiveViewProduct(false)}
+          >
+            <UserViewPedidos data={pedido} />
           </ModalDesk>
         </div>
         <div className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300">
@@ -140,7 +149,7 @@ const [activeViewProduct, setActiveViewProduct] = useState(false)
               PASO 1: Copia la cuenta bancaria y realiza tu pago en tu entidad
               bancaria favorita. Luego, toma una captura.
             </div>
-            <CuentasBancarias  cuentasBancarias={cuentasBancarias}/>
+            <CuentasBancarias cuentasBancarias={cuentasBancarias} />
           </div>
 
           <div className="pt-5 w-full">
@@ -150,7 +159,9 @@ const [activeViewProduct, setActiveViewProduct] = useState(false)
             {/* Adjunta comprobante */}
             <div className="bg-white py-5 rounded-md">
               <p className="text-md font-semibold text-gray-600 xl:mt-5 text-center">
-               {comprobanteExistente ? "Elimina tu comprobante si deseas reemplazarlo ": "Sube tu comprobante para confirmar tu pedido."}
+                {comprobanteExistente
+                  ? "Elimina tu comprobante si deseas reemplazarlo "
+                  : "Sube tu comprobante para confirmar tu pedido."}
               </p>
 
               {/* Input de archivo */}
@@ -168,15 +179,19 @@ const [activeViewProduct, setActiveViewProduct] = useState(false)
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                      <g
+                        id="SVGRepo_tracerCarrier"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></g>
                       <g id="SVGRepo_iconCarrier">
                         <path
                           d="M8 16L12 12M12 12L16 16M12 12V21M20 16.7428C21.2215 15.734 22 14.2079 22 12.5C22 9.46243 19.5376 7 16.5 7C16.2815 7 16.0771 6.886 15.9661 6.69774C14.6621 4.48484 12.2544 3 9.5 3C5.35786 3 2 6.35786 2 10.5C2 12.5661 2.83545 14.4371 4.18695 15.7935"
                           stroke="#000000"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         ></path>
                       </g>
                     </svg>
@@ -211,7 +226,11 @@ const [activeViewProduct, setActiveViewProduct] = useState(false)
               {previewUrl && (
                 <div className="mt-4 flex flex-col items-center">
                   <img
-                    src={previewUrl ? previewUrl : urlForImage(comprobanteExistente?.asset?._ref).url()}
+                    src={
+                      previewUrl
+                        ? previewUrl
+                        : urlForImage(comprobanteExistente?.asset?._ref).url()
+                    }
                     alt="Vista previa"
                     className="xl:w-[500px] h-[500px] w-full rounded-lg shadow"
                   />
@@ -242,15 +261,18 @@ const [activeViewProduct, setActiveViewProduct] = useState(false)
             </div>
             <div className="mt-1 flex justify-center">
               <button
-
-                className={`mt-6 px-6 py-2 uppercase ${!file || comprobanteExistente || loading ? "bg-red-500":"bg-green-500"}  text-white font-semibold rounded-md hover:bg-red-800 disabled:opacity-30`}
+                className={`mt-6 px-6 py-2 uppercase ${
+                  !file || comprobanteExistente || loading
+                    ? "bg-red-500"
+                    : "bg-green-500"
+                }  text-white font-semibold rounded-md hover:bg-red-800 disabled:opacity-30`}
                 onClick={handleUpload}
-                disabled={!file || comprobanteExistente || loading ? true:false}
+                disabled={
+                  !file || comprobanteExistente || loading ? true : false
+                }
               >
                 {loading ? "Subiendo..." : "Enviar Comprobante"}
               </button>
-
-     
             </div>
           </div>
         </div>

@@ -117,33 +117,32 @@ export default function Product({
           {/* <LoveFollow product={products} /> */}
         </div>
 
-          <>
-            <div className="mt-2 xl:flex gap-1 hidden ">
-              {data?.map((el, i) => (
-                <Link key={i} href={`/products/${el.slug}/${el.sku}`}>
-                  <img
-                    onMouseEnter={() =>
-                      setHoverImage(urlForImage(el.images[0].asset._ref).url())
-                    }
-                    onMouseLeave={() =>
-                      setHoverImage(
-                        urlForImage(products.images[0].asset._ref).url()
-                      )
-                    }
-                    width={50}
-                    height={50}
-                    className="relative"
-                    src={
-                      el.images[0].asset &&
-                      urlForImage(el.images[0].asset._ref).url()
-                    }
-                    alt=""
-                  />
-                </Link>
-              ))}
-            </div>
-          </>
-    
+        <>
+          <div className="mt-2 xl:flex gap-1 hidden ">
+            {data?.map((el, i) => (
+              <Link key={i} href={`/products/${el.slug}/${el.sku}`}>
+                <img
+                  onMouseEnter={() =>
+                    setHoverImage(urlForImage(el.images[0].asset._ref).url())
+                  }
+                  onMouseLeave={() =>
+                    setHoverImage(
+                      urlForImage(products.images[0].asset._ref).url()
+                    )
+                  }
+                  width={50}
+                  height={50}
+                  className="relative"
+                  src={
+                    el.images[0].asset &&
+                    urlForImage(el.images[0].asset._ref).url()
+                  }
+                  alt=""
+                />
+              </Link>
+            ))}
+          </div>
+        </>
 
         <Link
           key={products.id}
@@ -162,23 +161,22 @@ export default function Product({
             {products.name}
           </h3>
           <div className="border-t-[1px] border-blue-gray-300 mt-2">
-          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Retail:</span> S/{products?.priceecommerce.toFixed()}
-          </div>
-          <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
-          <span className="font-medium">Precio Emprendedor:</span> S/{products?.priceemprendedor.toFixed()}
-          </div>
-          {
-            products.tipoproducto === "web" ? (
-
-                   <></>
+            <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
+              <span className="font-medium">Precio Retail:</span> S/
+              {products?.priceecommerce.toFixed()}
+            </div>
+            <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
+              <span className="font-medium">Precio Emprendedor:</span> S/
+              {products?.priceemprendedor.toFixed()}
+            </div>
+            {products.tipoproducto === "web" ? (
+              <></>
             ) : (
               <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
-                    <span className="font-medium">Precio Mayorista:</span> S/{products?.pricemayorista.toFixed()}
+                <span className="font-medium">Precio Mayorista:</span> S/
+                {products?.pricemayorista.toFixed()}
               </div>
-            )
-          }
-
+            )}
           </div>
         </Link>
       </div>
@@ -197,7 +195,7 @@ export default function Product({
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             clip-rule="evenodd"
             d="M9.125 10.875V18H10.375V10.875H18V9.625H10.375V2H9.125V9.625H2V10.875H9.125Z"
           ></path>

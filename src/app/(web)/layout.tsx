@@ -13,7 +13,7 @@ import IconWhatapp from "@/components/icon-whatsapp/icon-whatapp";
 import { client } from "@/sanity/lib/client";
 import { SanitySlider } from "@/config/inventory";
 import { groq } from "next-sanity";
-import Footer from "@/components/footer-update/footer";
+// import Footer from "@/components/footer-update/footer";
 import GoogleAnalytics from "@/app/(web)/GoogleAnalytics";
 import Script from "next/script";
 const raleway = Raleway({
@@ -62,8 +62,9 @@ export default async function RootLayout({
   >(groq`*[_type == "home"] {
 whatsapp
 }`);
-
-
+  const nuestrasTiendasFooter = await client.fetch(
+    groq`*[_type == "nuestrastiendas"][0]`
+  );
 
   return (
     <html lang="es">
@@ -75,8 +76,8 @@ whatsapp
         />
         <link rel="icon" href="/favicon.ico" sizes="any" />
 
-                {/* Meta Pixel Script */}
-                <Script
+        {/* Meta Pixel Script */}
+        <Script
           id="meta-pixel"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -95,7 +96,10 @@ whatsapp
           }}
         />
         <noscript>
-          <img height="1" width="1" style={{ display: 'none' }}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=530492399885832&ev=PageView&noscript=1"
           />
         </noscript>
@@ -110,7 +114,7 @@ whatsapp
               <GoogleAnalytics />
               {children}
               <div className="fill-black">
-                <Footer />
+                {/* <Footer tiendas ={nuestrasTiendasFooter}/> */}
               </div>
             </main>
           </ThemeProvider>

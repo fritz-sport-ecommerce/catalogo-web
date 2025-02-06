@@ -79,8 +79,8 @@ export default function Product_2({
         setLoading(false);
       });
   }, [products.sku]);
-let descuentoSobreD= products?.descuentosobred;
-console.log(descuentoSobreD);
+  let descuentoSobreD = products?.descuentosobred;
+  console.log(descuentoSobreD);
   return (
     <>
       <div className=" flex h-full flex-col justify-around   border-[1px] p-2 border-blue-gray-300  dark:border-none ">
@@ -120,7 +120,8 @@ console.log(descuentoSobreD);
           </Link>
           <LoveFollow product={products} />
           {descuentos.descuentofritzsport ||
-          descuentos.descuentofritzsport > 0 || descuentoSobreD > 0 ? (
+          descuentos.descuentofritzsport > 0 ||
+          descuentoSobreD > 0 ? (
             <div className="absolute right-0 top-4 z-10 ">
               <div className=" mt-1 text-xs text-white ">
                 <div className="flex flex-col">
@@ -128,13 +129,21 @@ console.log(descuentoSobreD);
                     {!products.preciomanual || descuentoSobreD > 0 ? (
                       <span className="flex justify-center bg-black px-3 py-1">
                         {" "}
-                        {!stock && descuentos.descuentofritzsport || descuentoSobreD >0
-                          ? `-${descuentos.descuentofritzsport && !descuentoSobreD ? descuentos.descuentofritzsport : descuentoSobreD}%`
+                        {(!stock && descuentos.descuentofritzsport) ||
+                        descuentoSobreD > 0
+                          ? `-${
+                              descuentos.descuentofritzsport && !descuentoSobreD
+                                ? descuentos.descuentofritzsport
+                                : descuentoSobreD
+                            }%`
                           : "Agotado"}
                       </span>
-                    ):(<></>)}
-                    {descuentos.descuentofritzsport &&
-                    !products.preciomanual || descuentoSobreD? (
+                    ) : (
+                      <></>
+                    )}
+                    {(descuentos.descuentofritzsport &&
+                      !products.preciomanual) ||
+                    descuentoSobreD ? (
                       <span className="mt-1 bg-red-500 px-3 py-1 uppercase">
                         oferta
                       </span>
@@ -155,7 +164,6 @@ console.log(descuentoSobreD);
                         Agotado
                       </span>
                     )}
-
 
                     {descuentos.descuento && !products.preciomanual ? (
                       <span className="mt-1 hidden bg-red-500 px-3 py-1 uppercase">
@@ -206,14 +214,21 @@ console.log(descuentoSobreD);
         >
           {!generoSku && (
             <div>
-              <CantidadProduct tallas={products?.tallas} sku={products?.sku}/>
-            <div className="flex items-center justify-between ">
-              <h2 className="mt-1 font-medium capitalize">
-              {products.marca} - {products?.genero} { products?.subgenero_ninos && `${products?.subgenero_ninos === "ninonina" ? "- Niño/Niña": `- ${products?.subgenero_ninos}`}`}
-
-              </h2>
-              <h5 className="mt-4 text-xs font-medium">Sku: {products.sku}</h5>
-            </div>
+              <CantidadProduct tallas={products?.tallas} sku={products?.sku} />
+              <div className="flex items-center justify-between ">
+                <h2 className="mt-1 font-medium capitalize">
+                  {products.marca} - {products?.genero}{" "}
+                  {products?.subgenero_ninos &&
+                    `${
+                      products?.subgenero_ninos === "ninonina"
+                        ? "- Niño/Niña"
+                        : `- ${products?.subgenero_ninos}`
+                    }`}
+                </h2>
+                <h5 className="mt-4 text-xs font-medium">
+                  Sku: {products.sku}
+                </h5>
+              </div>
             </div>
           )}
           <h3 className="mt-2 text-sm font-medium uppercase xl:text-lg 2xl:text-xl ">
@@ -221,9 +236,12 @@ console.log(descuentoSobreD);
           </h3>
 
           <div className="flex">
-            {descuentos.descuentofritzsport > 0 || products.descuento || descuentoSobreD ? (
+            {descuentos.descuentofritzsport > 0 ||
+            products.descuento ||
+            descuentoSobreD ? (
               <>
-                {descuentos.descuentofritzsport && !products.preciomanual || descuentoSobreD? (
+                {(descuentos.descuentofritzsport && !products.preciomanual) ||
+                descuentoSobreD ? (
                   <span className="mr-2 mt-2 font-semibold text-[#767677] line-through">
                     S/{products.priceecommerce}
                   </span>
@@ -241,8 +259,8 @@ console.log(descuentoSobreD);
                 products.priceecommerce,
                 products.preciomanual,
                 descuentos,
-                descuentoSobreD
-              ,outlet = false
+                descuentoSobreD,
+                (outlet = false)
               )}
             </p>
           </div>
@@ -263,7 +281,7 @@ console.log(descuentoSobreD);
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             clip-rule="evenodd"
             d="M9.125 10.875V18H10.375V10.875H18V9.625H10.375V2H9.125V9.625H2V10.875H9.125Z"
           ></path>
@@ -272,4 +290,3 @@ console.log(descuentoSobreD);
     </>
   );
 }
-
