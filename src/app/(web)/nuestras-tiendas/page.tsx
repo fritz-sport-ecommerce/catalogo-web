@@ -33,7 +33,7 @@ export const metadata = {
     ],
   },
 };
-
+// test
 export default async function page() {
   const nuestrasTiendas = await client.fetch(
     groq`*[_type == "nuestrastiendas"][0]`
