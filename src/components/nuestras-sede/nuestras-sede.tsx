@@ -61,13 +61,13 @@ const TiendasComponent: React.FC<Props> = ({ sedes, sedes_mayorista,videoPrincip
       {/* Botones de filtro */}
       <div className="flex gap-4 mb-4">
         <button
-          className={`px-4 py-2 rounded ${tipoTienda === "retail" ? "bg-black dark:border-white border-[1px] text-white " : "bg-gray-200 dark:text-black"}`}
+          className={`xl:px-4 px-3  py-2 rounded ${tipoTienda === "retail" ? "bg-black dark:border-white border-[1px] text-white " : "bg-gray-200 dark:text-black"}`}
           onClick={() => setTipoTienda("retail")}
         >
           Tiendas Retail
         </button>
         <button
-          className={`px-4 py-2 rounded ${tipoTienda === "mayorista" ? "bg-black dark:border-white border-[1px] text-white " : "bg-gray-200 dark:text-black"}`}
+          className={`xl:px-4 px-3 rounded ${tipoTienda === "mayorista" ? "bg-black dark:border-white border-[1px] text-white " : "bg-gray-200 dark:text-black"}`}
           onClick={() => setTipoTienda("mayorista")}
         >
           Tiendas Mayoristas
@@ -75,7 +75,7 @@ const TiendasComponent: React.FC<Props> = ({ sedes, sedes_mayorista,videoPrincip
       </div>
 
       {/* Filtro por provincia */}
-      <div className="mb-4">
+      <div className="mb-4 xl:flex flex flex-col items-center justify-center xl:flex-row">
         <label className="font-bold">Selecciona un Departamento:</label>
         <select
           className="ml-2 p-2 border rounded text-black"

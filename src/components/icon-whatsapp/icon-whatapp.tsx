@@ -13,24 +13,12 @@ interface Props {
 export default function IconWhatapp({ urlWhatsApp }: Props) {
   return (
     <>
-      <ModalPreguntasFrecuentes>
+      {/* <ModalPreguntasFrecuentes>
         <>
           <div className="bg-white">
             <div className=" overflow-y-scroll xl:h-[60vh] h-[80vh] xl:w-[40vw] w-full xl:p-8 xl:py-5 p-2">
               <div>
-                {/* <div className="font-extrabold pt-5 pb-2">
-                  TIENDAS Y HORARIOS DE ATENCIÓN
-                </div>
-                <p className="text-xs xl:text-base">
-                  Contamos con 3 Tiendas y nuestro Canal Online
-                  www.fritzsport.pe. Flagship Acacias - Miraflores -
-                  Dirección: Calle Las Acacias 310 Miraflores - Lima - Horarios
-                  de Atención: Lunes a sábado de 11 am a 7 pm, Domingo de 12 am
-                  a 7 pm FV Secret Store - San Isidro - Dirección: Calle Miguel
-                  Dasso 126. Tienda 205 - 2do Piso San Isidro - Lima - Horarios
-                  de Atención: Lunes a viernes de 11am a 7pm Sábado de 11am a
-                  7pm
-                </p> */}
+     
 
                 <div className="font-extrabold pt-5 pb-2">MEDIOS DE PAGO</div>
                 <p className="text-xs xl:text-base ">
@@ -148,10 +136,10 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
             </div>
           </div>
         </>
-      </ModalPreguntasFrecuentes>
+      </ModalPreguntasFrecuentes> */}
       <Link
         href="/emprende"
-        className="z-header  sticky-0 fixed bottom-16 left-6 z-[999] flex items-center justify-center xl:bottom-[80px] xl:left-16 "
+        className="z-header  sticky-0 fixed bottom-0 left-1 z-[999] flex items-center justify-center xl:bottom-[80px] xl:left-16 "
         rel="noreferrer"
       >
         <div className=" relative mb-[6vh] mr-1 flex  h-[50px] cursor-pointer  items-center  justify-end rounded-r-full    pl-1 md:w-10">
