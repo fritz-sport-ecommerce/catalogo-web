@@ -119,7 +119,7 @@ const TiendasComponent: React.FC<Props> = ({
                 autoPlay
                 loop
                 muted
-                src={videoPrincipal.videoPrincipalDesk }
+                src={videoPrincipal.videoPrincipalDesk}
               ></video>
             )}
 
@@ -139,9 +139,7 @@ const TiendasComponent: React.FC<Props> = ({
                 autoPlay
                 loop
                 muted
-                src={
-                  videoPrincipal.videoPrincipalTablet
-                }
+                src={videoPrincipal.videoPrincipalTablet}
               ></video>
             )}
           </>
@@ -164,7 +162,7 @@ const TiendasComponent: React.FC<Props> = ({
                     {el.dataSede.map((sede: Sede, i: number) => (
                       <li
                         key={index}
-                        className="p-4 border rounded shadow bg-gray-100 flex flex-col justify-between"
+                        className="p-4 border rounded shadow bg-gray-100 dark:bg-black flex flex-col justify-between"
                       >
                         <div>
                           <h3 className="text-xl font-bold text-center uppercase">
