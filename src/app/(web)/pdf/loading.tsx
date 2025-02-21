@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function loading() {
+export default function LoadingSpinner() {
   return (
     <main className="w-full px-6 animate-pulse">
       <section aria-labelledby="products-heading" className="flex pb-24 pt-6">
