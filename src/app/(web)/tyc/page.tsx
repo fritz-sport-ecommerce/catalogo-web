@@ -80,13 +80,26 @@ export default function index() {
             la compra en la tienda seleccionada. Transcurrido este plazo sin que
             el cliente o tercero autorizado haya procedido con el retiro, se
             entenderá que el cliente ha desistido de la compra y por lo cual
-            Fritz Sport procederá a anular dicho pedido y a realizar la devolución
-            del monto pagado a través de una Nota de Crédito, la cual será
-            enviada al correo electrónico registrado en nuestra plataforma. El
-            Cliente acepta expresamente esta anulación y autoriza a Fritz Sport a
-            realizarla, sin restricción alguna y bajo su entera responsabilidad
+            Fritz Sport procederá a anular dicho pedido y a realizar la
+            devolución del monto pagado a través de una Nota de Crédito, la cual
+            será enviada al correo electrónico registrado en nuestra plataforma.
+            El Cliente acepta expresamente esta anulación y autoriza a Fritz
+            Sport a realizarla, sin restricción alguna y bajo su entera
+            responsabilidad.
           </p>
-
+          <br />
+          <p>
+            El reembolso de la tienda virtual en caso de devolución de dinero se realizará utilizando el mismo
+            método de pago que utilizaste al realizar la compra y puede tomar
+            entre 5 a 7 días hábiles en procesarse o dependiendo de las
+            políticas de tu institución financiera. Esperamos que esta política
+            aclare cualquier duda que puedas tener sobre nuestros precios,
+            disponibilidad y políticas de compra. Si necesitas más información o
+            asistencia, no dudes en ponerte en contacto con nuestro equipo de
+            atención al cliente. Gracias por confiar en nosotros para tus
+            compras en línea.
+          </p>
+    <br />
           <p>
             El presente Política de Privacidad establece los términos en que
             Fritz Sport usa y protege la información que es proporcionada por
