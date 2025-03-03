@@ -151,7 +151,7 @@ const TiendasComponent: React.FC<Props> = ({
               provincia.nombre === provinciaSeleccionada
           )
           .map((provincia) => (
-            <div key={provincia.nombre} className="mb-6">
+            <div key={provincia.nombre} className="my-6">
               <h3 className="text-2xl font-bold text-center uppercase">
                 {provincia.nombre}
               </h3>

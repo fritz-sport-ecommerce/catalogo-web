@@ -54,7 +54,6 @@ export default async function Page() {
   //   return `https://cdn.sanity.io/files/ibvmpbc1/production/${id}.${extension}`
   // }
 
-  console.log(catalogo);
 
   // console.log(getUrlFromId());
 

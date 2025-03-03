@@ -13,7 +13,7 @@ import IconWhatapp from "@/components/icon-whatsapp/icon-whatapp";
 import { client } from "@/sanity/lib/client";
 import { SanitySlider } from "@/config/inventory";
 import { groq } from "next-sanity";
-// import Footer from "@/components/footer-update/footer";
+import Footer from "@/components/footer-update/footer";
 import GoogleAnalytics from "@/app/(web)/GoogleAnalytics";
 import Script from "next/script";
 const raleway = Raleway({
@@ -114,7 +114,7 @@ whatsapp
               <GoogleAnalytics />
               {children}
               <div className="fill-black">
-                {/* <Footer tiendas ={nuestrasTiendasFooter}/> */}
+                <Footer tiendas={nuestrasTiendasFooter} />
               </div>
             </main>
           </ThemeProvider>
