@@ -537,6 +537,13 @@ export default function Footer({ tiendas }: any) {
                     </small>
                   </div>
                 </div>
+                <div className="flex justify-center w-full xl:mt-2">
+                  <span className="text-[10px]  py-2">
+                    © {date.getFullYear()} FRITZ SPORT SAC, RUC 20602090117.
+                    Av.Miguel Grau 231 Cercado de Lima, Provincia y Departamento
+                    de Lima, Código Postal Lima 18
+                  </span>
+                </div>
               </div>
             </div>
           </div>
