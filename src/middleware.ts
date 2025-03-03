@@ -3,7 +3,6 @@ import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import { getMaintenanceMode } from "./utilits/maintence-mode-cache";
 
-
 async function fetchMaintenanceMode() {
   const data = await client.fetch(
     groq`*[_type == "catalogo"][0]{
@@ -21,7 +20,15 @@ export async function middleware(req: Request) {
   // Redirigir si está en modo mantenimientoo
 
   if (modo_mantenimiento) {
-    if (!url.includes("/mantenimiento") && !url.includes("/studio") && !url.includes("/emprende") && !url.includes("/nuestras-tiendas")&& !url.includes("/pdf")&& !url.includes("/tyc")&& !url.includes("/pyp")) {
+    if (
+      !url.includes("/mantenimiento") &&
+      !url.includes("/studio") &&
+      !url.includes("/emprende") &&
+      !url.includes("/nuestras-tiendas") &&
+      !url.includes("/pdf") &&
+      !url.includes("/tyc") &&
+      !url.includes("/pyp")
+    ) {
       const redirectUrl = new URL("/pdf", req.url);
       return NextResponse.redirect(redirectUrl);
     }
@@ -29,5 +36,9 @@ export async function middleware(req: Request) {
   return NextResponse.next();
 }
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|mantenimiento).*)", "/users/:path*", "/pagar"],
+  matcher: [
+    "/((?!_next|favicon.ico|mantenimiento).*)",
+    "/users/:path*",
+    "/pagar",
+  ],
 };
