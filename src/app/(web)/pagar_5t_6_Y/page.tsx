@@ -6,12 +6,12 @@ import { Metadata } from "next";
 
 import { authOptions } from "@/libs/auth";
 import { getServerSession } from "next-auth";
-import { redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 export const metadata: Metadata = {
   openGraph: {
-    title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
     url: `${process.env.URL_DOMINIO}`,
     siteName: "Fritz Sport",
     images: [
@@ -34,10 +34,8 @@ export const metadata: Metadata = {
 export default async function page() {
   const session = await getServerSession(authOptions);
 
-
   if (!session) {
-      redirect("/auth")
-
+    redirect("/auth");
   }
   // Check if user is authorized to perform the action
   // if (userRole !== "admin") {

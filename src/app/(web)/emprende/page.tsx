@@ -1,17 +1,17 @@
+import { client } from "@/sanity/lib/client";
+import { groq } from "next-sanity";
 
-import { client } from "@/sanity/lib/client"
-import { groq } from "next-sanity"
-
-import PaginaEmprende from "@/components/emprende/emprende"
+import PaginaEmprende from "@/components/emprende/emprende";
 
 export const metadata = {
-  title: "Emprende con Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+  title:
+    "Emprende con Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
-    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
   openGraph: {
-    title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
     url: `${process.env.URL_DOMINIO}`,
     siteName: "Fritz Sport",
     images: [
@@ -30,14 +30,14 @@ export const metadata = {
       },
     ],
   },
-}
+};
 
 export default async function page() {
-  // 
-  const emprende = await client.fetch(groq`*[_type == "emprende"]`)
+  //
+  const emprende = await client.fetch(groq`*[_type == "emprende"]`);
   return (
     <>
       <PaginaEmprende emprende={emprende[0]} />
     </>
-  )
+  );
 }

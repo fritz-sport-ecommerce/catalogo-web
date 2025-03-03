@@ -4,7 +4,7 @@ export const revalidate = 10; // seconds
 import { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import {  SanitySlider } from "@/config/inventory";
+import { SanitySlider } from "@/config/inventory";
 import Carousel from "@/components/carousel-home/Carousel";
 import CarouselProductRelacionados from "@/components/carousel-product/carousel-product-relacionados";
 import Descuentos from "@/config/descuentos";
@@ -13,13 +13,13 @@ import ContedorCarouselProduct from "@/components/carousel-product/contedor-caro
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export const metadata: Metadata = {
-  title: "Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+  title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
-    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
   openGraph: {
-    title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
     url: `${process.env.URL_DOMINIO}`,
     siteName: "Fritz Sport",
     images: [
@@ -54,20 +54,12 @@ interface Props {
   };
 }
 
-
-
-
-
 export default async function Page({ searchParams }: Props) {
-
-
   const slider = await client.fetch<SanitySlider[]>(
     groq`*[_type == "catalogo"] [0] {
       slider
     }`
   );
-
-
 
   const productFilter = FiltroGlobal();
   const newProducts = await client.fetch<
@@ -94,13 +86,7 @@ export default async function Page({ searchParams }: Props) {
       "slug":slug.current
   }`);
 
-
-
-
- 
   let descuentos = await Descuentos();
-
-
 
   return (
     <div>
@@ -108,13 +94,13 @@ export default async function Page({ searchParams }: Props) {
       <div className="conta">
         <Carousel dataSlider={slider} />
         {/* <VideoHome url={homeVideo[0]} /> */}
-   {/* nuevos ingresos */}
-   <div className="my-10 xl:my-20">
+        {/* nuevos ingresos */}
+        <div className="my-10 xl:my-20">
           <div className="text-center text-xl uppercase xl:text-4xl">
             nuevos ingresos
           </div>
           <ContedorCarouselProduct
-             nuevo={true}
+            nuevo={true}
             genero={"unisex"}
             cantidad={"20"}
             descuentos={descuentos}
@@ -178,8 +164,6 @@ export default async function Page({ searchParams }: Props) {
         {/* <Carousel dataSlider={slider[0]} /> */}
 
         {/* <HombreMujer bannerGenero={bannerGenero[0]} /> */}
-     
-
       </div>
     </div>
   );

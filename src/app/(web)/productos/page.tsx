@@ -1,5 +1,3 @@
-
-
 export const fetchCache = "force-no-store";
 export const revalidate = 0; // seconds
 export const dynamic = "force-dynamic";
@@ -10,15 +8,12 @@ import { FiltroProducts } from "@/utilits/filtro-products";
 import { SanityProduct } from "@/config/inventory";
 import { cn } from "@/lib/utils";
 import { ProductFilters } from "@/components/product-filters";
-import  ProductGrid  from "@/components/product/product-card/product-grid";
+import ProductGrid from "@/components/product/product-card/product-grid";
 import { MainSort } from "@/components/product-sort";
 
 import { Metadata } from "next";
 import { FiltroGlobal } from "@/utilits/filtro-products";
 import Descuentos from "@/config/descuentos";
-
-
-
 
 interface Props {
   searchParams: {
@@ -40,13 +35,13 @@ interface Props {
   };
 }
 export const metadata: Metadata = {
-  title: "Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+  title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
-    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
   openGraph: {
-    title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
     url: `${process.env.URL_DOMINIO}`,
     siteName: "Fritz Sport",
     images: [
@@ -100,23 +95,20 @@ export default async function Page({ searchParams }: Props) {
 
   const sizeFilter = size ? `&& tallas match "tallas"` : "";
   const generoFilter = genero ? `&& genero in ["${genero}","unisex"] ` : "";
-  const subgeneroFilter = subgenero ? `&& subgenero_ninos match "${subgenero}"` : "";
-
-  const coleccionFilter = coleccion
-    ? `&& coleccion match "${coleccion}"`
+  const subgeneroFilter = subgenero
+    ? `&& subgenero_ninos match "${subgenero}"`
     : "";
+
+  const coleccionFilter = coleccion ? `&& coleccion match "${coleccion}"` : "";
   const searchFilter = search
     ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" && categories != "originals" `
     : "";
 
-    const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}] | order(_createdAt desc)`;
- 
-    
+  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}] | order(_createdAt desc)`;
+
   async function fetchNextPage() {
-
-
     // Función para obtener productos y productos similares
-     const fetchProducts = async (filter: string, order: string) => {
+    const fetchProducts = async (filter: string, order: string) => {
       // Obtener productos principales
 
       const products = await client.fetch<SanityProduct[]>(
@@ -146,11 +138,10 @@ export default async function Page({ searchParams }: Props) {
         }[${start}..${start + 11}]`
       );
 
-      
       // Para cada producto, obtener productos similares basados en el nombre
       const productsWithSimilar = await Promise.all(
         products.map(async (product) => {
-          const filtroProduct = FiltroProducts(product)
+          const filtroProduct = FiltroProducts(product);
           const allProducts = await client.fetch<SanityProduct[]>(
             groq`*[${filtroProduct}] {
               _id,
@@ -163,65 +154,53 @@ export default async function Page({ searchParams }: Props) {
               "slug": slug.current
             }[0..4]` // Limitar a 5 productos similares
           );
-         // Filtra productos duplicados
-         const similarProducts = allProducts.filter(
-          (newProduct, index, self) =>
-            index === self.findIndex((p) => p.sku === newProduct.sku)
-        );
+          // Filtra productos duplicados
+          const similarProducts = allProducts.filter(
+            (newProduct, index, self) =>
+              index === self.findIndex((p) => p.sku === newProduct.sku)
+          );
           return {
             ...product,
             similarProducts, // Agregar los productos similares
           };
         })
       );
-          // Filtra productos duplicados
-          const uniqueProducts = productsWithSimilar.filter(
-            (newProduct, index, self) =>
-              index === self.findIndex((p) => p.sku === newProduct.sku)
-          );
-    
-          return uniqueProducts;
+      // Filtra productos duplicados
+      const uniqueProducts = productsWithSimilar.filter(
+        (newProduct, index, self) =>
+          index === self.findIndex((p) => p.sku === newProduct.sku)
+      );
+
+      return uniqueProducts;
       // return productsWithSimilar;
     };
 
-    const products = await fetchProducts(filter,order)
+    const products = await fetchProducts(filter, order);
 
+    if (searchFilter) {
+      if (products.length == 2) {
+        return [products[0]];
+      } else {
+        // if(search === "IF1347"){
+        //   return []
+        // }else{
 
-      
+        //   return products
+        // }
 
-    if(searchFilter){
-        if (products.length == 2 )  {
-           return [products[0]]
-         }else{
-          // if(search === "IF1347"){
-          //   return []
-          // }else{
-
-          //   return products
-          // }
-       
-      
-             return products
-           
-          
-         }
-
-    
-    }else{
-  
+        return products;
+      }
+    } else {
       return products;
-
     }
   }
   const products = await fetchNextPage();
- 
-  let descuentos = await Descuentos();
 
+  let descuentos = await Descuentos();
 
   return (
     <div>
-
-  <MainSort/>
+      <MainSort />
       <div>
         <main className=" w-full px-6">
           <section
@@ -246,7 +225,7 @@ export default async function Page({ searchParams }: Props) {
               </div>
             </div>
             <ProductGrid
-            start={start}
+              start={start}
               descuentos={descuentos}
               outlet={false}
               products={products}

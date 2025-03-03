@@ -89,17 +89,17 @@ export default function index() {
           </p>
           <br />
           <p>
-            El reembolso de la tienda virtual en caso de devolución de dinero se realizará utilizando el mismo
-            método de pago que utilizaste al realizar la compra y puede tomar
-            entre 5 a 7 días hábiles en procesarse o dependiendo de las
-            políticas de tu institución financiera. Esperamos que esta política
-            aclare cualquier duda que puedas tener sobre nuestros precios,
-            disponibilidad y políticas de compra. Si necesitas más información o
-            asistencia, no dudes en ponerte en contacto con nuestro equipo de
-            atención al cliente. Gracias por confiar en nosotros para tus
-            compras en línea.
+            El reembolso de la tienda virtual en caso de devolución de dinero se
+            realizará utilizando el mismo método de pago que utilizaste al
+            realizar la compra y puede tomar entre 5 a 7 días hábiles en
+            procesarse o dependiendo de las políticas de tu institución
+            financiera. Esperamos que esta política aclare cualquier duda que
+            puedas tener sobre nuestros precios, disponibilidad y políticas de
+            compra. Si necesitas más información o asistencia, no dudes en
+            ponerte en contacto con nuestro equipo de atención al cliente.
+            Gracias por confiar en nosotros para tus compras en línea.
           </p>
-    <br />
+          <br />
           <p>
             El presente Política de Privacidad establece los términos en que
             Fritz Sport usa y protege la información que es proporcionada por
