@@ -62,6 +62,8 @@ export default async function RootLayout({
   >(groq`*[_type == "home"] {
 whatsapp
 }`);
+
+
   const nuestrasTiendasFooter = await client.fetch(
     groq`*[_type == "nuestrastiendas"][0]`
   );

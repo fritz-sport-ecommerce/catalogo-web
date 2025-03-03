@@ -52,6 +52,39 @@ const FooterMobil = ({ tiendas }: any) => {
             </div>
           </AccordionContent>
         </AccordionItem>
+        <AccordionItem value={`item-1`}>
+          <AccordionTrigger className="border-[1px]  border-t-black">
+            <span className="w-full  ">
+              <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
+                Tiendas Mayorista
+              </span>
+            </span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className=" flex  gap-y-5  justify-center">
+              <div className="flex flex-col items-start gap-y-5">
+                {tiendas?.sedes_mayorista?.map((sede: any) => (
+                  <div key={sede._key}>
+                    <div className="font-bold mb-2">{sede.provincia} </div>
+                    <div className="flex flex-col gap-y-2 ">
+                      {sede.sedes.map((sede: any, i: number) => (
+                        <Link key={i} href={sede.urlubicacion} target="_blank">
+                          <div
+                            className={`flex flex-col text-sm items-start justify-start `}
+                          >
+                            <span className=" border-b-[1px] border-black border-solid">
+                              {sede.titulosede}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         {/* cuenta */}
         <AccordionItem value={`item-2`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
