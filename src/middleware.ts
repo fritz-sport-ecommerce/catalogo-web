@@ -21,7 +21,7 @@ export async function middleware(req: Request) {
   // Redirigir si está en modo mantenimientoo
 
   if (modo_mantenimiento) {
-    if (!url.includes("/mantenimiento") && !url.includes("/studio") && !url.includes("/emprende") && !url.includes("/nuestras-tiendas")&& !url.includes("/pdf")) {
+    if (!url.includes("/mantenimiento") && !url.includes("/studio") && !url.includes("/emprende") && !url.includes("/nuestras-tiendas")&& !url.includes("/pdf")&& !url.includes("/tyc")&& !url.includes("/pyp")) {
       const redirectUrl = new URL("/pdf", req.url);
       return NextResponse.redirect(redirectUrl);
     }
