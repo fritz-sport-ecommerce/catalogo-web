@@ -13,7 +13,7 @@ import IconWhatapp from "@/components/icon-whatsapp/icon-whatapp";
 import { client } from "@/sanity/lib/client";
 import { SanitySlider } from "@/config/inventory";
 import { groq } from "next-sanity";
-// import Footer from "@/components/footer-update/footer";
+import Footer from "@/components/footer-update/footer";
 import GoogleAnalytics from "@/app/(web)/GoogleAnalytics";
 import Script from "next/script";
 const raleway = Raleway({
@@ -25,13 +25,13 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+  title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
-    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
   openGraph: {
-    title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
     url: `${process.env.URL_DOMINIO}`,
     siteName: "Fritz Sport",
     images: [
@@ -62,6 +62,8 @@ export default async function RootLayout({
   >(groq`*[_type == "home"] {
 whatsapp
 }`);
+
+
   const nuestrasTiendasFooter = await client.fetch(
     groq`*[_type == "nuestrastiendas"][0]`
   );
@@ -114,7 +116,7 @@ whatsapp
               <GoogleAnalytics />
               {children}
               <div className="fill-black">
-                {/* <Footer tiendas ={nuestrasTiendasFooter}/> */}
+                <Footer tiendas={nuestrasTiendasFooter} />
               </div>
             </main>
           </ThemeProvider>

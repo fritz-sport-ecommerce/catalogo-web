@@ -7,21 +7,18 @@ import { groq } from "next-sanity";
 
 import { SanityProduct } from "@/config/inventory";
 
-
-
 import { Metadata } from "next";
-
 
 import DescargarPdf from "@/components/pdf/DescargarPdf";
 
 export const metadata: Metadata = {
-  title: "Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+  title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
-    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
   openGraph: {
-    title: " Fritz Sport Perú Tienda oficial | Zapatillas y ropa deportiva",
+    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra en esta tienda online zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
+      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
     url: `${process.env.URL_DOMINIO}`,
     siteName: "Fritz Sport",
     images: [
@@ -42,9 +39,6 @@ export const metadata: Metadata = {
   },
 };
 export default async function Page() {
-
-
-
   // console.log(productos);
 
   const catalogo = await client.fetch<SanityProduct[]>(
@@ -59,29 +53,23 @@ export default async function Page() {
   //   const [_file, id, extension] = pdf.split('-');
   //   return `https://cdn.sanity.io/files/ibvmpbc1/production/${id}.${extension}`
   // }
-  
-  console.log(catalogo);
 
   // console.log(getUrlFromId());
 
-  
   return (
     <div>
-        {/* <object className='w-[100vw] h-[100vh]' data={getUrlFromId()} type="application/pdf"></object> */}
-
+      {/* <object className='w-[100vw] h-[100vh]' data={getUrlFromId()} type="application/pdf"></object> */}
 
       <div>
-      <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl mt-10 text-xl font-semibold">
-              CATALOGO
-              </div>
-      {/* <MainPdf catalogo={catalogo} items={products} /> */}
+        <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl mt-10 text-xl font-semibold">
+          CATALOGO
+        </div>
+        {/* <MainPdf catalogo={catalogo} items={products} /> */}
         <main className=" w-full px-6">
           <section
             aria-labelledby="products-heading"
             className="flex pb-24 pt-6"
           >
-       
-        
             {/* Product grid */}
             <DescargarPdf catalogo={catalogo}></DescargarPdf>
           </section>

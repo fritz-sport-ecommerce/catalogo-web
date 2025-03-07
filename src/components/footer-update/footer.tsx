@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import {
   Accordion,
@@ -9,7 +10,7 @@ import { Logo } from "../logo/logo";
 import LibroReclamacionesRedes from "../Footer/libro-reclamaciones-redes";
 
 const date = new Date();
-const FooterMobil = ({tiendas}:any) => {
+const FooterMobil = ({ tiendas }: any) => {
   return (
     <div className="block xl:hidden">
       <div className="flex w-full justify-center items-center">
@@ -18,50 +19,74 @@ const FooterMobil = ({tiendas}:any) => {
 
       <Accordion type="single" collapsible className="my-10 ">
         {/* tiendas */}
-        <AccordionItem value={`item-}`}>
+        <AccordionItem value={`item-1`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
             <span className="w-full  ">
               <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
-                Tiendas
+                Tiendas Retail
               </span>
             </span>
           </AccordionTrigger>
           <AccordionContent>
             <div className=" flex  gap-y-5  justify-center">
               <div className="flex flex-col items-start gap-y-5">
-                {tiendas?.sedes?.map((sede:any) => (
-                  <Link
-                    key={sede._key}
-                    href={sede.urlubicacion}
-                    target="_blank"
-                  >
-                    <div
-                      className={`flex flex-col text-sm items-start justify-start `}
-                    >
-                      {sede.direccion}
-                      {/* <span className="text-xs text-blue-gray-300 mt-1">
-                              Cercado de Lima
-                            </span> */}
+                {tiendas?.sedes?.map((sede: any) => (
+                  <div key={sede._key}>
+                    <div className="font-bold mb-2">{sede.provincia} </div>
+                    <div className="flex flex-col gap-y-2 ">
+                      {sede.sedes.map((sede: any, i: number) => (
+                        <Link key={i} href={sede.urlubicacion} target="_blank">
+                          <div
+                            className={`flex flex-col text-sm items-start justify-start `}
+                          >
+                            <span className=" border-b-[1px] border-black border-solid">
+                              {sede.titulosede}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </Link>
-                ))}
-                <Link
-                  href={"https://maps.app.goo.gl/iUxXwFKqF2BAEGhC7"}
-                  target="_blank"
-                >
-                  <div className={`flex flex-col  items-start justify-start  `}>
-                    Tienda - Tumbes
-                    <span className="text-xs text-blue-gray-300 mt-1">
-                      Av. República del Perú 373, 24101
-                    </span>
                   </div>
-                </Link>
+                ))}
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value={`item-1`}>
+          <AccordionTrigger className="border-[1px]  border-t-black">
+            <span className="w-full  ">
+              <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
+                Tiendas Mayorista
+              </span>
+            </span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className=" flex  gap-y-5  justify-center">
+              <div className="flex flex-col items-start gap-y-5">
+                {tiendas?.sedes_mayorista?.map((sede: any) => (
+                  <div key={sede._key}>
+                    <div className="font-bold mb-2">{sede.provincia} </div>
+                    <div className="flex flex-col gap-y-2 ">
+                      {sede.sedes.map((sede: any, i: number) => (
+                        <Link key={i} href={sede.urlubicacion} target="_blank">
+                          <div
+                            className={`flex flex-col text-sm items-start justify-start `}
+                          >
+                            <span className=" border-b-[1px] border-black border-solid">
+                              {sede.titulosede}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </AccordionContent>
         </AccordionItem>
         {/* cuenta */}
-        <AccordionItem value={`item-}`}>
+        <AccordionItem value={`item-2`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
             <span className="w-full  ">
               <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
@@ -97,7 +122,7 @@ const FooterMobil = ({tiendas}:any) => {
           </AccordionContent>
         </AccordionItem>
         {/* información */}
-        <AccordionItem value={`item-}`}>
+        <AccordionItem value={`item-3`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
             <span className="w-full  ">
               <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
@@ -123,7 +148,7 @@ const FooterMobil = ({tiendas}:any) => {
           </AccordionContent>
         </AccordionItem>
         {/* Redes Sociales */}
-        <AccordionItem value={`item-}`}>
+        <AccordionItem value={`item-4`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
             <span className="w-full  ">
               <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
@@ -163,7 +188,7 @@ const FooterMobil = ({tiendas}:any) => {
           </AccordionContent>
         </AccordionItem>
         {/* Únete a Nosotros */}
-        <AccordionItem value={`item-}`}>
+        <AccordionItem value={`item-5`}>
           <AccordionTrigger className="border-[1px]  border-t-black">
             <span className="w-full  ">
               <span className="ml-1 text-sm xl:text-base   uppercase text-black dark:text-gray-400">
@@ -281,7 +306,8 @@ const FooterMobil = ({tiendas}:any) => {
   );
 };
 
-export default function Footer({ tiendas }:any) {
+export default function Footer({ tiendas }: any) {
+  console.log(tiendas);
   return (
     <div>
       <div>
@@ -297,43 +323,59 @@ export default function Footer({ tiendas }:any) {
                 <div className="flex w-full justify-center py-5">
                   <div className=" grid grid-cols-6 gap-x-10 py-5">
                     {/* tiendas */}
-                    <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4">
-                      <div className="uppercase text-sm">Tiendas</div>
-                      {tiendas?.sedes?.map((sede:any) => (
-                        <Link
-                          key={sede._key}
-                          href={sede.urlubicacion}
-                          target="_blank"
-                        >
-                          <div
-                            className={`flex flex-col text-sm items-start justify-start `}
-                          >
-                            {sede.direccion}
-                            {/* <span className="text-xs text-blue-gray-300 mt-1">
-                              Cercado de Lima
-                            </span> */}
+                    <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4 pb-2">
+                      <div className="uppercase text-sm">Tiendas Retail</div>
+                      {tiendas?.sedes?.map((sede: any) => (
+                        <div key={sede._key}>
+                          <div className="font-bold mb-2">
+                            {sede.provincia}{" "}
                           </div>
-                        </Link>
+                          <div className="flex flex-col gap-y-1 ">
+                            {sede.sedes.map((sede: any, i: number) => (
+                              <Link
+                                key={i}
+                                href={sede.urlubicacion}
+                                target="_blank"
+                              >
+                                <div
+                                  className={`flex flex-col text-sm items-start justify-start `}
+                                >
+                                  <span className=" border-b-[1px] border-black border-solid">
+                                    {sede.titulosede}
+                                  </span>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </ul>
                     {/* tiendas Mayorista */}
                     <ul className="flex flex-col gap-y-3 border-l-[1px] dark:border-white border-black px-4">
-                      <div className="uppercase text-sm">Tiendas</div>
-                      {tiendas?.sede_mayorista?.map((sede:any) => (
-                        <Link
-                          key={sede._key}
-                          href={sede.urlubicacion}
-                          target="_blank"
-                        >
-                          <div
-                            className={`flex flex-col text-sm items-start justify-start `}
-                          >
-                            {sede.direccion}
-                            {/* <span className="text-xs text-blue-gray-300 mt-1">
-                              Cercado de Lima
-                            </span> */}
+                      <div className="uppercase text-sm">Tiendas Mayorista</div>
+                      {tiendas?.sedes_mayorista?.map((sede: any) => (
+                        <div key={sede._key}>
+                          <div className="font-bold mb-2">
+                            {sede.provincia}{" "}
                           </div>
-                        </Link>
+                          <div className="flex flex-col gap-y-1 ">
+                            {sede.sedes.map((sede: any, i: number) => (
+                              <Link
+                                key={i}
+                                href={sede.urlubicacion}
+                                target="_blank"
+                              >
+                                <div
+                                  className={`flex flex-col text-sm items-start justify-start `}
+                                >
+                                  <span className=" border-b-[1px] border-black border-solid">
+                                    {sede.titulosede}
+                                  </span>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </ul>
                     {/* cuenta */}
@@ -527,6 +569,13 @@ export default function Footer({ tiendas }:any) {
                       Images are the property of Adidas and Nike ecommerce
                     </small>
                   </div>
+                </div>
+                <div className="flex justify-center w-full xl:mt-2">
+                  <span className="text-[10px]  py-2">
+                    © {date.getFullYear()} FRITZ SPORT SAC, RUC 20602090117.
+                    Av.Miguel Grau 231 Cercado de Lima, Provincia y Departamento
+                    de Lima, Código Postal Lima 18
+                  </span>
                 </div>
               </div>
             </div>
