@@ -12,7 +12,7 @@ export default function DescargarPdf({ catalogo }) {
   return (
     <div className="flex justify-center w-full">
       <div className="grid md:gap-x-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-10 gap-y-5 ">
-        {catalogo.map((el) => (
+        {catalogo?.map((el) => (
           <section
             key={el._key}
             className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl"
