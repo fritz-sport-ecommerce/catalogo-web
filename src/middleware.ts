@@ -21,15 +21,16 @@ export async function middleware(req: Request) {
 
   if (modo_mantenimiento) {
     if (
-      !url.includes("/mantenimiento") &&
-      !url.includes("/studio") &&
-      !url.includes("/emprende") &&
-      !url.includes("/nuestras-tiendas") &&
-      !url.includes("/pdf") &&
-      !url.includes("/tyc") &&
-      !url.includes("/pyp")
+      !url.includes("catalogo/mantenimiento") &&
+      !url.includes("catalogo/studio") &&
+      !url.includes("catalogo/emprende") &&
+      !url.includes("catalogo/nuestras-tiendas") &&
+      !url.includes("catalogo/pdf") &&
+      !url.includes("catalogo/tyc") &&
+      !url.includes("catalogo/pyp") &&
+      !url.includes("catalogo-pdf/")
     ) {
-      const redirectUrl = new URL("/pdf", req.url);
+      const redirectUrl = new URL("catalogo/pdf", req.url);
       return NextResponse.redirect(redirectUrl);
     }
   }

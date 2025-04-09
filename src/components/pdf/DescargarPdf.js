@@ -24,6 +24,7 @@ export default function DescargarPdf({ catalogo }) {
   }, [provinciaSeleccionada]);
 
   return (
+
     <div>
       <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl py-5 text-xl font-semibold uppercase">
         CATALOGO {provinciaSeleccionada}
