@@ -8,7 +8,7 @@ import {
   getUserData,
   updateReview,
 } from '@/libs/apis';
-
+// add .
 export async function GET(req: Request, res: Response) {
   const session = await getServerSession(authOptions);
 
