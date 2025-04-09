@@ -41,11 +41,13 @@ export const metadata: Metadata = {
 export default async function Page() {
   // console.log(productos);
 
-  const catalogo = await client.fetch<SanityProduct[]>(
-    groq`*[_type == "catalogo"] {
-    catalogospdf
-    }[0].catalogospdf`
+  const catalogoProvincias = await client.fetch<SanityProduct[]>(
+    groq`*[_type == "catalogo"]{portadas_catalogo}[0].portadas_catalogo`
   );
+  const catalogo = await client.fetch<SanityProduct[]>(
+    groq`*[_type == "catalogo"]{catalogospdf,catalogospdf_emprendedor}[0]`
+  );
+
 
   // const getUrlFromId = () => {
   //   // Example ref: file-207fd9951e759130053d37cf0a558ffe84ddd1c9-mp3
@@ -55,15 +57,13 @@ export default async function Page() {
   // }
 
   // console.log(getUrlFromId());
+  // console.log(catalogoProvincias);
 
   return (
     <div>
       {/* <object className='w-[100vw] h-[100vh]' data={getUrlFromId()} type="application/pdf"></object> */}
 
       <div>
-        <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl mt-10 text-xl font-semibold">
-          CATALOGO
-        </div>
         {/* <MainPdf catalogo={catalogo} items={products} /> */}
         <main className=" w-full px-6">
           <section
@@ -71,7 +71,7 @@ export default async function Page() {
             className="flex pb-24 pt-6"
           >
             {/* Product grid */}
-            <DescargarPdf catalogo={catalogo}></DescargarPdf>
+            <DescargarPdf catalogo={catalogo} />
           </section>
         </main>
       </div>

@@ -307,7 +307,6 @@ const FooterMobil = ({ tiendas }: any) => {
 };
 
 export default function Footer({ tiendas }: any) {
-  console.log(tiendas);
   return (
     <div>
       <div>
