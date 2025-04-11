@@ -1,5 +1,6 @@
 "use client";
 import { urlForImage } from "@/sanity/lib/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 export default function DescargarPdf({ catalogo }) {
@@ -24,7 +25,6 @@ export default function DescargarPdf({ catalogo }) {
   }, [provinciaSeleccionada]);
 
   return (
-
     <div>
       <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl py-5 text-xl font-semibold uppercase">
         CATALOGO {provinciaSeleccionada}
@@ -72,6 +72,14 @@ export default function DescargarPdf({ catalogo }) {
                     Descargar
                   </button>
                 </a>
+                <Link href={getUrlFromId(el.asset?._ref)} target="_blank">
+                  <button
+                    type="button"
+                    className="text-white  bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                  >
+                    Ver
+                  </button>
+                </Link>
               </div>
             </section>
           ))}
