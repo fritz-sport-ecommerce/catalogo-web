@@ -50,7 +50,7 @@ export default function LoveFollow({ product, view = true }) {
     } else {
       console.log("error");
     }
-  }, [session?.user.id, follows, product.sku]);
+  }, [session?.user.id, follows, product?.sku]);
 
   //   console.log(session?.user.id);
   const handlerLove = async (exite, name) => {

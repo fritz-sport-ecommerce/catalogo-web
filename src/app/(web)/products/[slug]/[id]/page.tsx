@@ -12,7 +12,6 @@ import { groq } from "next-sanity";
 // import { metadataPage } from "@/config/generateMetadata";
 import { SanityProduct } from "@/config/inventory";
 
-
 import { ProductGalleryDesk } from "@/components/product-gallery-desk";
 import { ProductInfo } from "@/components/product-info";
 import {
@@ -23,11 +22,11 @@ import {
 } from "@/components/ui/accordion";
 import { AccordionDescription } from "@/components/acordion-details/acordion-description";
 import { AccordionDetails } from "@/components/acordion-details/acordion-details";
-import { FiltroGlobal, FiltroViewProduct } from "@/utilits/filtro-products";
+import { FiltroGlobal, FiltroViewProduct } from "@/utils/filtro-products";
 import { notFound } from "next/navigation";
 import Descuentos from "@/config/descuentos";
 import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
-import PrecioViewProductMovil from "@/components/product/product-view/precio-view-product-movil"
+import PrecioViewProductMovil from "@/components/product/product-view/precio-view-product-movil";
 import ToggleUserRole from "@/context/cambiarRol";
 
 interface Props {
@@ -115,21 +114,24 @@ export default async function Page({ params }: Props) {
 
   const products = await productosGenero();
   let descuentos = await Descuentos();
-  let descuentoSobreD= product?.descuentosobred;
+  let descuentoSobreD = product?.descuentosobred;
 
   return (
     <>
       <div className="absolute xl:flex hidden z-3 w-full justify-center items-center bg-transparent py-1">
-
-<ToggleUserRole/>
-</div>
+        <ToggleUserRole />
+      </div>
       <main className=" mb-0 xl:pt-16  z-[1]">
         <div className="">
           {/* Product */}
           {/* <PushIntereses users={user} product={product}></PushIntereses> */}
           <div className=" w-full xl:flex 2xl:pb-20">
             {/* precio y nombre */}
-            <PrecioViewProductMovil product={product} descuentos={descuentos} descuentoSobreD={descuentoSobreD} ></PrecioViewProductMovil>
+            <PrecioViewProductMovil
+              product={product}
+              descuentos={descuentos}
+              descuentoSobreD={descuentoSobreD}
+            ></PrecioViewProductMovil>
 
             {/* Product gallery */}
             <div>

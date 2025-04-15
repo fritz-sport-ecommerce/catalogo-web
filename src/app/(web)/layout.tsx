@@ -14,7 +14,7 @@ import { client } from "@/sanity/lib/client";
 import { SanitySlider } from "@/config/inventory";
 import { groq } from "next-sanity";
 import Footer from "@/components/footer-update/footer";
-import GoogleAnalytics from "@/app/(web)/catalogo/GoogleAnalytics";
+import GoogleAnalytics from "@/app/(web)/GoogleAnalytics";
 import Script from "next/script";
 const raleway = Raleway({
   weight: ["800"],

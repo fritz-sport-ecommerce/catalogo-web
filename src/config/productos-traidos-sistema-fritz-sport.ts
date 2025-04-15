@@ -1,91 +1,111 @@
 import { fetchProductosPrecios } from "@/lib/fetchProductosPrecios";
-import determinarRazonSocial from "@/utilits/calcular-razon-social";
-import convertUSSizeToEuropean from "@/utilits/convertir-talla-usa-eu";
-import determinarSubgeneroPorTalla from "@/utilits/determinar-subgenero-ninos";
+import determinarRazonSocial from "@/utils/calcular-razon-social";
+import convertUSSizeToEuropean from "@/utils/convertir-talla-usa-eu";
+import determinarSubgeneroPorTalla from "@/utils/determinar-subgenero-ninos";
 
-export default async function productosTraidosSistemaFritzSport(productos:any) {
+// Función para obtener el stock total en Lima
+function obtenerStockEnLima(
+  provincias: any[] = [],
+  provincia: string = "LIMA"
+): number {
+  return provincias
+    .filter(
+      (p) => p?.provincia?.toLocaleUpperCase() === provincia.toLocaleUpperCase()
+    )
+    .reduce((total, p) => total + (p.stock ?? 0), 0);
+}
 
-  
+export default async function productosTraidosSistemaFritzSport(
+  productos: any[] = [],
+  provincia: string | undefined
+) {
+  if (!Array.isArray(productos) || productos.length === 0) {
+    console.error("❌ Error: No hay productos para procesar.");
+    return [];
+  }
 
+  const SkuProducts = productos
+    .map((el) => ({ sku: el.sku }))
+    .filter((el:any) => el.empresa != "fz_premium");
 
-// console.log(precioDeProductos)
-// console.log(products.filter((el) => el.razonsocial === "fritzsport"));
-const SkuProducts = productos.map((el: any) => {
-  return {
-    sku: el.sku,
-  };
-});
+  let precioDeProductos: any[] = [];
+  try {
+    precioDeProductos = await fetchProductosPrecios(SkuProducts, provincia);
+    if (!Array.isArray(precioDeProductos))
+      throw new Error("Datos inválidos recibidos.");
+  } catch (error) {
+    console.error("❌ Error en fetchProductosPrecios:", error);
+    return [];
+  }
 
-const precioDeProductos = await fetchProductosPrecios(SkuProducts);
+  // Generar nuevo array con precios asignados
+  const productosConPrecio = productos.map((producto) => {
+    const precio = precioDeProductos.find((p) => p.sku === producto.sku);
 
-
-
-// necesito que me crees un nuevo array de objetos apartir de products y precioDeProductos y me dejes personalizar el precio de cada producto con el precio de precioDeProductos
-const productosConPrecio = productos.map((producto: any) => {
-  const precio = precioDeProductos.find(
-    (precio) => precio.sku === producto.sku
-  );
-
-  
-  return {
-    ...producto,
-    razonsocial: determinarRazonSocial(
-      precio?.precio_retail,
-      precio?.precio_mayorista,
-      producto?.marca
-    ),
-    subgenero_ninos:
-      producto.genero == "niños" &&
-      determinarSubgeneroPorTalla(precio?.tallas_catalogo, producto?.marca, producto?.tipo),
-    tipoproducto: precio?.stockDisponible > 20 ? "catalogo" : "web",
-    stock: precio?.stockDisponible,
-    talla_sistema: precio?.tallas_catalogo  && precio?.tallas_catalogo
-      .filter((size: any) => size !== null)
-      .join(", "),
-    tallascatalogo:
-      precio?.tallas_catalogo &&
-      convertUSSizeToEuropean(
-        precio?.tallas_catalogo,
-        producto?.genero,
-        producto?.marca,
-        producto.genero == "niños"
+    return {
+      ...producto,
+      razonsocial: determinarRazonSocial(
+        precio?.precio_retail,
+        precio?.precio_mayorista,
+        producto?.marca
+      ),
+      subgenero_ninos:
+        producto.genero === "niños"
           ? determinarSubgeneroPorTalla(
               precio?.tallas_catalogo,
               producto?.marca,
-              producto?.tipo,
+              producto?.tipo
             )
           : undefined,
-        producto?.tipo
-      ),
-      tallas:precio?.tallas,
-    priceecommerce: precio?.precio_retail,
-    priceemprendedor: precio?.precio_emprendedor,
-    pricemayorista: precio?.precio_mayorista,
-  };
-});
-// Ordenar por _createdAt
-let productosOrdenadosConPrecio = productosConPrecio
-  .sort(
-    (a:any, b:any) =>
-      new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-  )
-  .filter(
-    (el:any) =>
+      tipoproducto: precio?.stockDisponible > 6 ? "catalogo" : "web",
+      stock: precio?.stockDisponible ?? 0,
+      talla_sistema: precio?.tallas_catalogo?.filter(Boolean).join(", ") || "",
+      tallascatalogo: precio?.tallas_catalogo
+        ? convertUSSizeToEuropean(
+            precio?.tallas_catalogo,
+            producto?.genero,
+            producto?.marca,
+            producto.genero === "niños"
+              ? determinarSubgeneroPorTalla(
+                  precio?.tallas_catalogo,
+                  producto?.marca,
+                  producto?.tipo
+                )
+              : undefined,
+            producto?.tipo
+          )
+        : "",
+      tallas: precio?.tallas || [],
+      priceecommerce: precio?.precio_retail ?? null,
+      priceemprendedor: precio?.precio_emprendedor ?? null,
+      pricemayorista: precio?.precio_mayorista ?? null,
+      provincias: precio?.provincias || [],
+    };
+  });
 
-      el.subgenero_ninos !== "Categoría no determinada" &&
-      el.talla_sistema !== "" && el.stock > 10 && 
-      el.tallascatalogo !== ""
+  // Ordenar por _createdAt y filtrar
+  const productosOrdenadosConPrecio = productosConPrecio
+    .sort(
+      (a, b) =>
+        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
+    )
+    .filter(
+      (el) =>
+        el.subgenero_ninos !== "Categoría no determinada" &&
+        // obtenerStockEnLima(el.provincias, provincia) > 10 &&
+        el.talla_sistema !== "" &&
+        // el.stock > 10 &&
+        el.tallascatalogo !== ""
+    )
+    .filter(
+      (el) =>
+        el.pricemayorista !== undefined &&
+        el.priceemprendedor !== undefined &&
+        el.priceecommerce !== undefined &&
+        el.pricemayorista !== null &&
+        el.priceemprendedor !== null &&
+        el.priceecommerce !== null
+    );
 
-  )
-  .filter(
-    (el:any) =>
-      el.pricemayorista != undefined ||
-      el.priceemprendedor != undefined ||
-      el.priceecommerce != undefined ||
-      el.pricemayorista != null ||
-      el.priceemprendedor != null ||
-      el.priceecommerce != null 
-  );
-    return productosOrdenadosConPrecio
+  return productosOrdenadosConPrecio;
 }
-

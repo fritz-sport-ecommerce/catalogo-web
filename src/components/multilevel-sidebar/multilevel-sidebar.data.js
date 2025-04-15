@@ -1573,7 +1573,7 @@ let options = [
     icon: "",
     hideBorder: false,
     disabled: false,
-    to: "/catalogo/emprende",
+    to: "/emprende",
   },
     {
     id: 21,
@@ -1581,7 +1581,7 @@ let options = [
     icon: "",
     hideBorder: false,
     disabled: false,
-    to: "/catalogo/pdf",
+    to: "/pdf",
   },
   {
     id: 25,
@@ -1589,7 +1589,7 @@ let options = [
     icon: "",
     hideBorder: false,
     disabled: false,
-    to: "/catalogo/nuestras-tiendas",
+    to: "/nuestras-tiendas",
   },
 
   // {

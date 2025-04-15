@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import NuestrasTiendas from "@/components/nuestras-sede/nuestras-sede";
 import { client } from "@/sanity/lib/client";
-import getSanityFileUrl from "@/utilits/get-url-video";
+import getSanityFileUrl from "@/utils/get-url-video";
 
 import { groq } from "next-sanity";
 
@@ -86,7 +86,6 @@ export default async function page() {
     })),
     provincia: sede.provincia,
   }));
-
 
   return (
     <div>

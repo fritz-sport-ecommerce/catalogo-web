@@ -1,8 +1,12 @@
-import organizarProductos from "@/utilits/organizar-precios-productos";
+import organizarProductos from "@/utils/organizar-precios-productos";
 
 interface Producto {
   sku: string;
 }
+
+// const ALMACENES: string[] = ["0009", "0002", "2001"]; // Agrega aquí todos los almacenes disponibles
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 20000);
 async function buscarEnAlmacen(
   productos: Producto[],
   codigoAlmacen: string
@@ -15,7 +19,7 @@ async function buscarEnAlmacen(
 
     const solicitud = {
       codigoAlmacen,
-      codigosGrupo: Array.from(new Set(skusTransformados)) // Eliminar duplicados
+      codigosGrupo: Array.from(new Set(skusTransformados)), // Eliminar duplicados
     };
 
     const response = await fetch(
@@ -24,9 +28,10 @@ async function buscarEnAlmacen(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(solicitud),
+        signal: controller.signal,
       }
     );
-
+    clearTimeout(timeoutId);
     if (response.ok) {
       return await response.json();
     } else {
@@ -42,36 +47,47 @@ async function buscarEnAlmacen(
 }
 
 export async function fetchProductosPrecios(
-  productos: Producto[]
+  productos: Producto[],
+  provincia: string | undefined
 ): Promise<any[]> {
+  // const ALMACENES = ["0009", "0002", "2001"];
+  let provinciaT = provincia ? provincia : "LIMA";
+
+  let ALMACENES: string[] = [];
+
+  switch (provinciaT) {
+    case "LIMA":
+      ALMACENES = ["0009"];
+      break;
+    case "TUMBES":
+      ALMACENES = ["2001"];
+      break;
+    case "HUANUCO":
+      ALMACENES = ["0002"];
+      break;
+  }
+
   try {
     let productosEncontrados: any[] = [];
     const skusEncontrados = new Set<string>();
+    let productosFaltantes = [...productos];
 
-    // Buscar en el almacén "0009"
-    let data = await buscarEnAlmacen(productos, "0009");
-    productosEncontrados.push(...data);
-    data.forEach((p: any) => skusEncontrados.add(p.sku));
+    // Buscar en cada almacén
+    for (const almacen of ALMACENES) {
+      if (productosFaltantes.length === 0) break; // Si ya se encontraron todos, salir del loop
 
-    // Filtrar productos no encontrados
-    let productosFaltantes = productos.filter(
-      ({ sku }) => !skusEncontrados.has(sku)
-    );
-
-    // Si hay productos no encontrados, buscarlos en el almacén "0002"
-    if (productosFaltantes.length > 0) {
-      data = await buscarEnAlmacen(productosFaltantes, "0002");
+      const data = await buscarEnAlmacen(productosFaltantes, almacen);
       productosEncontrados.push(...data);
       data.forEach((p: any) => skusEncontrados.add(p.sku));
 
-      // Actualizar productos faltantes después de buscar en "0002"
+      // Filtrar los productos que aún no se han encontrado
       productosFaltantes = productos.filter(
         ({ sku }) => !skusEncontrados.has(sku)
       );
     }
 
-    // Si no se encontró ningún producto después de ambas búsquedas, devolver []
-    if (productosEncontrados.length === 0 && productosFaltantes.length > 0) {
+    // Si no se encontró ningún producto, devolver []
+    if (productosEncontrados.length === 0) {
       return [];
     }
 

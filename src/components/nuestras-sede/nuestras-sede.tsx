@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ModalDesk from "../modal/Modal";
 import Link from "next/link";
-import getSanityFileUrl from "@/utilits/get-url-video";
+import getSanityFileUrl from "@/utils/get-url-video";
 import { MapPin } from "lucide-react";
 
 interface Sede {

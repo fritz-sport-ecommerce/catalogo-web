@@ -1,5 +1,5 @@
 import { client } from "@/sanity/lib/client";
-import { FiltroProducts } from "@/utilits/filtro-products";
+import { FiltroProducts } from "@/utils/filtro-products";
 import { groq } from "next-sanity";
 import React, { useEffect, useState } from "react";
 

@@ -8,7 +8,7 @@ import { SanitySlider } from "@/config/inventory";
 import Carousel from "@/components/carousel-home/Carousel";
 import CarouselProductRelacionados from "@/components/carousel-product/carousel-product-relacionados";
 import Descuentos from "@/config/descuentos";
-import { FiltroGlobal } from "@/utilits/filtro-products";
+import { FiltroGlobal } from "@/utils/filtro-products";
 import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

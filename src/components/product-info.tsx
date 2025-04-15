@@ -10,7 +10,7 @@ import { SanityProduct } from "@/config/inventory";
 import { precioProduct } from "@/config/precio-product";
 
 import ProductAddToCart from "./product-add-to-cart";
-import { FiltroProducts } from "@/utilits/filtro-products";
+import { FiltroProducts } from "@/utils/filtro-products";
 import RoleContext from "@/context/roleContext";
 
 interface Props {
@@ -40,7 +40,7 @@ export function ProductInfo({ product, descuentos }: Props) {
       .then((fetchedData) => {
         // Filtrar productos que tengan el mismo SKU que el producto principal
         const uniqueProducts = fetchedData.filter(
-          (relatedProduct:any) => relatedProduct.sku !== product.sku
+          (relatedProduct: any) => relatedProduct.sku !== product.sku
         );
 
         setData(uniqueProducts);
@@ -57,23 +57,31 @@ export function ProductInfo({ product, descuentos }: Props) {
           <h1 className="hidden text-3xl font-bold uppercase w-full tracking-tight xl:block">
             {product?.name} - {product?.genero}
           </h1>
-          <div className="mt-3 hidden xl:block">l
-            <h2 className="sr-only">Product information</h2>
+          <div className="mt-3 hidden xl:block">
+            l<h2 className="sr-only">Product information</h2>
             <div className="mb-3 flex items-center justify-between w-ful gap-x-2">
-            {userRole === "emprendedor" ? "PRECIO EMPRENDEDOR:" :"PRECIO MAYORISTA:"}
-        
-              <p className={`text-3xl tracking-tight ${userRole === "emprendedor" ? "text-black dark:text-white " :"text-red-500"} font-semibold `}>
+              {userRole === "emprendedor"
+                ? "PRECIO EMPRENDEDOR:"
+                : "PRECIO MAYORISTA:"}
+
+              <p
+                className={`text-3xl tracking-tight ${
+                  userRole === "emprendedor"
+                    ? "text-black dark:text-white "
+                    : "text-red-500"
+                } font-semibold `}
+              >
                 S/
-                {userRole === "emprendedor" ? product?.priceemprendedor : product?.pricemayorista}
+                {userRole === "emprendedor"
+                  ? product?.priceemprendedor
+                  : product?.pricemayorista}
               </p>
             </div>
-
             <div className="mb-5 flex items-center justify-between gap-x-2">
-            PRECIO RETAIL:
-        
+              PRECIO RETAIL:
               <p className="text-2xl tracking-tight ">
                 S/
-                { product?.priceecommerce.toFixed()}
+                {product?.priceecommerce.toFixed()}
               </p>
             </div>
           </div>
@@ -91,18 +99,15 @@ export function ProductInfo({ product, descuentos }: Props) {
                 images: any;
               }) => (
                 <Link key={el.id} href={`/products/${el.slug}/${el.sku}`}>
-                  {
-                    el.images && el.images[0] && el.images[0]?.asset && (
-                      <img
-                        width={70}
-                        height={70}
-                        className="relative"
-                        src={urlForImage(el.images[0]?.asset._ref).url()}
-                        alt=""
-                      />
-
-                    )
-                  }
+                  {el.images && el.images[0] && el.images[0]?.asset && (
+                    <img
+                      width={70}
+                      height={70}
+                      className="relative"
+                      src={urlForImage(el.images[0]?.asset._ref).url()}
+                      alt=""
+                    />
+                  )}
                 </Link>
               )
             )}

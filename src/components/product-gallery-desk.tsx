@@ -9,7 +9,7 @@ import { SanityProduct } from "@/config/inventory";
 import { shimmer, toBase64 } from "@/lib/image";
 
 import "react-photo-view/dist/react-photo-view.css";
-import ToTop from "@/utilits/scroll-top";
+import ToTop from "@/utils/scroll-top";
 
 interface Props {
   product: SanityProduct;

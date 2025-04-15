@@ -4,7 +4,7 @@ export const dynamic = "force-dynamic";
 
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import { FiltroProducts } from "@/utilits/filtro-products";
+import { FiltroProducts } from "@/utils/filtro-products";
 import { SanityProduct } from "@/config/inventory";
 import { cn } from "@/lib/utils";
 import { ProductFilters } from "@/components/product-filters";
@@ -12,8 +12,9 @@ import ProductGrid from "@/components/product/product-card/product-grid";
 import { MainSort } from "@/components/product-sort";
 
 import { Metadata } from "next";
-import { FiltroGlobal } from "@/utilits/filtro-products";
+import { FiltroGlobal } from "@/utils/filtro-products";
 import Descuentos from "@/config/descuentos";
+import productosTraidosSistemaFritzSport from "@/config/productos-traidos-sistema-fritz-sport";
 
 interface Props {
   searchParams: {
@@ -104,7 +105,7 @@ export default async function Page({ searchParams }: Props) {
     ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" && categories != "originals" `
     : "";
 
-  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}] | order(_createdAt desc)`;
+  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}&& pricemayorista != 0 && priceemprendedor != 0 && categories != "originals"] | order(_createdAt desc)`;
 
   async function fetchNextPage() {
     // Función para obtener productos y productos similares
@@ -118,60 +119,59 @@ export default async function Page({ searchParams }: Props) {
           name,
           sku,
           images,
-          priceecommerce,
-          tipoproducto,
-          priceemprendedor,
-          pricemayorista,
           description,
           genero,
-          subgenero_ninos,
           tipo,
+          empresa,
           coleccion,
           marca,
           descuento,
+  
           color,
-          razonsocial,
           descuentosobred,
-          tallas,
           preciomanual,
           "slug": slug.current
         }[${start}..${start + 11}]`
       );
-
-      // Para cada producto, obtener productos similares basados en el nombre
-      const productsWithSimilar = await Promise.all(
-        products.map(async (product) => {
-          const filtroProduct = FiltroProducts(product);
-          const allProducts = await client.fetch<SanityProduct[]>(
-            groq`*[${filtroProduct}] {
-              _id,
-              name,
-              sku,
-              images,
-              marca,
-              genero,
-              priceecommerce,
-              "slug": slug.current
-            }[0..4]` // Limitar a 5 productos similares
-          );
-          // Filtra productos duplicados
-          const similarProducts = allProducts.filter(
-            (newProduct, index, self) =>
-              index === self.findIndex((p) => p.sku === newProduct.sku)
-          );
-          return {
-            ...product,
-            similarProducts, // Agregar los productos similares
-          };
-        })
-      );
-      // Filtra productos duplicados
-      const uniqueProducts = productsWithSimilar.filter(
+      const AllProducts = products.filter(
         (newProduct, index, self) =>
           index === self.findIndex((p) => p.sku === newProduct.sku)
       );
 
-      return uniqueProducts;
+      // Para cada producto, obtener productos similares basados en el nombre
+      // const productsWithSimilar = await Promise.all(
+      //   products.map(async (product) => {
+      //     const filtroProduct = FiltroProducts(product)
+      //     const allProducts = await client.fetch<SanityProduct[]>(
+      //       groq`*[${filtroProduct}] {
+      //         _id,
+      //         name,
+      //         sku,
+      //         images,
+      //         marca,
+      //         genero,
+      //         priceecommerce,
+      //         "slug": slug.current
+      //       }[0..4]` // Limitar a 5 productos similares
+      //     );
+      //    // Filtra productos duplicados
+      //    const similarProducts = allProducts.filter(
+      //     (newProduct, index, self) =>
+      //       index === self.findIndex((p) => p.sku === newProduct.sku)
+      //   );
+      //     return {
+      //       ...product,
+      //       similarProducts, // Agregar los productos similares
+      //     };
+      //   })
+      // );
+      //     // Filtra productos duplicados
+      //     const uniqueProducts = productsWithSimilar.filter(
+      //       (newProduct, index, self) =>
+      //         index === self.findIndex((p) => p.sku === newProduct.sku)
+      //     );
+
+      return AllProducts;
       // return productsWithSimilar;
     };
 
@@ -195,6 +195,12 @@ export default async function Page({ searchParams }: Props) {
     }
   }
   const products = await fetchNextPage();
+
+  const ProductosDeSistema = await productosTraidosSistemaFritzSport(
+    products,
+
+    "LIMA"
+  );
 
   let descuentos = await Descuentos();
 
@@ -228,7 +234,7 @@ export default async function Page({ searchParams }: Props) {
               start={start}
               descuentos={descuentos}
               outlet={false}
-              products={products}
+              products={ProductosDeSistema}
               generoSku={true}
               filter={filter}
               order={order}

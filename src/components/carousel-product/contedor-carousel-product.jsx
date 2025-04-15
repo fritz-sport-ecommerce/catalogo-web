@@ -2,25 +2,23 @@ import React from "react";
 import { client } from "@/sanity/lib/client";
 
 import CarouselProduct from "@/components/carousel-product/carousel-product";
-import { FiltroGlobal } from "@/utilits/filtro-products";
+import { FiltroGlobal } from "@/utils/filtro-products";
 
 export default async function ContedorCarouselProduct({
   genero,
   cantidad = "80",
   descuentos,
-  nuevo=false,
+  nuevo = false,
   tipoCategoria,
   outlet,
 }) {
   const productosGenero = async (genero, cantidad, tipoCategoria) => {
     const order = `| order(_id) [0...${cantidad}]`;
 
-    const productFilter = FiltroGlobal(outlet ? "fritzduran": "fritzsport");
+    const productFilter = FiltroGlobal(outlet ? "fritzduran" : "fritzsport");
 
     const generoFilterHombre = genero ? `&& genero match "${genero}"  ` : "";
-    const categoria = tipoCategoria
-      ?  tipoCategoria
-      : generoFilterHombre;
+    const categoria = tipoCategoria ? tipoCategoria : generoFilterHombre;
 
     const filter = `*[${productFilter}${categoria} && categories != "originals"] | order(_createdAt desc)[0..100]`;
     console.log(filter);
