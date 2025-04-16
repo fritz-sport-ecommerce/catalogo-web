@@ -15,6 +15,7 @@ import { Metadata } from "next";
 import { FiltroGlobal } from "@/utils/filtro-products";
 import Descuentos from "@/config/descuentos";
 import productosTraidosSistemaFritzSport from "@/config/productos-traidos-sistema-fritz-sport";
+import Pagination from "@/components/pagination/pagination";
 
 interface Props {
   searchParams: {
@@ -203,7 +204,8 @@ export default async function Page({ searchParams }: Props) {
   );
 
   let descuentos = await Descuentos();
-
+  // NUEVO: obtenemos el total de productos para la paginación
+  const totalProducts = await client.fetch<number>(groq`count(${filter})`);
   return (
     <div>
       <MainSort />
@@ -238,6 +240,12 @@ export default async function Page({ searchParams }: Props) {
               generoSku={true}
               filter={filter}
               order={order}
+            />
+
+            <Pagination
+              currentStart={start}
+              pageSize={12}
+              total={totalProducts}
             />
             {/* Product grid */}
           </section>

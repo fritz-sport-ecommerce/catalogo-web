@@ -51,9 +51,9 @@ export default function Product({
       
       setCurrentIndex(0);
       setDataProduct(data);
-       setStock(!data.tallas || data.tallas.every((el) => el.stock === 0));
+       setStock(!data?.tallas || data?.tallas?.every((el) => el.stock === 0));
 
-      setLoadedImages([data.images && data.images[0]]);
+      setLoadedImages([data?.images && data.images[0]]);
       
         setLoading(false); // Desactivar el loader aquí si ya hay imágenes
         
