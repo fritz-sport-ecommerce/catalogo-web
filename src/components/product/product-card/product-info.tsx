@@ -57,28 +57,33 @@ export default function ProductInfo({
           {dataProduct?.name}
         </h3>
       </div>
-      <div className="flex justify-between w-full items-start">
-        <h3 className="mt-2 text-sm font-bold capitalize  xl:text-sm 2xl:text-sm w-full h-10">
-          {dataProduct?.stock}
-        </h3>
-      </div>
+
       <div className="flex mt-2 flex-col-reverse items-end justify-center">
         <div className="flex justify-between items-center w-full">
           <div className="uppercase">Precio Retail:</div>
           <div className={`dark:text-white text-black font-bold text-base`}>
-            S/{dataProduct?.priceecommerce?.toFixed(2)}
+            S/
+            {dataProduct?.priceecommerce
+              ? dataProduct?.priceecommerce?.toFixed(2)
+              : "----"}
           </div>
         </div>
         <div className="flex justify-between items-center w-full">
           <div className="uppercase">Precio Emprendedor:</div>
           <div className={`dark:text-white text-black font-bold text-base`}>
-            S/{dataProduct?.priceemprendedor?.toFixed(2)}
+            S/
+            {dataProduct?.priceemprendedor
+              ? dataProduct?.priceemprendedor?.toFixed(2)
+              : "----"}
           </div>
         </div>
         <div className="flex justify-between items-center w-full">
           <div className="uppercase">Precio Mayorista:</div>
           <div className={` text-red-500 font-bold text-lg`}>
-            S/{dataProduct?.pricemayorista?.toFixed(2)}
+            S/
+            {dataProduct?.pricemayorista
+              ? dataProduct?.pricemayorista?.toFixed(2)
+              : "----"}
           </div>
         </div>
       </div>

@@ -32,7 +32,7 @@ export function ProductGalleryDesk({ product }: Props) {
       {/* Image Grid */}
       <div className=" h-full w-full ">
         <ul className="grid   justify-start gap-[2px] sm:grid-cols-2 lg:col-span-3 2xl:grid-cols-2">
-          {product?.images.slice(0, loadMore).map((image, index) => (
+          {product?.images?.slice(0, loadMore).map((image, index) => (
             <div
               key={index}
               className={`${
@@ -56,7 +56,7 @@ export function ProductGalleryDesk({ product }: Props) {
           ))}
         </ul>
         <div className="flex justify-center">
-          {loadMore < product?.images.length ? (
+          {loadMore < product?.images?.length ? (
             <button
               type="button"
               className="group relative overflow-hidden border-2 border-black bg-white px-2 py-3 text-sm md:text-base"
@@ -83,7 +83,7 @@ export function ProductGalleryDesk({ product }: Props) {
             </button>
           ) : (
             <div className="flex flex-col items-center">
-              {product?.images.length > 2 && (
+              {product?.images?.length > 2 && (
                 <button
                   type="button"
                   className="group relative overflow-hidden border-2 border-black bg-white px-2 py-3 text-sm md:text-base"
@@ -123,10 +123,10 @@ export function ProductGalleryDesk({ product }: Props) {
           )}
         </div>
         <div className="mt-1 flex justify-center">
-          {loadMore > product?.images.length
-            ? product?.images.length
+          {loadMore > product?.images?.length
+            ? product?.images?.length
             : loadMore}{" "}
-          de {product?.images.length} fotos
+          de {product?.images?.length} fotos
         </div>
       </div>
 

@@ -5,7 +5,7 @@ interface props {
   products: {
     preciomanual: number;
   };
-  stock: boolean;
+  stock: number;
 }
 export default function ProductOfertStyle({
   descuento,
@@ -44,11 +44,11 @@ export default function ProductOfertStyle({
           <div className=" mt-1 text-xs text-white ">
             <div className="flex flex-col">
               <>
-                {stock <= 0 && (
+                {stock === 0 && (
                   <span className="flex justify-center bg-black px-3 py-1">
                     Agotado
                   </span>
-                )}
+                ) }
               </>
             </div>
           </div>

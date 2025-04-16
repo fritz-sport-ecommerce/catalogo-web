@@ -74,21 +74,21 @@ export default function ProductRelacionados({
               <div>Precio Mayorista:</div>
               <div className="xl:text-lg font-bold text-[#B73228]">
                 S/
-                {products?.pricemayorista.toFixed()}
+                {products?.pricemayorista?.toFixed()}
               </div>
             </div>
             <div className="flex items-center justify-between w-full">
               <div>Precio Emprendedor:</div>
               <div className="xl:text-base font-bold ">
                 S/
-                {products?.priceemprendedor.toFixed()}
+                {products?.priceemprendedor?.toFixed()}
               </div>
             </div>
             <div className="flex items-center justify-between w-full">
               <div>Precio Retail:</div>
               <div className="xl:text-base font-bold ">
                 S/
-                {products?.priceecommerce.toFixed()}
+                {products?.priceecommerce?.toFixed()}
               </div>
             </div>
           </div>

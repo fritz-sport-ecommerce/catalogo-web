@@ -26,7 +26,7 @@ export default async function productosTraidosSistemaFritzSport(
 
   const SkuProducts = productos
     .map((el) => ({ sku: el.sku }))
-    .filter((el:any) => el.empresa != "fz_premium");
+    .filter((el: any) => el.empresa != "fz_premium");
 
   let precioDeProductos: any[] = [];
   try {
@@ -49,6 +49,7 @@ export default async function productosTraidosSistemaFritzSport(
         precio?.precio_mayorista,
         producto?.marca
       ),
+      images: producto?.images,
       subgenero_ninos:
         producto.genero === "niños"
           ? determinarSubgeneroPorTalla(
@@ -89,14 +90,14 @@ export default async function productosTraidosSistemaFritzSport(
       (a, b) =>
         new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
     )
-    .filter(
-      (el) =>
-        el.subgenero_ninos !== "Categoría no determinada" &&
-        // obtenerStockEnLima(el.provincias, provincia) > 10 &&
-        el.talla_sistema !== "" &&
-        // el.stock > 10 &&
-        el.tallascatalogo !== ""
-    )
+    // .filter(
+    //   (el) =>
+    //     el.subgenero_ninos !== "Categoría no determinada" &&
+    //     // obtenerStockEnLima(el.provincias, provincia) > 10 &&
+    //     el.talla_sistema !== "" &&
+    //     // el.stock > 10 &&
+    //     el.tallascatalogo !== ""
+    // )
     .filter(
       (el) =>
         el.pricemayorista !== undefined &&

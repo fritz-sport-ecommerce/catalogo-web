@@ -49,7 +49,7 @@ export function AccordionDescription({ product }: Props) {
               <div>
                <img
                   src={
-                    product.images[1]
+                    product.images && product.images.length > 1
                       ? urlForImage(product.images[1]).url()
                       : urlForImage(product.images[0]).url()
                   }

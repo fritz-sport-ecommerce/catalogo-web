@@ -34,6 +34,7 @@ interface Props {
     subgenero?: string;
     search?: string;
     sku?: string;
+    page?: string; // Añadimos parámetro de página
   };
 }
 export const metadata: Metadata = {
@@ -77,9 +78,14 @@ export default async function Page({ searchParams }: Props) {
     coleccion,
     talla,
     marca,
+
     tipo,
   } = searchParams;
-  const start = searchParams.start ? parseInt(searchParams.start) : 0;
+  const page = searchParams.page ? parseInt(searchParams.page) : 1; // Nueva variable de página
+  const itemsPerPage = 12; // Cantidad de items por página
+
+  // Calculamos el start correctamente
+  const start = (page - 1) * itemsPerPage;
 
   const priceOrder = price ? `| order(priceecommerce ${price}) ` : "";
 
@@ -106,115 +112,72 @@ export default async function Page({ searchParams }: Props) {
     ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" && categories != "originals" `
     : "";
 
-  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${tipoFilter}${marcaFilter}${coleccionFilter}${tallaFilter}${subgeneroFilter}&& pricemayorista != 0 && priceemprendedor != 0 && categories != "originals"] | order(_createdAt desc)`;
+  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${marcaFilter}${coleccionFilter} && empresa != "fz_premium"] | order(_createdAt desc)`;
 
-  async function fetchNextPage() {
-    // Función para obtener productos y productos similares
-    const fetchProducts = async (filter: string, order: string) => {
-      // Obtener productos principales
+  async function fetchNextPage(itemsPerPage: number, start: number) {
+    let totalValidProducts: SanityProduct[] = [];
 
+    const fetchProducts = async (
+      filter: string,
+      order: string,
+      start: number
+    ) => {
       const products = await client.fetch<SanityProduct[]>(
         groq`${filter} ${order} {
           _id,
           _createdAt,
           name,
+          empresa,
           sku,
           images,
           description,
           genero,
           tipo,
-          empresa,
-          coleccion,
           marca,
-          descuento,
-  
           color,
-          descuentosobred,
+          imgcatalogomain,
+          imagescatalogo,
+          categories,
           preciomanual,
+          fechaIngreso,
           "slug": slug.current
-        }[${start}..${start + 11}]`
+        }[${start}...${start + itemsPerPage}]`
       );
-      const AllProducts = products.filter(
-        (newProduct, index, self) =>
-          index === self.findIndex((p) => p.sku === newProduct.sku)
-      );
-
-      // Para cada producto, obtener productos similares basados en el nombre
-      // const productsWithSimilar = await Promise.all(
-      //   products.map(async (product) => {
-      //     const filtroProduct = FiltroProducts(product)
-      //     const allProducts = await client.fetch<SanityProduct[]>(
-      //       groq`*[${filtroProduct}] {
-      //         _id,
-      //         name,
-      //         sku,
-      //         images,
-      //         marca,
-      //         genero,
-      //         priceecommerce,
-      //         "slug": slug.current
-      //       }[0..4]` // Limitar a 5 productos similares
-      //     );
-      //    // Filtra productos duplicados
-      //    const similarProducts = allProducts.filter(
-      //     (newProduct, index, self) =>
-      //       index === self.findIndex((p) => p.sku === newProduct.sku)
-      //   );
-      //     return {
-      //       ...product,
-      //       similarProducts, // Agregar los productos similares
-      //     };
-      //   })
-      // );
-      //     // Filtra productos duplicados
-      //     const uniqueProducts = productsWithSimilar.filter(
-      //       (newProduct, index, self) =>
-      //         index === self.findIndex((p) => p.sku === newProduct.sku)
-      //     );
-
-      return AllProducts;
-      // return productsWithSimilar;
+      return products;
     };
 
-    const products = await fetchProducts(filter, order);
+    while (totalValidProducts.length < itemsPerPage) {
+      const products = await fetchProducts(filter, order, start);
 
-    if (searchFilter) {
-      if (products.length == 2) {
-        return [products[0]];
-      } else {
-        // if(search === "IF1347"){
-        //   return []
-        // }else{
+      // Si ya no hay más productos para traer desde Sanity, salimos
+      if (products.length === 0) break;
 
-        //   return products
-        // }
+      const validProducts = await productosTraidosSistemaFritzSport(
+        products,
+        "LIMA"
+      );
+      totalValidProducts = [...totalValidProducts, ...validProducts];
 
-        return products;
-      }
-    } else {
-      return products;
+      start += itemsPerPage; // avanzar al siguiente bloque de productos
     }
+
+    // Devolver solo los primeros 12 válidos (por si obtuvimos más)
+    return totalValidProducts.slice(0, itemsPerPage);
   }
-  const products = await fetchNextPage();
+  const products = await fetchNextPage(itemsPerPage, start);
 
-  const ProductosDeSistema = await productosTraidosSistemaFritzSport(
-    products,
-
-    "LIMA"
-  );
+  // console.log(products, "productos traidos sanity");
 
   let descuentos = await Descuentos();
   // NUEVO: obtenemos el total de productos para la paginación
   const totalProducts = await client.fetch<number>(groq`count(${filter})`);
+
   return (
     <div>
       <MainSort />
       <div>
         <main className=" w-full px-6">
-          <section
-            aria-labelledby="products-heading"
-            className="flex pb-24 pt-6"
-          >
+          <section aria-labelledby="products-heading" className="flex  pt-6">
             <h2 id="products-heading" className="sr-only">
               Products
             </h2>
@@ -236,19 +199,20 @@ export default async function Page({ searchParams }: Props) {
               start={start}
               descuentos={descuentos}
               outlet={false}
-              products={ProductosDeSistema}
+              products={products}
               generoSku={true}
               filter={filter}
               order={order}
             />
 
-            <Pagination
-              currentStart={start}
-              pageSize={12}
-              total={totalProducts}
-            />
             {/* Product grid */}
           </section>
+
+          <Pagination
+            currentPage={page}
+            itemsPerPage={itemsPerPage}
+            totalItems={totalProducts}
+          />
         </main>
       </div>
     </div>

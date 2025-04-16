@@ -10,7 +10,7 @@ export function FiltroProducts(
 }
 
 export function FiltroGlobal(razonsocial = "fritzsport") {
-  const productFilter = `_type == "product" && priceecommerce != undefined && priceecommerce != null && categories != "originals" && images != undefined   && images != null && tallas != undefined && pricemayorista != undefined && pricemayorista != undefined && priceemprendedor != undefined  `;
+  const productFilter = `_type == "product"`;
 
   return productFilter;
 }

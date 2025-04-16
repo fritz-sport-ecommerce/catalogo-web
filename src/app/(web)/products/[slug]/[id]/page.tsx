@@ -53,11 +53,7 @@ export default async function Page({ params }: Props) {
     sku,
     marca,
     images,
-    priceecommerce,
-    pricemayorista,
-    priceemprendedor,
-
-
+    empresa,
     currency,
     description,
     sizes,
@@ -68,7 +64,6 @@ export default async function Page({ params }: Props) {
     tipo,
     descuentosobred,
     descuento,
-    tallas,
     preciomanual,
     "slug":slug.current
   }`);

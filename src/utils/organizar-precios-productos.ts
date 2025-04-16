@@ -12,6 +12,8 @@
 //   precio6: number;
 // };
 
+import { obtenerProvinciaProducto } from "./obtener-provincia-producto";
+
 // type Talla = {
 //   _id: string;
 //   talla: string;
@@ -76,22 +78,22 @@
 //       groupedProducts[grupo].tallas_catalogo.add(tallaPeruana);
 //       groupedProducts[grupo].stockDisponible += stockDisponible;
 //       groupedProducts[grupo].precio_retail =
-//         Math.max(
+//         Math.min(
 //           groupedProducts[grupo].precio_retail ?? 0,
 //           validarPrecio(precio1) ?? 0
 //         ) || null;
 //       groupedProducts[grupo].precio_tienda =
-//         Math.max(
+//         Math.min(
 //           groupedProducts[grupo].precio_tienda ?? 0,
 //           validarPrecio(precio2) ?? 0
 //         ) || null;
 //       groupedProducts[grupo].precio_emprendedor =
-//         Math.max(
+//         Math.min(
 //           groupedProducts[grupo].precio_emprendedor ?? 0,
 //           validarPrecio(precio3) ?? 0
 //         ) || null;
 //       groupedProducts[grupo].precio_mayorista =
-//         Math.max(
+//         Math.min(
 //           groupedProducts[grupo].precio_mayorista ?? 0,
 //           validarPrecio(precio6) ?? 0
 //         ) || null;
@@ -103,22 +105,22 @@
 //       if (existingTalla) {
 //         existingTalla.stock += stockDisponible;
 //         existingTalla.precio_retail =
-//           Math.max(
+//           Math.min(
 //             existingTalla.precio_retail ?? 0,
 //             validarPrecio(precio1) ?? 0
 //           ) || null;
 //         existingTalla.precio_tienda =
-//           Math.max(
+//           Math.min(
 //             existingTalla.precio_tienda ?? 0,
 //             validarPrecio(precio2) ?? 0
 //           ) || null;
 //         existingTalla.precio_emprendedor =
-//           Math.max(
+//           Math.min(
 //             existingTalla.precio_emprendedor ?? 0,
 //             validarPrecio(precio3) ?? 0
 //           ) || null;
 //         existingTalla.precio_mayorista =
-//           Math.max(
+//           Math.min(
 //             existingTalla.precio_mayorista ?? 0,
 //             validarPrecio(precio6) ?? 0
 //           ) || null;
@@ -153,6 +155,7 @@
 // funcion anterior
 
 type Producto = {
+  almacenTabla: string;
   codigoAlmacen: string;
   codigoArticulo: string;
   nombreArticulo: string;
@@ -175,8 +178,17 @@ type Talla = {
   precio_emprendedor: number;
   precio_mayorista: number;
 };
-
+interface Almacen {
+  almacen: string;
+  stock: number;
+}
+interface ProvinciaStock {
+  provincia: string;
+  stock: number;
+}
 type ProductoOrdenado = {
+  almacenTabla: string;
+
   codigoAlmacen: string;
   codigoArticulo: string;
   nombreArticulo: string;
@@ -189,19 +201,40 @@ type ProductoOrdenado = {
   precio_mayorista: number;
   tallas_catalogo: any;
   tallas: Talla[];
+  almacenes: Almacen[];
+  provincias: ProvinciaStock[];
 };
 function convertirTallaPeruana(talla: string): string {
-  return talla.endsWith("-") 
-    ? talla.replace("-", ".5")  // Si termina en "-", reemplaza con ".5"
-    : talla.replace("-", "");   // Si el "-" está en medio, solo elimínalo
+  return talla.endsWith("-")
+    ? talla.replace("-", ".5") // Si termina en "-", reemplaza con ".5"
+    : talla.replace("-", ""); // Si el "-" está en medio, solo elimínalo
 }
+function obtenerPrecioMasFrecuente(precios: number[]): number {
+  const conteo = new Map<number, number>();
 
+  precios.forEach((precio) => {
+    conteo.set(precio, (conteo.get(precio) || 0) + 1);
+  });
+
+  let maxFrecuencia = 0;
+  let precioMasFrecuente = precios[0];
+
+  conteo.forEach((frecuencia, precio) => {
+    if (frecuencia > maxFrecuencia) {
+      maxFrecuencia = frecuencia;
+      precioMasFrecuente = precio;
+    }
+  });
+
+  return precioMasFrecuente;
+}
 
 export default function (data: Producto[]): ProductoOrdenado[] {
   const groupedProducts: Record<string, ProductoOrdenado> = {};
 
   data.forEach(
     ({
+      almacenTabla,
       codigoAlmacen,
       codigoArticulo,
       nombreArticulo,
@@ -216,6 +249,7 @@ export default function (data: Producto[]): ProductoOrdenado[] {
     }) => {
       if (!groupedProducts[grupo]) {
         groupedProducts[grupo] = {
+          almacenTabla,
           codigoAlmacen,
           codigoArticulo,
           nombreArticulo,
@@ -228,22 +262,36 @@ export default function (data: Producto[]): ProductoOrdenado[] {
           precio_mayorista: precio6,
           tallas_catalogo: new Set<string>(),
           tallas: [],
+          almacenes: [],
+          provincias: [],
         };
       }
 
       let tallaPeruana = convertirTallaPeruana(talla);
-      
+
       const existingTalla = groupedProducts[grupo].tallas.find(
         (t) => t.talla === tallaPeruana
       );
-      
+
       if (existingTalla) {
         existingTalla.stock += stockDisponible;
-        existingTalla.precio_retail = Math.max(existingTalla.precio_retail, precio1);
-        existingTalla.precio_tienda = Math.max(existingTalla.precio_tienda, precio2);
-        existingTalla.precio_emprendedor = Math.max(existingTalla.precio_emprendedor, precio3);
-        existingTalla.precio_mayorista = Math.max(existingTalla.precio_mayorista, precio6);
-      } else if (stockDisponible > 0) { // Solo agregar tallas con stock mayor a 1
+        existingTalla.precio_retail = obtenerPrecioMasFrecuente([
+          existingTalla.precio_retail,
+          precio1,
+        ]);
+        existingTalla.precio_tienda = obtenerPrecioMasFrecuente([
+          existingTalla.precio_tienda,
+          precio2,
+        ]);
+        existingTalla.precio_emprendedor = obtenerPrecioMasFrecuente([
+          existingTalla.precio_emprendedor,
+          precio3,
+        ]);
+        existingTalla.precio_mayorista = obtenerPrecioMasFrecuente([
+          existingTalla.precio_mayorista,
+          precio6,
+        ]);
+      } else if (stockDisponible > 0) {
         groupedProducts[grupo].tallas.push({
           _id: codigoArticulo,
           talla: tallaPeruana,
@@ -253,26 +301,44 @@ export default function (data: Producto[]): ProductoOrdenado[] {
           precio_emprendedor: precio3,
           precio_mayorista: precio6,
         });
-        groupedProducts[grupo].tallas_catalogo.add(tallaPeruana); // Solo agregar si stock > 1
+        groupedProducts[grupo].tallas_catalogo.add(tallaPeruana);
       }
-      
+
+      const existingAlmacen = groupedProducts[grupo].almacenes.find(
+        (almacen) => almacen.almacen === almacenTabla
+      );
+
+      if (existingAlmacen) {
+        existingAlmacen.stock += stockDisponible;
+      } else {
+        groupedProducts[grupo].almacenes.push({
+          almacen: almacenTabla,
+          stock: stockDisponible,
+        });
+      }
+      groupedProducts[grupo].provincias = obtenerProvinciaProducto(
+        codigoAlmacen,
+        almacenTabla,
+        stockDisponible,
+        groupedProducts[grupo].provincias || []
+      );
       groupedProducts[grupo].stockDisponible += stockDisponible;
-      groupedProducts[grupo].precio_retail = Math.max(
+      groupedProducts[grupo].precio_retail = obtenerPrecioMasFrecuente([
         groupedProducts[grupo].precio_retail,
-        precio1
-      );
-      groupedProducts[grupo].precio_tienda = Math.max(
+        precio1,
+      ]);
+      groupedProducts[grupo].precio_tienda = obtenerPrecioMasFrecuente([
         groupedProducts[grupo].precio_tienda,
-        precio2
-      );
-      groupedProducts[grupo].precio_emprendedor = Math.max(
+        precio2,
+      ]);
+      groupedProducts[grupo].precio_emprendedor = obtenerPrecioMasFrecuente([
         groupedProducts[grupo].precio_emprendedor,
-        precio3
-      );
-      groupedProducts[grupo].precio_mayorista = Math.max(
+        precio3,
+      ]);
+      groupedProducts[grupo].precio_mayorista = obtenerPrecioMasFrecuente([
         groupedProducts[grupo].precio_mayorista,
-        precio6
-      );
+        precio6,
+      ]);
     }
   );
 
