@@ -169,7 +169,7 @@ export default async function Page({ searchParams }: Props) {
   // console.log(products, "productos traidos sanity");
 
   let descuentos = await Descuentos();
-  // NUEVO: obtenemos el total de productos para la paginación
+  // NUEVO: obtenemos el total de productos para la paginaciónn
   const totalProducts = await client.fetch<number>(groq`count(${filter})`);
 
   return (
