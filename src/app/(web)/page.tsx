@@ -87,7 +87,7 @@ export default async function Page({ searchParams }: Props) {
   }`);
 
   let descuentos = await Descuentos();
-
+//ts
   return (
     <div>
       {/* <DialogSizes promoHome={promoHome}></DialogSizes> */}
