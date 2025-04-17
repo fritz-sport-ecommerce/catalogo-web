@@ -61,7 +61,7 @@ export default function ProductSearchCard({
 
    
       {/* descuento y oferta ,stock*/}
-      <ProductOfertStyle descuento={descuentos?.descuentofritzsport} products={products} descuentoSobreD={descuentoSobreD} stock={stock}/>
+      <ProductOfertStyle descuento={descuentos?.descuentofritzsport} products={products} descuentoSobreD={descuentoSobreD} stock={products.stock}/>
       {/* Productos relacionados */}
 
   
