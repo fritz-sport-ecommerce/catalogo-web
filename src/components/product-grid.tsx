@@ -93,7 +93,7 @@ export function ProductGrid({
             <Product
               outlet={outlet}
               products={product}
-              generoSku={false}
+         
               descuentos={descuentos}
             />
           </div>
