@@ -42,7 +42,6 @@ export function AccordionDetails({ product }: Props) {
               {product.detalles?.map((el: string) => (
                 <li key={el}>{el != "undefined" ? el : "sin detalles"}</li>
               ))}
-            
             </div>
           </div>
         </div>
