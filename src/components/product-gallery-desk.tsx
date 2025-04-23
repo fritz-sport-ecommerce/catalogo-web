@@ -32,28 +32,73 @@ export function ProductGalleryDesk({ product }: Props) {
       {/* Image Grid */}
       <div className=" h-full w-full ">
         <ul className="grid   justify-start gap-[2px] sm:grid-cols-2 lg:col-span-3 2xl:grid-cols-2">
-          {product?.images?.slice(0, loadMore).map((image, index) => (
-            <div
-              key={index}
-              className={`${
-                activeViewImg ? "cursor-crosshair" : "cursor-default"
-              }`}
-            >
-              {image.asset && (
-                <PhotoProvider>
-                  <PhotoView src={urlForImage(image).url()}>
-                    <img
-                      onMouseEnter={() => setActiveViewImg(true)}
-                      onMouseLeave={() => setActiveViewImg(false)}
-                      className="h-full w-full "
-                      src={urlForImage(image).url()}
-                      alt=""
-                    />
-                  </PhotoView>
-                </PhotoProvider>
+          {product?.images?.length ? (
+            <>
+              {product?.images?.slice(0, loadMore).map((image, index) => (
+                <div
+                  key={index}
+                  className={`${
+                    activeViewImg ? "cursor-crosshair" : "cursor-default"
+                  }`}
+                >
+                  {image?.asset && (
+                    <PhotoProvider>
+                      <PhotoView src={urlForImage(image).url()}>
+                        <img
+                          onMouseEnter={() => setActiveViewImg(true)}
+                          onMouseLeave={() => setActiveViewImg(false)}
+                          className="h-full w-full "
+                          src={urlForImage(image).url()}
+                          alt={`${product?.name} ${index + 1}`}
+                        />
+                      </PhotoView>
+                    </PhotoProvider>
+                  )}
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              {product?.imgcatalogomain ? (
+                <li className="col-span-2 h-full w-full sm:col-span-1 lg:col-span-2 2xl:col-span-1">
+                  <PhotoProvider>
+                    <PhotoView src={urlForImage(product.imgcatalogomain).url()}>
+                      <Image
+                        onMouseEnter={() => setActiveViewImg(true)}
+                        onMouseLeave={() => setActiveViewImg(false)}
+                        className="h-full w-full object-cover"
+                        src={urlForImage(product.imgcatalogomain).url()}
+                        alt=""
+                        width={2000}
+                        height={2000}
+                        placeholder="blur"
+                        blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                          shimmer(2000, 2000)
+                        )}`}
+                        loader={() =>
+                          urlForImage(product.imgcatalogomain).url() ??
+                          "https://cdn.sanity.io/images/ibvmpbc1/production/82e2cc60553f917f8e776fa9c89fe2b533b1fb51-2000x2000.png"
+                        }
+                      />
+                    </PhotoView>
+                  </PhotoProvider>
+                </li>
+              ) : (
+                <img
+                  onMouseEnter={() => setActiveViewImg(true)}
+                  onMouseLeave={() => setActiveViewImg(false)}
+                  className="h-full w-full object-cover"
+                  src={
+                    "https://cdn.sanity.io/images/ibvmpbc1/production/82e2cc60553f917f8e776fa9c89fe2b533b1fb51-2000x2000.png"
+                  }
+                  alt=""
+                  width={2000}
+                  height={2000}
+                  placeholder="blur"
+                />
               )}
-            </div>
-          ))}
+            </>
+          )}
         </ul>
         <div className="flex justify-center">
           {loadMore < product?.images?.length ? (
@@ -123,10 +168,16 @@ export function ProductGalleryDesk({ product }: Props) {
           )}
         </div>
         <div className="mt-1 flex justify-center">
-          {loadMore > product?.images?.length
-            ? product?.images?.length
-            : loadMore}{" "}
-          de {product?.images?.length} fotos
+          {product?.images?.length ? (
+            <>
+              {loadMore > product?.images?.length
+                ? product?.images?.length
+                : loadMore}{" "}
+              de {product?.images?.length} fotos
+            </>
+          ) : (
+            <div>1 de 1 foto </div>
+          )}
         </div>
       </div>
 

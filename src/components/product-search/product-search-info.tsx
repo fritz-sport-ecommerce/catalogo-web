@@ -48,7 +48,7 @@ export default function ProductInfo({
       </div>
       <div className="flex justify-between w-full items-start flex-col">
         <h3 className="mt-2 text-sm font-bold capitalize  xl:text-sm 2xl:text-sm w-full">
-          {dataProduct.name}
+          {dataProduct?.name}
         </h3>
         <div className="flex mt-2  items-start justify-between w-full">
           {(descuento > 0 &&

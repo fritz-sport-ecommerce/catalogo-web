@@ -44,42 +44,7 @@ export default function Product({
   }, [products.sku]);
 
   const [data, setData] = useState(null);
-  const [isLoading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const productFilter = FiltroProducts(products);
-
-  //   const filter = `*[${productFilter}][0..5]`;
-  //   client
-  //     .fetch(
-  //       groq`${filter} {
-  //     _id,
-  //     _createdAt,
-  //     name,
-  //     sku,
-  //     images,
-  //     currency,
-  //     priceecommerce,
-  //     description,
-  //     genero,
-  //     categories,
-  //     marca,
-  //     tallas,
-  //     stock,
-  //     priceemprendedor,
-  //     pricemayorista,
-  //     tipoproducto,
-  //     descuento,
-  //     razonsocial,
-  //     preciomanual,
-  //     "slug":slug.current
-  //   }`
-  //     )
-  //     .then((data) => {
-  //       setData(data);
-  //       setLoading(false);
-  //     });
-  // }, [products.sku]);
 
   return (
     <>

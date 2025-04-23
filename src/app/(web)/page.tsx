@@ -12,6 +12,8 @@ import { FiltroGlobal } from "@/utils/filtro-products";
 import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import CarouselProduct from "@/components/carousel-product/carousel-product";
+import { getProductRazonSocial } from "@/utils/get-products-razon-social-home";
 export const metadata: Metadata = {
   title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
@@ -87,7 +89,16 @@ export default async function Page({ searchParams }: Props) {
   }`);
 
   let descuentos = await Descuentos();
-//ts
+  //ts
+
+  // filtro productos
+  const ProductosLinea = await getProductRazonSocial("adidas", "fritzsport");
+  const ProductosLiquidacion = await getProductRazonSocial(
+    "adidas",
+    "fritzduran"
+  );
+
+  const ProductosNike = await getProductRazonSocial("nike", "fritzsport");
   return (
     <div>
       {/* <DialogSizes promoHome={promoHome}></DialogSizes> */}
@@ -112,11 +123,9 @@ export default async function Page({ searchParams }: Props) {
           <div className="text-center text-xl uppercase xl:text-4xl">
             Adidas linea
           </div>
-          <ContedorCarouselProduct
-            genero={"unisex"}
-            cantidad={"20"}
+          <CarouselProduct
+            products={ProductosLinea}
             descuentos={descuentos}
-            tipoCategoria={`&& marca == "adidas" && razonsocial == "fritzsport"`}
             outlet={false}
           />
           <div className="flex justify-center w-full">
@@ -125,17 +134,14 @@ export default async function Page({ searchParams }: Props) {
             </Link>
           </div>
         </div>
-
         <div className="my-10 xl:my-20">
           <div className="text-center text-xl uppercase xl:text-4xl">
             Adidas liquidación
           </div>
-          <ContedorCarouselProduct
-            genero={"unisex"}
-            cantidad={"20"}
+          <CarouselProduct
+            products={ProductosLiquidacion}
             descuentos={descuentos}
-            tipoCategoria={`&& marca == "adidas"&& razonsocial == "fritzduran"  `}
-            outlet={true}
+            outlet={false}
           />
           <div className="flex justify-center w-full">
             <Link href={"/productos?razonsocial=fritzduran&marca=adidas"}>
@@ -143,16 +149,20 @@ export default async function Page({ searchParams }: Props) {
             </Link>
           </div>
         </div>
-
         {/* <PromoImage bannerhome={bannerhome} bottom={false} /> */}
 
         <div className="my-10 xl:my-20">
           <div className="text-center text-xl uppercase xl:text-4xl">Nike</div>
-          <ContedorCarouselProduct
+          {/* <ContedorCarouselProduct
             genero={"hombre"}
             cantidad={"20"}
             descuentos={descuentos}
             tipoCategoria={`&& marca == "nike"  `}
+            outlet={false}
+          /> */}
+          <CarouselProduct
+            products={ProductosNike}
+            descuentos={descuentos}
             outlet={false}
           />
           <div className="flex justify-center w-full">
@@ -162,7 +172,6 @@ export default async function Page({ searchParams }: Props) {
           </div>
         </div>
         {/* <Carousel dataSlider={slider[0]} /> */}
-
         {/* <HombreMujer bannerGenero={bannerGenero[0]} /> */}
       </div>
     </div>

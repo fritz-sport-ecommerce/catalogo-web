@@ -38,10 +38,7 @@ export default function ProductInfo({
   outlet,
 }: props) {
   return (
-    <Link
-      href={`/products/${dataProduct?.slug}/${dataProduct?.sku}`}
-      className="group z-10 text-sm px-2"
-    >
+    <div className="px-2">
       <div className="h-5">
         <CantidadProduct stock={dataProduct?.stock} sku={dataProduct?.sku} />
       </div>
@@ -87,6 +84,6 @@ export default function ProductInfo({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

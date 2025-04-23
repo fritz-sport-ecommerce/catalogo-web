@@ -3,6 +3,7 @@
 import React from "react";
 import { urlForImage } from "@/sanity/lib/image";
 import { SanityProduct } from "@/config/inventory";
+import ImageReplaceEcommerceCatalogo from "../imageReplaceEcommerceCatalogo";
 
 interface props {
   id: Number;
@@ -37,24 +38,18 @@ export function AccordionDescription({ product }: Props) {
     <>
       <div className="mb-16 flex flex-col justify-center">
         <div className="flex max-w-5xl flex-col ">
-
           <div className="px-10 text-black dark:text-white">
             <div className="flex flex-col items-center justify-around gap-5 xl:flex-row">
               <div>
                 <div className="mb-5 font-bold 2xl:text-3xl ">
-                  {product.name}
+                  {product?.name}
                 </div>
-                <div className="xl:pr-10 ">{product.description}</div>
+                <div className="xl:pr-10 ">{product?.description}</div>
               </div>
               <div>
-               <img
-                  src={
-                    product.images && product.images.length > 1
-                      ? urlForImage(product.images[1]).url()
-                      : urlForImage(product.images[0]).url()
-                  }
-                  alt={product.name}
-                />
+                <div className="w-80 xl:w-96 2xl:w-96">
+                  <ImageReplaceEcommerceCatalogo products={product} />
+                </div>
               </div>
             </div>
           </div>

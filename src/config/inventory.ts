@@ -52,13 +52,13 @@ export interface SanityProduct extends Omit<InventoryProduct, "images"> {
   descuentosobred: any;
   categories: string;
   detalles: any;
+  imgcatalogomain: any;
   tipo: string;
   stock: number;
   razonsocial: string | undefined;
   priceecommerce: number;
   pricemayorista: number;
   priceemprendedor: number;
-
 
   preciomanual: number | undefined;
   sku: any;

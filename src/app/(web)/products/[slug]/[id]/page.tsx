@@ -28,6 +28,8 @@ import Descuentos from "@/config/descuentos";
 import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
 import PrecioViewProductMovil from "@/components/product/product-view/precio-view-product-movil";
 import ToggleUserRole from "@/context/cambiarRol";
+import productosTraidosSistemaFritzSport from "@/config/productos-traidos-sistema-fritz-sport";
+import CarouselProduct from "@/components/carousel-product/carousel-product";
 
 interface Props {
   params: {
@@ -53,11 +55,7 @@ export default async function Page({ params }: Props) {
     sku,
     marca,
     images,
-    priceecommerce,
-    pricemayorista,
-    priceemprendedor,
-
-
+    imgcatalogomain,
     currency,
     description,
     sizes,
@@ -72,19 +70,26 @@ export default async function Page({ params }: Props) {
     preciomanual,
     "slug":slug.current
   }`);
+  // console.log(product);
 
-  if (!product) {
+  const productConPrecioSistema = await productosTraidosSistemaFritzSport(
+    [product],
+    "LIMA"
+  );
+
+  const singleProduct = productConPrecioSistema[0];
+  if (!singleProduct) {
     return notFound();
   }
-  const productosGenero = async () => {
-    const order = `| order(_id) [0...10]`;
+  const productosRelacionadosRopa = async () => {
+    const order = `| order(_id) [0...20]`;
 
     const productFilter = FiltroGlobal();
 
     const generoFilterHombre = `${product?.genero}`
-      ? `&& genero in ["${product?.genero}","unisex"] && marca match "${
-          product?.marca
-        }" && images != undefined && sku != "${product?.sku.trim()}"`
+      ? `&& genero in ["${
+          product?.genero
+        }","unisex"] && tipo in ["ropa","accesorios"] && imgcatalogomain != undefined && sku != "${product?.sku?.trim()}"`
       : "";
     const filter = `*[${productFilter}${generoFilterHombre}]`;
 
@@ -96,11 +101,9 @@ export default async function Page({ params }: Props) {
           sku,
           images,
           marca,
-          priceecommerce,
-             pricemayorista,
-    priceemprendedor,
           description,
           descuento,
+          imgcatalogomain,
           tipo,
           genero,
           detalles,
@@ -109,10 +112,45 @@ export default async function Page({ params }: Props) {
           "slug":slug.current
         }`);
 
-    return products;
+    return await productosTraidosSistemaFritzSport(products, "LIMA");
+  };
+  const productosRelacionadosCalzado = async () => {
+    const order = `| order(_id) [0...10]`;
+
+    const productFilter = FiltroGlobal();
+
+    const generoFilterHombre = `${product?.genero}`
+      ? `&& genero in ["${
+          product?.genero
+        }","unisex"] && tipo in ["calzado","accesorios"] && imgcatalogomain != undefined && sku != "${product?.sku?.trim()}"`
+      : "";
+    const filter = `*[${productFilter}${generoFilterHombre}]`;
+
+    // await seedSanityData()
+    const products = await client.fetch(`${filter} ${order} {
+          _id,
+          _createdAt,
+          name,
+          sku,
+          images,
+          marca,
+          description,
+          descuento,
+          imgcatalogomain,
+          tipo,
+          genero,
+          detalles,
+          descuento,
+          preciomanual,
+          "slug":slug.current
+        }`);
+
+    return await productosTraidosSistemaFritzSport(products, "LIMA");
   };
 
-  const products = await productosGenero();
+  const productosRelacionadosVestuario = await productosRelacionadosRopa();
+  const productosRelacionadosZapatillas = await productosRelacionadosCalzado();
+
   let descuentos = await Descuentos();
   let descuentoSobreD = product?.descuentosobred;
 
@@ -128,17 +166,17 @@ export default async function Page({ params }: Props) {
           <div className=" w-full xl:flex 2xl:pb-20">
             {/* precio y nombre */}
             <PrecioViewProductMovil
-              product={product}
+              product={singleProduct}
               descuentos={descuentos}
               descuentoSobreD={descuentoSobreD}
-            ></PrecioViewProductMovil>
+            />
 
             {/* Product gallery */}
             <div>
               {/* <div className="hidden border-b-[1px] border-blue-gray-300 text-black dark:text-white  xl:block  xl:border-none xl:border-transparent">
                 <BreadcrumbsDefault product={product} />
               </div> */}
-              <ProductGalleryDesk product={product} />
+              <ProductGalleryDesk product={singleProduct} />
 
               {/* acordion */}
 
@@ -156,12 +194,12 @@ export default async function Page({ params }: Props) {
                       <div
                         className={`flex items-center justify-center space-x-2 py-10`}
                       >
-                        <AccordionDescription product={product} />
+                        <AccordionDescription product={singleProduct} />
                       </div>
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-                {product.detalles && (
+                {singleProduct?.detalles && (
                   <AccordionItem value={`items-}`}>
                     <AccordionTrigger>
                       <span className="w-full">
@@ -175,7 +213,7 @@ export default async function Page({ params }: Props) {
                         <div
                           className={`flex items-center justify-center space-x-2 py-10 `}
                         >
-                          <AccordionDetails product={product} />
+                          <AccordionDetails product={singleProduct} />
                         </div>
                       </div>
                     </AccordionContent>
@@ -185,7 +223,7 @@ export default async function Page({ params }: Props) {
             </div>
 
             {/* Product info */}
-            <ProductInfo product={product} descuentos={descuentos} />
+            <ProductInfo product={singleProduct} descuentos={descuentos} />
           </div>
         </div>
       </main>
@@ -197,11 +235,9 @@ export default async function Page({ params }: Props) {
             COMPLETA TU outfit{" "}
           </h5>
 
-          <ContedorCarouselProduct
-            genero={product.genero}
-            cantidad={"20"}
+          <CarouselProduct
+            products={productosRelacionadosVestuario}
             descuentos={descuentos}
-            tipoCategoria={`&& marca == "${product.marca}" && tipo == "ropa" && genero == "${product.genero}"`}
             outlet={false}
           />
         </div>
@@ -211,11 +247,9 @@ export default async function Page({ params }: Props) {
             QUIZÁ TAMBIÉN TE GUSTE..
           </h5>
 
-          <ContedorCarouselProduct
-            genero={product.genero}
-            cantidad={"20"}
+          <CarouselProduct
+            products={productosRelacionadosZapatillas}
             descuentos={descuentos}
-            tipoCategoria={`&& marca == "${product.marca}" && tipo == "calzado" && genero == "${product.genero}" && categories == "${product.categories}" `}
             outlet={false}
           />
         </div>

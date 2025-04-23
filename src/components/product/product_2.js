@@ -232,7 +232,7 @@ export default function Product_2({
             </div>
           )}
           <h3 className="mt-2 text-sm font-medium uppercase xl:text-lg 2xl:text-xl ">
-            {products.name}
+            {products?.name}
           </h3>
 
           <div className="flex">

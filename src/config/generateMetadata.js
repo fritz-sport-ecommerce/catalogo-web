@@ -19,27 +19,27 @@ export async function metadataPage({ params }) {
   );
   return {
     openGraph: {
-      title: `Producto: ${product.name}`,
-      description: `${product.name}-${product.slug}-${product.sku}-${product.genero}-${product.tipo}`,
+      title: `Producto: ${product?.name}`,
+      description: `${product?.name}-${product?.slug}-${product?.sku}-${product?.genero}-${product?.tipo}`,
       url: `${process.env.URL_DOMINIO}/products/${product.slug}/${product.slug}`,
       siteName: "Fritz Sport",
       images: [
         {
           url: `${
-            product.images && urlForImage(product.images[0].asset._ref).url()
+            product?.images && urlForImage(product?.images[0].asset._ref).url()
           }`,
           width: 800,
           height: 600,
-          alt: `${product.name} Imagen`,
+          alt: `${product?.name} Imagen`,
         },
         {
           url: `${
-            product.images && urlForImage(product.images[0].asset._ref).url()
+            product?.images && urlForImage(product.images[0].asset._ref).url()
           }`,
 
           width: 1800,
           height: 1600,
-          alt: `${product.name} Imagen`,
+          alt: `${product?.name} Imagen`,
         },
       ],
     },

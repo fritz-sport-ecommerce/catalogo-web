@@ -9,7 +9,7 @@ import { useCart } from "react-use-cart";
 import { groq } from "next-sanity";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-          // Authorization: `Bearer APP_USR-1458144755191319-042511-bc0b96dc49d504d083e85727d5f8e50a-1360412804`,
+// Authorization: `Bearer APP_USR-1458144755191319-042511-bc0b96dc49d504d083e85727d5f8e50a-1360412804`,
 
 export default function Page() {
   const router = useRouter();
@@ -34,8 +34,6 @@ export default function Page() {
         method: "GET",
         headers: {
           Authorization: `Bearer ${process.env.ACCESS_TOKEN_MERCADO}`,
-
-          
         },
       })
         .then((res) => res.json())
@@ -181,7 +179,7 @@ export default function Page() {
           <div className="py-10 text-center flex justify-center">
             <div className="flex flex-col gap-y-5 container w-3/6">
               <Link
-                href={`/tienda`}
+                href={`/catalogo`}
                 className="bg-indigo-600 uppercase xl:px-12 py-3 font-semibold text-white hover:bg-indigo-500"
               >
                 Seguir Comprando

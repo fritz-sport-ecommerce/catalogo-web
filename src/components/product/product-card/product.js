@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import { urlForImage } from "@/sanity/lib/image";
 
-import LoveFollow from "../../love-follow/love-follow";
 
 import ColoresProducts from "./product-colores";
 import ProductOfertStyle from "./product-ofert-style";
 import ProductInfo from "./product-info";
 import ProductCarousel from "./product-carousel";
+import ImageReplaceEcommerceCatalogo from "@/components/imageReplaceEcommerceCatalogo";
+import Link from "next/link";
 
 export default function Product({
   products,
@@ -62,9 +62,13 @@ export default function Product({
   const descuentoSobreD = products?.descuentosobred;
 
   return (
-    <div className="flex h-full flex-col justify-center border-[1px] border-blue-gray-300 dark:border-blue-gray-800">
-      {/* Carrusel de imágenes */}
-      {/* <ProductCarousel
+    <Link
+      href={`/products/${products?.slug}/${products?.sku}`}
+      className="group z-10 text-sm px-2"
+    >
+      <div className="flex h-full flex-col justify-center border-[1px] border-blue-gray-300 dark:border-blue-gray-800">
+        {/* Carrusel de imágenes */}
+        {/* <ProductCarousel
         setLoading={setLoading}
         loading={loading}
         dataProduct={products}
@@ -74,49 +78,36 @@ export default function Product({
         currentIndex={currentIndex}
       /> */}
 
-      <img
-        width={2000}
-        height={2000}
-        className="w-full h-auto"
-        src={
-          products?.images?.asset?._ref || products.imgcatalogomain?.asset
-            ? products?.images && products?.images[0]?.asset
-              ? products.images[0]?.asset?._ref
-                ? urlForImage(products.images[0]?.asset?._ref).url()
-                : "https://cdn.sanity.io/images/ibvmpbc1/production/82e2cc60553f917f8e776fa9c89fe2b533b1fb51-2000x2000.png"
-              : urlForImage(products.imgcatalogomain?.asset?._ref).url()
-            : "https://cdn.sanity.io/images/ibvmpbc1/production/82e2cc60553f917f8e776fa9c89fe2b533b1fb51-2000x2000.png"
-        }
-        alt={`Imagen del producto ${products?.name}`}
-      />
+        <ImageReplaceEcommerceCatalogo products={products} />
 
-      {/* <LoveFollow product={products} /> */}
-      {/* descuento y oferta ,stock*/}
-      <ProductOfertStyle
-        descuento={descuentos?.descuentofritzsport}
-        products={products}
-        descuentoSobreD={descuentoSobreD}
-        stock={products.stock}
-      />
-      {/* Productos relacionados */}
+        {/* <LoveFollow product={products} /> */}
+        {/* descuento y oferta ,stock*/}
+        <ProductOfertStyle
+          descuento={descuentos?.descuentofritzsport}
+          products={products}
+          descuentoSobreD={descuentoSobreD}
+          stock={products.stock}
+        />
+        {/* Productos relacionados */}
 
-      <ColoresProducts
+        {/* <ColoresProducts
         setSkuColor={setSkuColor}
         skuColor={skuColor}
         products={products}
         // data={data}
         urlForImage={urlForImage}
-      />
+      /> */}
 
-      {/* Información del producto */}
-      <ProductInfo
-        dataProduct={products}
-        descuento={descuentos.descuentofritzsport}
-        products={products}
-        descuentos={descuentos}
-        descuentoSobreD={descuentoSobreD}
-        outlet={outlet}
-      />
-    </div>
+        {/* Información del producto */}
+        <ProductInfo
+          dataProduct={products}
+          descuento={descuentos.descuentofritzsport}
+          products={products}
+          descuentos={descuentos}
+          descuentoSobreD={descuentoSobreD}
+          outlet={outlet}
+        />
+      </div>
+    </Link>
   );
 }

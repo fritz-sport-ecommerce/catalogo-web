@@ -16,15 +16,11 @@ interface Product {
   descuentos: [];
 }
 interface ModalProps {
-
   onClose: () => void;
 }
 // test
 export default function ProductSearch({ onClose }: ModalProps) {
-
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement> | any) => {
-
-    
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -39,8 +35,8 @@ export default function ProductSearch({ onClose }: ModalProps) {
     let descuentos = await Descuentos();
     setDescuentos(descuentos);
 
-    const results: Product[] = await  client.fetch(groq
-      `*[_type == "product" && (
+    const results: Product[] = await client.fetch(
+      groq`*[_type == "product" && (
         lower(sku) match $input || 
         lower(name) match $input || 
         lower(marca) match $input || 
@@ -87,7 +83,7 @@ export default function ProductSearch({ onClose }: ModalProps) {
   };
 
   return (
-    <div   className="flex-col flex p-3 w-full justify-center items-center">
+    <div className="flex-col flex p-3 w-full justify-center items-center">
       <div className="w-5/6 ">
         <input
           type="text"
@@ -105,23 +101,30 @@ export default function ProductSearch({ onClose }: ModalProps) {
         )}
         {suggestions.length > 0 && (
           <>
-          <div className="flex w-full justify-center my-2">
-            <Link href={`/tienda?search=${query}`}>
-              <button onClick={handleOverlayClick}  className="uppercase dark:bg-black dark:text-white border-black dark:border-transparent border-[1px] dark:border-none px-3 py-2 text-xs">ver todo </button>
-            </Link>
-          </div>
-          <ul onClick={handleOverlayClick}  className="grid xl:grid-cols-4 gap-y-2 grid-cols-2 text-[3px] mx-auto container w-full">
-            {suggestions.map((product) => (
-              <ProductSearchCard
-              
-                key={product._id}
-                descuentos={descuentosProduct}
-                products={product}
-                outlet={false}
-                stock={false}
-              />
-            ))}
-          </ul>
+            <div className="flex w-full justify-center my-2">
+              <Link href={`/catalogo?search=${query}`}>
+                <button
+                  onClick={handleOverlayClick}
+                  className="uppercase dark:bg-black dark:text-white border-black dark:border-transparent border-[1px] dark:border-none px-3 py-2 text-xs"
+                >
+                  ver todo{" "}
+                </button>
+              </Link>
+            </div>
+            <ul
+              onClick={handleOverlayClick}
+              className="grid xl:grid-cols-4 gap-y-2 grid-cols-2 text-[3px] mx-auto container w-full"
+            >
+              {suggestions.map((product) => (
+                <ProductSearchCard
+                  key={product._id}
+                  descuentos={descuentosProduct}
+                  products={product}
+                  outlet={false}
+                  stock={false}
+                />
+              ))}
+            </ul>
           </>
         )}
       </div>

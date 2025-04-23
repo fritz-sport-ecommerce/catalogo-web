@@ -1,27 +1,26 @@
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-
-import { Input } from "@/components/ui/input"
+import { Input } from "@/components/ui/input";
 
 export default function NavSearch() {
-  const pathname = usePathname()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const defaultSearch = searchParams.get("search") ?? ""
-  if (pathname.startsWith("/studio")) return null
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const defaultSearch = searchParams.get("search") ?? "";
+  if (pathname.startsWith("/studio")) return null;
 
   function onSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const searchQuery = formData.get("search")
-    router.replace(`/tienda?search=${searchQuery}`)
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const searchQuery = formData.get("search");
+    router.replace(`/catalogo?search=${searchQuery}`);
   }
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const searchQuery = event.target.value
-    router.replace(`/tienda?search=${searchQuery}`)
+    const searchQuery = event.target.value;
+    router.replace(`/catalogo?search=${searchQuery}`);
   }
   return (
     <div className="w-4/6 xl:w-auto">
@@ -56,5 +55,5 @@ export default function NavSearch() {
         </div>
       </form>
     </div>
-  )
+  );
 }

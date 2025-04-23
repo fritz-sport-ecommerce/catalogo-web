@@ -73,7 +73,7 @@ const filters = [
       { label: "Escolar", value: "escolar" },
       { label: "Pantalón", value: "pantalon" },
       { label: "Gorras", value: "gorras" },
-            { label: "Guantes", value: "guantes" },
+      { label: "Guantes", value: "guantes" },
       { label: "Shorts", value: "shorts" },
       { label: "Polos", value: "polos" },
       { label: "Sandalias", value: "sandalias" },
@@ -236,7 +236,7 @@ const filters = [
       { value: "reebok", label: "reebok" },
       { value: "cat", label: "cat" },
       { value: "joma", label: "joma" },
-         { value: "kelme", label: "kelme" },
+      { value: "kelme", label: "kelme" },
     ],
   },
   {
@@ -254,7 +254,7 @@ const filters = [
       { value: "amarillo", label: "amarillo" },
     ],
   },
-];  
+];
 
 const subFiltersNiños = [
   { value: "bebe", label: "Bebés" },
@@ -266,23 +266,21 @@ export function ProductFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isNiñosSelected, setIsNiñosSelected] = useState(false);
-  const params = new URLSearchParams(
-    searchParams.toString()
-  );
+  const params = new URLSearchParams(searchParams.toString());
   // Detectar si "Niños" está activado
   useEffect(() => {
     const genero = searchParams.get("genero");
     setIsNiñosSelected(genero === "niños");
     console.log(genero != "niños");
-    
+
     if (genero != "niños") {
-      params.delete("subgenero")
-      router.replace(`/tienda/?${params.toString()}`);
+      params.delete("subgenero");
+      router.replace(`/catalogo/?${params.toString()}`);
     }
   }, [searchParams]);
 
   const searchValues = Array.from(searchParams.entries());
-//
+  //
   return (
     <form className="sticky top-20">
       <h3 className="sr-only">Categories</h3>
@@ -321,8 +319,8 @@ export function ProductFilters() {
                           event.currentTarget.dataset.state === "checked";
                         checked
                           ? params.delete(section.id)
-                          : params.set(section.id, option.value) ;
-                        router.replace(`/tienda/?${params.toString()}`);
+                          : params.set(section.id, option.value);
+                        router.replace(`/catalogo/?${params.toString()}`);
                       }}
                     />
                     <label
@@ -340,7 +338,9 @@ export function ProductFilters() {
           {/* Mostrar subfiltro si Niños está activado */}
           {section.id === "genero" && isNiñosSelected && (
             <div className="ml-6 mt-2">
-              <h4 className="text-sm font-medium uppercase mb-2">Subfiltro Niños</h4>
+              <h4 className="text-sm font-medium uppercase mb-2">
+                Subfiltro Niños
+              </h4>
               <div className="space-y-2">
                 {subFiltersNiños.map((subOption, subIdx) => (
                   <div
@@ -351,8 +351,7 @@ export function ProductFilters() {
                       id={`subgenero-${subIdx}`}
                       checked={searchValues.some(
                         ([key, value]) =>
-                          key === "subgenero" &&
-                          value === subOption.value
+                          key === "subgenero" && value === subOption.value
                       )}
                       onClick={(event) => {
                         const params = new URLSearchParams(
@@ -363,7 +362,7 @@ export function ProductFilters() {
                         checked
                           ? params.delete("subgenero")
                           : params.set("subgenero", subOption.value);
-                        router.replace(`/tienda/?${params.toString()}`);
+                        router.replace(`/catalogo/?${params.toString()}`);
                       }}
                     />
                     <label

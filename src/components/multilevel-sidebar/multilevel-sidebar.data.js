@@ -17,19 +17,19 @@ let options = [
   //           id: 9,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=hombre",
+  //           to: "/catalogo?tipo=calzado&genero=hombre",
   //         },
   //         {
   //           id: 9,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=hombre",
+  //           to: "/catalogo?tipo=calzado&genero=hombre",
   //         },
   //         {
   //           id: 9,
   //           title: "Sandalias",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=hombre",
+  //           to: "/catalogo?tipo=calzado&genero=hombre",
   //         },
   //         // ,
   //         // {
@@ -74,19 +74,19 @@ let options = [
   //           id: 3,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=mujer",
+  //           to: "/catalogo?tipo=calzado&genero=mujer",
   //         },
   //         {
   //           id: 3,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=mujer",
+  //           to: "/catalogo?tipo=calzado&genero=mujer",
   //         },
   //         {
   //           id: 3,
   //           title: "Sandalias",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=mujer",
+  //           to: "/catalogo?tipo=calzado&genero=mujer",
   //         },
   //         // ,
   //         // {
@@ -141,19 +141,19 @@ let options = [
   //           id: 1,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=niños",
+  //           to: "/catalogo?tipo=calzado&genero=niños",
   //         },
   //         {
   //           id: 2,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=niños",
+  //           to: "/catalogo?tipo=calzado&genero=niños",
   //         },
   //         {
   //           id: 3,
   //           title: "Sandalias",
   //           icon: "",
-  //           to: "/tienda?tipo=sandalia&genero=niños",
+  //           to: "/catalogo?tipo=sandalia&genero=niños",
   //         },
   //       ],
   //     },
@@ -172,7 +172,7 @@ let options = [
   //       title: "Adidas Temporada",
 
   //       icon: "",
-  //       to: "/tienda?tipoproducto=web&razonsocial=fritzsport&marca=adidas",
+  //       to: "/catalogo?tipoproducto=web&razonsocial=fritzsport&marca=adidas",
 
   //     },
   //     {
@@ -180,7 +180,7 @@ let options = [
   //       title: "Adidas Liquidación",
 
   //       icon: "",
-  //       to: "/tienda?tipoproducto=web&razonsocial=fritzduran&marca=adidas",
+  //       to: "/catalogo?tipoproducto=web&razonsocial=fritzduran&marca=adidas",
 
   //     },
   //     {
@@ -188,7 +188,7 @@ let options = [
   //       title: "Nike",
 
   //       icon: "",
-  //       to: "/tienda?tipoproducto=web&razonsocial=fritzduran&marca=nike",
+  //       to: "/catalogo?tipoproducto=web&razonsocial=fritzduran&marca=nike",
 
   //     },
   //     // {
@@ -338,16 +338,15 @@ let options = [
   //       title: "Adidas Temporada",
 
   //       icon: "",
-  //       to: "/tienda?tipoproducto=catalogo&razonsocial=fritzsport&marca=adidas",
-      
+  //       to: "/catalogo?tipoproducto=catalogo&razonsocial=fritzsport&marca=adidas",
+
   //     },
   //     {
   //       id: 3,
   //       title: "Adidas Liquidación",
 
   //       icon: "",
-  //       to: "/tienda?tipoproducto=catalogo&razonsocial=fritzduran&marca=adidas",
-
+  //       to: "/catalogo?tipoproducto=catalogo&razonsocial=fritzduran&marca=adidas",
 
   //     },
   //     {
@@ -355,8 +354,7 @@ let options = [
   //       title: "Nike",
 
   //       icon: "",
-  //       to: "/tienda?tipoproducto=catalogo&razonsocial=fritzduran&marca=nike",
-       
+  //       to: "/catalogo?tipoproducto=catalogo&razonsocial=fritzduran&marca=nike",
 
   //     },
   //     // {
@@ -511,19 +509,19 @@ let options = [
   //           id: 3,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=mujer",
+  //           to: "/catalogo?tipo=calzado&genero=mujer",
   //         },
   //         {
   //           id: 3,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=mujer",
+  //           to: "/catalogo?tipo=calzado&genero=mujer",
   //         },
   //         {
   //           id: 3,
   //           title: "Sandalias",
   //           icon: "",
-  //           to: "/tienda?tipo=sandalia&genero=mujer",
+  //           to: "/catalogo?tipo=sandalia&genero=mujer",
   //         },
   //         // {
   //         //   id: 3,
@@ -723,19 +721,19 @@ let options = [
   //           id: 9,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=hombre",
+  //           to: "/catalogo?tipo=calzado&genero=hombre",
   //         },
   //         {
   //           id: 9,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?tipo=calzado&genero=hombre",
+  //           to: "/catalogo?tipo=calzado&genero=hombre",
   //         },
   //         {
   //           id: 3,
   //           title: "Sandalias",
   //           icon: "",
-  //           to: "/tienda?tipo=sandalias&genero=hombre",
+  //           to: "/catalogo?tipo=sandalias&genero=hombre",
   //         },
   //         // ,
   //         // {
@@ -784,20 +782,20 @@ let options = [
   //           id: 3,
   //           title: "Ver Toda la Ropa",
   //           icon: "",
-  //           to: "/tienda?tipo=ropa&genero=hombre",
+  //           to: "/catalogo?tipo=ropa&genero=hombre",
   //         },
   //         {
   //           id: 3,
   //           title: "Polos",
   //           icon: "",
-  //           url: "/tienda?search=&tipo=ropa&genero=hombre&category=polos",
+  //           url: "/catalogo?search=&tipo=ropa&genero=hombre&category=polos",
   //         },
   //         ,
   //         {
   //           id: 3,
   //           title: "Poleras",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=poleras",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=poleras",
   //         },
   //         // {
   //         //   id: 3,
@@ -809,19 +807,19 @@ let options = [
   //           id: 3,
   //           title: "Casacas",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=casacas",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=casacas",
   //         },
   //         {
   //           id: 3,
   //           title: "Pantalones",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=pantalones",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=pantalones",
   //         },
   //         {
   //           id: 3,
   //           title: "Camisetas de Futbol",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=camisetas",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=camisetas",
   //         },
   //         {
   //           id: 9,
@@ -852,7 +850,7 @@ let options = [
   //           id: 1,
   //           title: "Mochilas",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=mochilas",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=mochilas",
   //         },
   //         // {
   //         //   id: 1,
@@ -864,25 +862,25 @@ let options = [
   //           id: 1,
   //           title: "Gorras",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=gorras",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=gorras",
   //         },
   //         {
   //           id: 1,
   //           title: "Medias",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=medias",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=medias",
   //         },
   //         {
   //           id: 1,
   //           title: "Tomatodos",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=tomatodo",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=tomatodo",
   //         },
   //         {
   //           id: 1,
   //           title: "Bolsos",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=ropa&genero=hombre&category=bolsos",
+  //           to: "/catalogo?search=&tipo=ropa&genero=hombre&category=bolsos",
   //         },
   //       ],
   //     },
@@ -905,13 +903,13 @@ let options = [
   //           id: 3,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=calzado&genero=niños",
+  //           to: "/catalogo?search=&tipo=calzado&genero=niños",
   //         },
   //         {
   //           id: 3,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=calzado&genero=niños",
+  //           to: "/catalogo?search=&tipo=calzado&genero=niños",
   //         },
   //         // {
   //         //   id: 3,
@@ -1114,13 +1112,13 @@ let options = [
   //           id: 9,
   //           title: "Ver Todas las Zapatillas",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=calzado&genero=niños",
+  //           to: "/catalogo?search=&tipo=calzado&genero=niños",
   //         },
   //         {
   //           id: 9,
   //           title: "Zapatillas",
   //           icon: "",
-  //           to: "/tienda?search=&tipo=calzado&genero=niños",
+  //           to: "/catalogo?search=&tipo=calzado&genero=niños",
   //         },
   //         // {
   //         //   id: 9,
@@ -1323,13 +1321,13 @@ let options = [
   //       id: 9,
   //       title: "Adidas",
   //       icon: "",
-  //       to: "/tienda?marca=adidas",
+  //       to: "/catalogo?marca=adidas",
   //     },
   //     {
   //       id: 9,
   //       title: "Nike",
   //       icon: "",
-  //       to: "/tienda?marca=nike",
+  //       to: "/catalogo?marca=nike",
   //     },
   //     // {
   //     //   id: 37,
@@ -1565,7 +1563,7 @@ let options = [
   //   icon: "",
   //   hideBorder: false,
   //   disabled: false,
-  //   to: "/tienda",
+  //   to: "/catalogo",
   // },
   {
     id: 20,
@@ -1575,7 +1573,7 @@ let options = [
     disabled: false,
     to: "/emprende",
   },
-    {
+  {
     id: 21,
     title: "DESCARGAR CATÁLOGO ",
     icon: "",

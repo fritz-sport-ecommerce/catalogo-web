@@ -13,19 +13,19 @@ const columns = [
     links: [
       {
         text: "Hombre",
-        link: "/tienda?genero=hombre",
+        link: "/catalogo?genero=hombre",
       },
       {
         text: "Mujer",
-        link: "/tienda?genero=mujer",
+        link: "/catalogo?genero=mujer",
       },
       {
         text: "Niños",
-        link: "/tienda?genero=niños",
+        link: "/catalogo?genero=niños",
       },
       {
         text: "Carrito",
-        link: "/tienda?genero=carrito",
+        link: "/catalogo?genero=carrito",
       },
     ],
   },

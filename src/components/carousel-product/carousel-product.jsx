@@ -24,7 +24,7 @@ const responsive = {
   },
 };
 
-const CarouselProduct = ({ products, descuentos, outlet,nuevo=false }) => {
+const CarouselProduct = ({ products, descuentos, outlet, nuevo = false }) => {
   return (
     <>
       {/* <div>

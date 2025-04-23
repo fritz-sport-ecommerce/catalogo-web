@@ -48,7 +48,7 @@ export default function ProductOfertStyle({
                   <span className="flex justify-center bg-black px-3 py-1">
                     Agotado
                   </span>
-                ) }
+                )}
               </>
             </div>
           </div>

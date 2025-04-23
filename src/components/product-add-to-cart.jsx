@@ -13,9 +13,6 @@ import LoveFollow from "./love-follow/love-follow";
 import GuiaTallasNinos from "./guia-tallas/gia-ninos";
 import RoleContext from "@/context/roleContext";
 
-
-
-
 export default function ProductAddToCart({ product, descuentos }) {
   const { userRole } = useContext(RoleContext);
   const { toast } = useToast();
@@ -26,36 +23,36 @@ export default function ProductAddToCart({ product, descuentos }) {
   });
   const [activeAddProduct, setActiveAddProduct] = useState(true);
   const [stock, setStock] = useState(
-    product.tallas?.every(
+    product?.tallas?.every(
       (el) => el.stock === 0 || el.stock === undefined || el.stock === null
     )
   );
   const { addItem, items } = useCart();
 
+  const functionAddToCardMayorista = (tallas, product) => {
+    const tallasDisponibles = tallas
+      .filter((talla) => talla.stock > 0)
+      .filter((talla) => talla.stock > 0 && !talla.talla.includes("x"))
+      .filter((producto) => !producto.talla.includes("X"));
 
-  const functionAddToCardMayorista = (tallas,product) =>{
-
-    const tallasDisponibles = tallas.filter((talla) => talla.stock > 0 ).filter((talla) => talla.stock > 0 && !talla.talla.includes("x")).filter((producto) => !producto.talla.includes("X"));
-
-    
-    tallasDisponibles.forEach(talla => {
+    tallasDisponibles.forEach((talla) => {
       addItem({
         id: String(`${talla._key}`),
-        name: product.name,
-        idsanity: product.id,
-        img: product.image,
-        title: product.name,
-        image: product.images[0].asset?._ref,
-        objectID: product.sku,
-        price: product.pricemayorista,
+        name: product?.name,
+        idsanity: product?.id,
+        img: product?.image,
+        title: product?.name,
+        image: product?.images[0].asset?._ref,
+        objectID: product?.sku,
+        price: product?.pricemayorista,
         talla: String(`${talla.talla}`),
-        slug: product.slug,
+        slug: product?.slug,
         quantity: 1, // Agregar un par por talla
       });
-    })
+    });
 
     toast({
-      title: `${product.name}`,
+      title: `${product?.name}`,
       description: "Productos Agregados al Carrito",
       action: (
         <Link href={"/carrito"}>
@@ -66,40 +63,35 @@ export default function ProductAddToCart({ product, descuentos }) {
         </Link>
       ),
     });
-  }
+  };
 
-
-
-
-
-
-  const [quantityStock, setQuantityStock] = useState(0)
+  const [quantityStock, setQuantityStock] = useState(0);
   // const [rol, setRol] = useState(userRole)
   // useEffect(() => {
   //   setRol(userRole)
   // }, [userRole])
-  
+
   //add to cart
   const addToCart = () => {
     console.log(userRole);
-    
-    if(userRole === "mayorista") {
-      functionAddToCardMayorista(product.tallas,product)
-    }else{
-      if(items.length < 3){
+
+    if (userRole === "mayorista") {
+      functionAddToCardMayorista(product.tallas, product);
+    } else {
+      if (items.length < 3) {
         const item = {
           ...product,
           product_data: {
             size: selectSize,
           },
         };
-      
+
         addItem({
           id: String(`${selectSize._key}`),
-          name: product.name,
+          name: product?.name,
           idsanity: product.id,
           img: product.image,
-          title: product.name,
+          title: product?.name,
           image: product.images[0].asset?._ref,
           objectID: product.sku,
           price: product.priceemprendedor,
@@ -119,14 +111,12 @@ export default function ProductAddToCart({ product, descuentos }) {
           ),
         });
         setActiveAddProduct(true);
-
       }
-      
     }
   };
 
   const selectTalla = (talla, _key, stock) => {
-        setQuantityStock(stock)
+    setQuantityStock(stock);
 
     setActiveAddProduct(false);
     setSelectSize({ talla, _key, stock });
@@ -138,76 +128,63 @@ export default function ProductAddToCart({ product, descuentos }) {
   }, []);
   const [isOpen, setIsOpen] = useState(false);
 
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div>
       <div className="mt-4">
-  
-        
         <p>
           Tallas: <strong>{selectSize.talla || ""}</strong>
         </p>
         {cliente &&
-          product.tallas?.filter((producto) =>  !producto.talla.includes("X")).filter((producto) => !producto.talla.includes("x")).map(({ talla, stock, _key }) => (
-            <Button
-              onClick={() => selectTalla(talla, _key, stock)}
-              key={_key}
-              disabled={
-                stock <= 0 ||
-                stock === undefined ||
-                stock === null ||
-                items.find(
-                  (itemsCarrito) =>
-                    itemsCarrito.id === _key &&
-                    itemsCarrito.quantity >= stock &&
-                    itemsCarrito.objectID === product.sku
-                )
-              }
-              variant={
-                selectSize.talla === talla && !activeAddProduct
-                  ? "default"
-                  : "outline"
-              }
-              className={`${
-                stock <= 0 ||
-                (items.find(
-                  (itemsCarrito) =>
-                    itemsCarrito.id === _key &&
-                    itemsCarrito.quantity >= stock &&
-                    itemsCarrito.objectID === product.sku
-                ) &&
-                  "line-through")
-              } mr-2 mt-4 `}
-            >
-              {talla}
-            </Button>
-          ))}
+          product?.tallas
+            ?.filter((producto) => !producto.talla.includes("X"))
+            .filter((producto) => !producto.talla.includes("x"))
+            .map(({ talla, stock, _key }) => (
+              <Button
+                onClick={() => selectTalla(talla, _key, stock)}
+                key={_key}
+                disabled={
+                  stock <= 0 ||
+                  stock === undefined ||
+                  stock === null ||
+                  items.find(
+                    (itemsCarrito) =>
+                      itemsCarrito.id === _key &&
+                      itemsCarrito.quantity >= stock &&
+                      itemsCarrito.objectID === product.sku
+                  )
+                }
+                variant={
+                  selectSize.talla === talla && !activeAddProduct
+                    ? "default"
+                    : "outline"
+                }
+                className={`${
+                  stock <= 0 ||
+                  (items.find(
+                    (itemsCarrito) =>
+                      itemsCarrito.id === _key &&
+                      itemsCarrito.quantity >= stock &&
+                      itemsCarrito.objectID === product.sku
+                  ) &&
+                    "line-through")
+                } mr-2 mt-4 `}
+              >
+                {talla}
+              </Button>
+            ))}
       </div>
-      {
-        quantityStock != 0 && (
-
-          <div className="text-red-400 text-sm mt-2">{quantityStock <= 10 && `Solo quedan ${quantityStock} en nuestros almacenes` }</div>
-        )
-
-      }
-
+      {quantityStock != 0 && (
+        <div className="text-red-400 text-sm mt-2">
+          {quantityStock <= 10 &&
+            `Solo quedan ${quantityStock} en nuestros almacenes`}
+        </div>
+      )}
 
       <button
         onClick={() => setIsOpen(true)}
-     className="mt-3 border-b-[1px] dark:fill-white  "
+        className="mt-3 border-b-[1px] dark:fill-white  "
       >
-            <svg
+        <svg
           height="34px"
           width="34px"
           version="1.1"
@@ -237,30 +214,20 @@ export default function ProductAddToCart({ product, descuentos }) {
         Ver Guía de Tallas
       </button>
 
-    
-       
-    
-      {product.tipo == "calzado" && (
-       <ModalDesk isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          {
-            product.genero === "niños" ? (
-              <GuiaTallasNinos></GuiaTallasNinos>
-            ) : (
-              <GiaDeTallasMain
-                gender={product.genero}
-                product_type={product.tipo}
-              />
-
-            )
-          }
+      {product?.tipo == "calzado" && (
+        <ModalDesk isOpen={isOpen} onClose={() => setIsOpen(false)}>
+          {product?.genero === "niños" ? (
+            <GuiaTallasNinos></GuiaTallasNinos>
+          ) : (
+            <GiaDeTallasMain
+              gender={product?.genero}
+              product_type={product?.tipo}
+            />
+          )}
         </ModalDesk>
       )}
 
-      
-   
-
-
-{/* 
+      {/* 
       <form
         className=" flex items-center mt-4 "
         onSubmit={(e) => e.preventDefault()}
@@ -268,7 +235,7 @@ export default function ProductAddToCart({ product, descuentos }) {
         <div className="w-full">
           {stock ? (
             <div className="flex w-full flex-col items-center">
-              <Link href={"/tienda"} className="w-full">
+              <Link href={"/catalogo"} className="w-full">
                 <Button
                   disabled={false}
                   type="button"
@@ -294,4 +261,3 @@ export default function ProductAddToCart({ product, descuentos }) {
     </div>
   );
 }
-

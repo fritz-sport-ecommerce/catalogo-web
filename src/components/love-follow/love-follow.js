@@ -168,7 +168,7 @@ export default function LoveFollow({ product, view = true }) {
               onClick={() =>
                 handlerLove(
                   follows === product.sku ? false : true,
-                  product.name
+                  product?.name
                 )
               }
             >

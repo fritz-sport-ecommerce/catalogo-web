@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { urlForImage } from "@/sanity/lib/image";
+import ImageReplaceEcommerceCatalogo from "../imageReplaceEcommerceCatalogo";
 
 export default function ProductRelacionados({
   products,
@@ -21,25 +22,12 @@ export default function ProductRelacionados({
   return (
     <>
       <Link
-        key={products.id}
-        href={`/products/${products.slug}/${products.sku}`}
+        key={products?._id}
+        href={`/products/${products?.slug}/${products?.sku}`}
         className="group z-10 text-sm  border-y-[1px] border-l-[1px]  p-2 border-blue-gray-300 dark:border-none"
       >
         <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md  group-hover:opacity-75 ">
-          {products.images && products.images[0] ? (
-            <img
-              width={800}
-              height={800}
-              className="relative "
-              src={
-                products.images[0].asset &&
-                urlForImage(products.images[0].asset._ref).url()
-              }
-              alt=""
-            />
-          ) : (
-            <></>
-          )}
+          <ImageReplaceEcommerceCatalogo products={products} />
 
           {/* <LoveFollow /> */}
           {/* {products.descuento ? (
@@ -55,19 +43,25 @@ export default function ProductRelacionados({
           )} */}
           {nuevo && (
             <div className="absolute left-0 xl:top-4 top-1 bg-black px-2 py-1">
-              <h4 className=" xl:text-xs text-white ">new</h4>
+              <div className=" xl:text-xs text-white ">new</div>
             </div>
           )}
         </div>
         <div className=" flex flex-col justify-around h-2/6">
           {generoSku && (
-            <h3 className="xl:mt-4 font-medium capitalize  text-xs">
-              {products.marca} - {products.genero}
-            </h3>
+            <div className="flex justify-between items-center">
+              <div className="xl:mt-4 font-medium capitalize  text-xs">
+                {products?.marca} - {products?.genero}
+              </div>
+              <div className="xl:mt-4 font-medium capitalize  text-xs">
+                {products?.sku}
+              </div>
+            </div>
           )}
-          <h3 className="mt-2 font-semibold uppercase  xl:text-sm text-sm">
-            {products.name} {products.genero}
-          </h3>
+
+          <div className="mt-2 font-semibold uppercase  xl:text-sm text-sm">
+            {products?.name} {products?.genero}
+          </div>
 
           <div className="flex w-full h-full flex-col mt-3 items-end justify-start xl:justify-center 2xl:gap-y-2 ">
             <div className="flex items-center justify-between w-full">
