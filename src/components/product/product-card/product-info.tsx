@@ -15,7 +15,7 @@ interface props {
     priceecommerce: number;
     pricemayorista: number;
     priceemprendedor: number;
-
+    razonsocial: string;
     preciomanual: number;
     marca: string;
     genero: string;
@@ -54,7 +54,9 @@ export default function ProductInfo({
           {dataProduct?.name}
         </h3>
       </div>
-
+      <h3 className="mt-2 text-sm font-semibold uppercase xl:text-lg 2xl:text-xl ">
+        {dataProduct?.razonsocial}
+      </h3>
       <div className="flex mt-2 flex-col-reverse items-end justify-center">
         <div className="flex justify-between items-center w-full">
           <div className="uppercase">Precio Retail:</div>

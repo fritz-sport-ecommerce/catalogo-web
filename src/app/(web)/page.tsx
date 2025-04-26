@@ -63,42 +63,18 @@ export default async function Page({ searchParams }: Props) {
     }`
   );
 
-  const productFilter = FiltroGlobal();
-  const newProducts = await client.fetch<
-    SanitySlider[]
-  >(groq`*[${productFilter} && genero != "niños"] | order(_createdAt desc)[0..100] {
-      _id,
-      _createdAt,
-      name,
-      sku,
-      images,
-      currency,
-      priceecommerce,
-      pricemayorista,
-      priceemprendedor,
-      tipoproducto,
-      description,
-      genero,
-      categories,
-      marca,
-      tallas,
-      stock,
-      descuento,
-      preciomanual,
-      "slug":slug.current
-  }`);
-
   let descuentos = await Descuentos();
   //ts
 
   // filtro productos
   const ProductosLinea = await getProductRazonSocial("adidas", "fritzsport");
-  const ProductosLiquidacion = await getProductRazonSocial(
-    "adidas",
-    "fritzduran"
-  );
+  // const ProductosLiquidacion = await getProductRazonSocial(
+  //   "adidas",
+  //   "fritzduran"
+  // );
+  console.log("productos linea", ProductosLinea);
 
-  const ProductosNike = await getProductRazonSocial("nike", "fritzsport");
+  // const ProductosNike = await getProductRazonSocial("nike", "fritzsport");
   return (
     <div>
       {/* <DialogSizes promoHome={promoHome}></DialogSizes> */}
@@ -129,7 +105,7 @@ export default async function Page({ searchParams }: Props) {
             outlet={false}
           />
           <div className="flex justify-center w-full">
-            <Link href={"/productos?razonsocial=fritzsport&marca=adidas"}>
+            <Link href={"/catalogo?razonsocial=fritzsport&marca=adidas"}>
               <Button className="rounded-none">VER MAS</Button>
             </Link>
           </div>
@@ -138,13 +114,13 @@ export default async function Page({ searchParams }: Props) {
           <div className="text-center text-xl uppercase xl:text-4xl">
             Adidas liquidación
           </div>
-          <CarouselProduct
+          {/* <CarouselProduct
             products={ProductosLiquidacion}
             descuentos={descuentos}
             outlet={false}
-          />
+          /> */}
           <div className="flex justify-center w-full">
-            <Link href={"/productos?razonsocial=fritzduran&marca=adidas"}>
+            <Link href={"/catalogo?razonsocial=fritzduran&marca=adidas"}>
               <Button className="rounded-none">VER MAS</Button>
             </Link>
           </div>
@@ -160,13 +136,14 @@ export default async function Page({ searchParams }: Props) {
             tipoCategoria={`&& marca == "nike"  `}
             outlet={false}
           /> */}
-          <CarouselProduct
+
+          {/* <CarouselProduct
             products={ProductosNike}
             descuentos={descuentos}
             outlet={false}
-          />
+          /> */}
           <div className="flex justify-center w-full">
-            <Link href={"/productos?&marca=nike"}>
+            <Link href={"/catalogo?&marca=nike"}>
               <Button className="rounded-none">VER MAS</Button>
             </Link>
           </div>

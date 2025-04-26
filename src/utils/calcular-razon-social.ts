@@ -8,6 +8,6 @@ export default function determinarRazonSocial(
   if (marca === "adidas") {
     return porcentaje >= 40 ? "fritzduran" : "fritzsport";
   }
-// traer commit
+  // traer commit
   return "fritzsport";
 }

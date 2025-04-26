@@ -45,7 +45,6 @@ export default function Product({
 
   const [data, setData] = useState(null);
 
-
   return (
     <>
       <div className=" flex h-full flex-col justify-around   border-[1px] p-2 border-blue-gray-300  dark:border-none ">
@@ -124,6 +123,9 @@ export default function Product({
           )}
           <h3 className="mt-2 text-sm font-semibold uppercase xl:text-lg 2xl:text-xl ">
             {products.name}
+          </h3>
+          <h3 className="mt-2 text-sm font-semibold uppercase xl:text-lg 2xl:text-xl ">
+            {products?.razonsocial}
           </h3>
           <div className="border-t-[1px] border-blue-gray-300 mt-2">
             <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">

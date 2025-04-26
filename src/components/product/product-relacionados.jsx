@@ -10,12 +10,7 @@ export default function ProductRelacionados({
   descuentos,
   outlet = false,
 }) {
-  let razonsocial;
-  if (outlet) {
-    razonsocial = descuentos.descuentooutlet;
-  } else {
-    razonsocial = descuentos.descuentofritzsport;
-  }
+
 
   let descuentoSobreD = products?.descuentosobred;
 

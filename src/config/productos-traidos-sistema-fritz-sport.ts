@@ -105,7 +105,8 @@ export default async function productosTraidosSistemaFritzSport(
         el.priceecommerce !== undefined &&
         el.pricemayorista !== null &&
         el.priceemprendedor !== null &&
-        el.priceecommerce !== null
+        el.priceecommerce !== null &&
+        el.empresa !== "fz_premium"
     );
 
   return productosOrdenadosConPrecio;

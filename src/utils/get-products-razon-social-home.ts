@@ -6,11 +6,11 @@ export const getProductRazonSocial = async (
   marca = "adidas",
   razonsocial: string
 ) => {
-  const order = `| order(_id) [0...50]`;
+  const order = `| order(_createdAt asc) [0...100]`;
 
   const productFilter = FiltroGlobal();
 
-  const filtroRazon = `&& tipo in ["ropa","calzado"] && imgcatalogomain != undefined  && marca == "${marca}"`;
+  const filtroRazon = `&& tipo in ["ropa","calzado"] && imgcatalogomain != undefined && empresa != "fz_premium" `;
 
   const filter = `*[${productFilter}${filtroRazon}]`;
 
@@ -35,9 +35,10 @@ export const getProductRazonSocial = async (
 
   let productosConPrecioDeSistemaFritzSport =
     await productosTraidosSistemaFritzSport(products, "LIMA");
+  // console.log(productosConPrecioDeSistemaFritzSport);
 
   let productosFiltrados = productosConPrecioDeSistemaFritzSport.filter(
-    (item) => item?.razonsocial == razonsocial
+    (item) => item?.razonsocial == razonsocial && item?.empresa != "fz_premium"
   );
   return productosFiltrados;
 };

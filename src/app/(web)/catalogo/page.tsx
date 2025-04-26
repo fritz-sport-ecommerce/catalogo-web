@@ -21,6 +21,7 @@ interface Props {
   searchParams: {
     start?: string;
     date?: string;
+    razonsocial?: string;
     priceecommerce?: string;
     price?: string;
     talla?: string;
@@ -74,6 +75,7 @@ export default async function Page({ searchParams }: Props) {
     size,
     search,
     subgenero,
+    razonsocial,
     genero,
     coleccion,
     talla,
@@ -109,10 +111,10 @@ export default async function Page({ searchParams }: Props) {
 
   const coleccionFilter = coleccion ? `&& coleccion match "${coleccion}"` : "";
   const searchFilter = search
-    ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" && categories != "originals" `
+    ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" `
     : "";
 
-  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${sizeFilter}${searchFilter}${generoFilter}${marcaFilter}${coleccionFilter} && empresa != "fz_premium"] | order(_createdAt desc)`;
+  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${searchFilter}${generoFilter}${marcaFilter}${coleccionFilter} && empresa != "fritzsport" ] | order(_createdAt desc)`;
 
   async function fetchNextPage(itemsPerPage: number, start: number) {
     let totalValidProducts: SanityProduct[] = [];
@@ -165,6 +167,8 @@ export default async function Page({ searchParams }: Props) {
     return totalValidProducts.slice(0, itemsPerPage);
   }
   const products = await fetchNextPage(itemsPerPage, start);
+
+
 
   // console.log(products, "productos traidos sanity");
 
