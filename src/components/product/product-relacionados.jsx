@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { urlForImage } from "@/sanity/lib/image";
 import ImageReplaceEcommerceCatalogo from "../imageReplaceEcommerceCatalogo";
+import { LimitarTexto } from "@/utils/limitarTexto";
 
 export default function ProductRelacionados({
   products,
@@ -10,8 +11,6 @@ export default function ProductRelacionados({
   descuentos,
   outlet = false,
 }) {
-
-
   let descuentoSobreD = products?.descuentosobred;
 
   return (
@@ -54,11 +53,13 @@ export default function ProductRelacionados({
             </div>
           )}
 
-          <div className="mt-2 font-semibold uppercase  xl:text-sm text-sm">
-            {products?.name} {products?.genero}
+          <div className="mt-2 xl:mt-2 font-semibold uppercase  xl:text-sm text-sm">
+            {LimitarTexto(products?.name)}
           </div>
-
-          <div className="flex w-full h-full flex-col mt-3 items-end justify-start xl:justify-center 2xl:gap-y-2 ">
+          <div className="mt-2 xl:mt-2 font-semibold uppercase  xl:text-sm text-sm">
+            {products?.razonsocial}
+          </div>
+          <div className="flex w-full h-full flex-col  mt-3 xl:mt-0 items-end justify-start xl:justify-start 2xl:gap-y-0 ">
             <div className="flex items-center justify-between w-full">
               <div>Precio Mayorista:</div>
               <div className="xl:text-lg font-bold text-[#B73228]">

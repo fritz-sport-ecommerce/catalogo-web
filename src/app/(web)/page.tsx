@@ -6,14 +6,14 @@ import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import { SanitySlider } from "@/config/inventory";
 import Carousel from "@/components/carousel-home/Carousel";
-import CarouselProductRelacionados from "@/components/carousel-product/carousel-product-relacionados";
+
 import Descuentos from "@/config/descuentos";
-import { FiltroGlobal } from "@/utils/filtro-products";
-import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CarouselProduct from "@/components/carousel-product/carousel-product";
 import { getProductRazonSocial } from "@/utils/get-products-razon-social-home";
+import { UNDEFINED } from "swr/_internal";
 export const metadata: Metadata = {
   title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
   description:
@@ -67,14 +67,28 @@ export default async function Page({ searchParams }: Props) {
   //ts
 
   // filtro productos
-  const ProductosLinea = await getProductRazonSocial("adidas", "fritzsport");
-  // const ProductosLiquidacion = await getProductRazonSocial(
-  //   "adidas",
-  //   "fritzduran"
-  // );
-  console.log("productos linea", ProductosLinea);
+  const ProductosNuevos = await getProductRazonSocial(
+    "adidas",
+    undefined,
+    true
+  );
 
-  // const ProductosNike = await getProductRazonSocial("nike", "fritzsport");
+  const ProductosLinea = await getProductRazonSocial(
+    "adidas",
+    "fritzsport",
+    false
+  );
+  const ProductosLiquidacion = await getProductRazonSocial(
+    "adidas",
+    "fritzduran",
+    false
+  );
+
+  const ProductosNike = await getProductRazonSocial(
+    "nike",
+    "fritzsport",
+    false
+  );
   return (
     <div>
       {/* <DialogSizes promoHome={promoHome}></DialogSizes> */}
@@ -86,18 +100,15 @@ export default async function Page({ searchParams }: Props) {
           <div className="text-center text-xl uppercase xl:text-4xl">
             nuevos ingresos
           </div>
-          <ContedorCarouselProduct
-            nuevo={true}
-            genero={"unisex"}
-            cantidad={"20"}
+          <CarouselProduct
+            products={ProductosNuevos}
             descuentos={descuentos}
-            tipoCategoria={`&& tipo == "calzado" `}
             outlet={false}
           />
         </div>
         <div className="my-10 xl:my-20">
           <div className="text-center text-xl uppercase xl:text-4xl">
-            Adidas linea
+            Productos linea
           </div>
           <CarouselProduct
             products={ProductosLinea}
@@ -105,7 +116,7 @@ export default async function Page({ searchParams }: Props) {
             outlet={false}
           />
           <div className="flex justify-center w-full">
-            <Link href={"/catalogo?razonsocial=fritzsport&marca=adidas"}>
+            <Link href={"/catalogo?razonsocial=fritzsport"}>
               <Button className="rounded-none">VER MAS</Button>
             </Link>
           </div>
@@ -114,11 +125,11 @@ export default async function Page({ searchParams }: Props) {
           <div className="text-center text-xl uppercase xl:text-4xl">
             Adidas liquidación
           </div>
-          {/* <CarouselProduct
+          <CarouselProduct
             products={ProductosLiquidacion}
             descuentos={descuentos}
             outlet={false}
-          /> */}
+          />
           <div className="flex justify-center w-full">
             <Link href={"/catalogo?razonsocial=fritzduran&marca=adidas"}>
               <Button className="rounded-none">VER MAS</Button>
@@ -136,12 +147,11 @@ export default async function Page({ searchParams }: Props) {
             tipoCategoria={`&& marca == "nike"  `}
             outlet={false}
           /> */}
-
-          {/* <CarouselProduct
+          <CarouselProduct
             products={ProductosNike}
             descuentos={descuentos}
             outlet={false}
-          /> */}
+          />
           <div className="flex justify-center w-full">
             <Link href={"/catalogo?&marca=nike"}>
               <Button className="rounded-none">VER MAS</Button>

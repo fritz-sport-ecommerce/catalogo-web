@@ -1,10 +1,9 @@
 export const fetchCache = "force-no-store";
 export const revalidate = 0; // seconds
 export const dynamic = "force-dynamic";
-
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import { FiltroProducts } from "@/utils/filtro-products";
+
 import { SanityProduct } from "@/config/inventory";
 import { cn } from "@/lib/utils";
 import { ProductFilters } from "@/components/product-filters";
@@ -12,10 +11,11 @@ import ProductGrid from "@/components/product/product-card/product-grid";
 import { MainSort } from "@/components/product-sort";
 
 import { Metadata } from "next";
-import { FiltroGlobal } from "@/utils/filtro-products";
+
 import Descuentos from "@/config/descuentos";
 import productosTraidosSistemaFritzSport from "@/config/productos-traidos-sistema-fritz-sport";
 import Pagination from "@/components/pagination/pagination";
+import { FiltroGlobal } from "@/utils/filtro-products-slider-home";
 
 interface Props {
   searchParams: {
@@ -114,7 +114,7 @@ export default async function Page({ searchParams }: Props) {
     ? `&& name match "${search}" || sku match "${search}" || genero match "${search}"|| marca match "${search}"|| tipo match "${search}"|| category match "${search}"|| color match "${search}" || coleccion match "${search}" `
     : "";
 
-  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${searchFilter}${generoFilter}${marcaFilter}${coleccionFilter} && empresa != "fritzsport" ] | order(_createdAt desc)`;
+  const filter = `*[${productFilter}${colorFilter}${categoryFilter}${searchFilter}${generoFilter}${marcaFilter}${coleccionFilter} && empresa != "fzpremium" ] `;
 
   async function fetchNextPage(itemsPerPage: number, start: number) {
     let totalValidProducts: SanityProduct[] = [];
@@ -156,7 +156,8 @@ export default async function Page({ searchParams }: Props) {
 
       const validProducts = await productosTraidosSistemaFritzSport(
         products,
-        "LIMA"
+        "LIMA",
+        razonsocial
       );
       totalValidProducts = [...totalValidProducts, ...validProducts];
 
@@ -167,8 +168,6 @@ export default async function Page({ searchParams }: Props) {
     return totalValidProducts.slice(0, itemsPerPage);
   }
   const products = await fetchNextPage(itemsPerPage, start);
-
-
 
   // console.log(products, "productos traidos sanity");
 

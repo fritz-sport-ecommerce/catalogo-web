@@ -22,7 +22,10 @@ import {
 } from "@/components/ui/accordion";
 import { AccordionDescription } from "@/components/acordion-details/acordion-description";
 import { AccordionDetails } from "@/components/acordion-details/acordion-details";
-import { FiltroGlobal, FiltroViewProduct } from "@/utils/filtro-products";
+import {
+  FiltroGlobal,
+  FiltroViewProduct,
+} from "@/utils/filtro-products-slider-home";
 import { notFound } from "next/navigation";
 import Descuentos from "@/config/descuentos";
 import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";

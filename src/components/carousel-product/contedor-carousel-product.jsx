@@ -2,7 +2,7 @@ import React from "react";
 import { client } from "@/sanity/lib/client";
 
 import CarouselProduct from "@/components/carousel-product/carousel-product";
-import { FiltroGlobal } from "@/utils/filtro-products";
+import { FiltroGlobal } from "@/utils/filtro-products-slider-home";
 
 export default async function ContedorCarouselProduct({
   genero,

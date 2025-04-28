@@ -21,9 +21,9 @@ import { ProductFilters } from "@/components/product-filters";
 import { useEffect, useState } from "react";
 
 const sortOptions = [
-  { name: "Lo más Nuevo", value: "tienda/?date=desc" },
-  { name: "Precio, Bajo a Alto", value: "tienda/?price=asc" },
-  { name: "Precio, Alto a Bajo", value: "tienda/?price=desc" },
+  { name: "Lo más Nuevo", value: "catalogo/?date=desc" },
+  { name: "Precio, Bajo a Alto", value: "catalogo/?price=asc" },
+  { name: "Precio, Alto a Bajo", value: "catalogo/?price=desc" },
 ];
 
 function ProductSort() {

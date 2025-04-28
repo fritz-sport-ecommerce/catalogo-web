@@ -17,7 +17,8 @@ function obtenerStockEnLima(
 
 export default async function productosTraidosSistemaFritzSport(
   productos: any[] = [],
-  provincia: string | undefined
+  provincia: string | undefined,
+  razonsocial: string | undefined =undefined
 ) {
   if (!Array.isArray(productos) || productos.length === 0) {
     console.error("❌ Error: No hay productos para procesar.");
@@ -90,14 +91,11 @@ export default async function productosTraidosSistemaFritzSport(
       (a, b) =>
         new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
     )
-    // .filter(
-    //   (el) =>
-    //     el.subgenero_ninos !== "Categoría no determinada" &&
-    //     // obtenerStockEnLima(el.provincias, provincia) > 10 &&
-    //     el.talla_sistema !== "" &&
-    //     // el.stock > 10 &&
-    //     el.tallascatalogo !== ""
-    // )
+    .filter(
+      (el) =>
+        // obtenerStockEnLima(el.provincias, provincia) > 10 &&
+        el.stock > 1
+    )
     .filter(
       (el) =>
         el.pricemayorista !== undefined &&
@@ -109,5 +107,13 @@ export default async function productosTraidosSistemaFritzSport(
         el.empresa !== "fz_premium"
     );
 
-  return productosOrdenadosConPrecio;
+  if (razonsocial) {
+    return productosOrdenadosConPrecio.filter(
+      (el) =>
+        // obtenerStockEnLima(el.provincias, provincia) > 10 &&
+        el.razonsocial === "fritzsport"
+    );
+  } else {
+    return productosOrdenadosConPrecio;
+  }
 }

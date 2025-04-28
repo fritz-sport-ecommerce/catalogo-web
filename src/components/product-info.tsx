@@ -10,7 +10,7 @@ import { SanityProduct } from "@/config/inventory";
 import { precioProduct } from "@/config/precio-product";
 
 import ProductAddToCart from "./product-add-to-cart";
-import { FiltroProducts } from "@/utils/filtro-products";
+import { FiltroProducts } from "@/utils/filtro-products-slider-home";
 import RoleContext from "@/context/roleContext";
 
 interface Props {

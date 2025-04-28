@@ -8,7 +8,7 @@ import { groq } from "next-sanity";
 
 import { precioProduct } from "@/config/precio-product";
 import LoveFollow from "../love-follow/love-follow";
-import { FiltroProducts } from "@/utils/filtro-products";
+import { FiltroProducts } from "@/utils/filtro-products-slider-home";
 import CantidadProduct from "@/components/product/cantidad-product/cantidad-product";
 
 // import LoveFollow from "../love-follow/love-follow";

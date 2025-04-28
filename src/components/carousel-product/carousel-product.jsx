@@ -3,7 +3,6 @@
 import Carousel from "react-multi-carousel";
 
 import "react-multi-carousel/lib/styles.css";
-import Product from "../product/product_2";
 import ProductRelacionados from "../product/product-relacionados";
 
 const responsive = {

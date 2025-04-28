@@ -1,16 +1,21 @@
 import productosTraidosSistemaFritzSport from "@/config/productos-traidos-sistema-fritz-sport";
-import { FiltroGlobal } from "./filtro-products";
+import { FiltroGlobal } from "./filtro-products-slider-home";
 import { client } from "@/sanity/lib/client";
 
 export const getProductRazonSocial = async (
-  marca = "adidas",
-  razonsocial: string
+  marca: string | undefined,
+  razonsocial: string | undefined,
+  all: boolean
 ) => {
-  const order = `| order(_createdAt asc) [0...100]`;
+  const order = `| order(_createdAt desc) ${
+    all ? "[0...100]" : "[100...200]"
+  } `;
 
   const productFilter = FiltroGlobal();
 
-  const filtroRazon = `&& tipo in ["ropa","calzado"] && imgcatalogomain != undefined && empresa != "fz_premium" `;
+  const filtroRazon = `&& tipo in ["ropa","calzado"] && imgcatalogomain != undefined && empresa != "fz_premium" ${
+    marca ? "" : `&& marca == "${marca}" `
+  } `;
 
   const filter = `*[${productFilter}${filtroRazon}]`;
 
@@ -36,9 +41,17 @@ export const getProductRazonSocial = async (
   let productosConPrecioDeSistemaFritzSport =
     await productosTraidosSistemaFritzSport(products, "LIMA");
   // console.log(productosConPrecioDeSistemaFritzSport);
+  let productosFiltrados = [];
+  if (razonsocial) {
+    productosFiltrados = productosConPrecioDeSistemaFritzSport.filter(
+      (item) =>
+        item?.razonsocial == razonsocial && item?.empresa != "fz_premium"
+    );
+  } else {
+    productosFiltrados = productosConPrecioDeSistemaFritzSport.filter(
+      (item) => item?.empresa != "fz_premium"
+    );
+  }
 
-  let productosFiltrados = productosConPrecioDeSistemaFritzSport.filter(
-    (item) => item?.razonsocial == razonsocial && item?.empresa != "fz_premium"
-  );
   return productosFiltrados;
 };
