@@ -1,8 +1,6 @@
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 
-
-
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 horas
 
 async function fetchSanityData(filterProducts, CACHE_KEY) {
@@ -22,15 +20,19 @@ async function fetchSanityData(filterProducts, CACHE_KEY) {
     : "";
 
   // Validar si razonsocial y genero no están definidos
-  const razonsocialFiltro = filtros.razonsocial ? `razonsocial == "${filtros.razonsocial}"` : "";
+  const razonsocialFiltro = filtros.razonsocial
+    ? `razonsocial == "${filtros.razonsocial}"`
+    : "";
 
   // Construir la consulta dinámicamente
   const query = groq`*[ _type == "product" && categories != "originals" 
         ${razonsocialFiltro ? `&& ${razonsocialFiltro}` : ""}
         ${generoFiltro ? `&& ${generoFiltro}` : ""}
         && marca == ${filtros.marca ? `"${filtros.marca}"` : "null"}
-        && tipoproducto == ${filtros.tipoproducto ? `"${filtros.tipoproducto}"` : "null"}
-    && imgcatalogomain != undefined] | order(_createdAt desc) {
+        && tipoproducto == ${
+          filtros.tipoproducto ? `"${filtros.tipoproducto}"` : "null"
+        }
+    && imgcatalogomain != null] | order(_createdAt desc) {
       _id, _createdAt, name, sku, images, priceecommerce, description,
       genero, subgenero, tipo, marca, descuento, color, imgcatalogomain,
       imagescatalogo, priceemprendedor, tallascatalogo, categories,

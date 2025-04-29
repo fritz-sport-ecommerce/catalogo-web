@@ -13,7 +13,7 @@ export const getProductRazonSocial = async (
 
   const productFilter = FiltroGlobal();
 
-  const filtroRazon = `&& tipo in ["ropa","calzado"] && imgcatalogomain != undefined && empresa != "fz_premium" ${
+  const filtroRazon = `&& tipo in ["ropa","calzado"] && imgcatalogomain != null && empresa != "fz_premium" ${
     marca ? "" : `&& marca == "${marca}" `
   } `;
 

@@ -92,7 +92,7 @@ export default async function Page({ params }: Props) {
     const generoFilterHombre = `${product?.genero}`
       ? `&& genero in ["${
           product?.genero
-        }","unisex"] && tipo in ["ropa","accesorios"] && imgcatalogomain != undefined && sku != "${product?.sku?.trim()}"`
+        }","unisex"] && tipo in ["ropa","accesorios"] && imgcatalogomain != null && sku != "${product?.sku?.trim()}"`
       : "";
     const filter = `*[${productFilter}${generoFilterHombre}]`;
 
@@ -125,7 +125,7 @@ export default async function Page({ params }: Props) {
     const generoFilterHombre = `${product?.genero}`
       ? `&& genero in ["${
           product?.genero
-        }","unisex"] && tipo in ["calzado","accesorios"] && imgcatalogomain != undefined && sku != "${product?.sku?.trim()}"`
+        }","unisex"] && tipo in ["calzado","accesorios"] && imgcatalogomain != null && sku != "${product?.sku?.trim()}"`
       : "";
     const filter = `*[${productFilter}${generoFilterHombre}]`;
 
