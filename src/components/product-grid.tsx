@@ -46,10 +46,10 @@ export function ProductGrid({
   const showMoreArticles = () => {
     if (isLoading) return;
     setIsLoading(true);
-    setTimeout(() => { // Simulating a delay for loading more products
-      setLoadMore((prev) => Math.min(prev + articlesShown, products.length));
-      setIsLoading(false);
-    }, 500);
+    // setTimeout(() => { // Simulating a delay for loading more products
+    //   setLoadMore((prev) => Math.min(prev + articlesShown, products.length));
+    //   setIsLoading(false);
+    // }, 500);
   };
 
   useEffect(() => {
