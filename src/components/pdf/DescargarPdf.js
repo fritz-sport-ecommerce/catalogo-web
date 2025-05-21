@@ -29,7 +29,7 @@ export default function DescargarPdf({ catalogo }) {
       <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl py-5 text-xl font-semibold uppercase">
         CATALOGO {provinciaSeleccionada}
       </div>
-      <div className="mb-4 xl:flex flex flex-col items-center justify-center xl:flex-row">
+     {/*   <div className="mb-4 xl:flex flex flex-col items-center justify-center xl:flex-row">
         <label className="font-bold">Selecciona un Tipo:</label>
         <select
           className="ml-2 p-2 border rounded text-black"
@@ -38,7 +38,7 @@ export default function DescargarPdf({ catalogo }) {
           <option value={"mayorista"}>mayorista</option>
           <option value={"emprendedor"}>emprendedor</option>
         </select>
-      </div>
+      </div>*/}
       <div className="flex justify-center w-full">
         <div className="grid md:gap-x-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-10 gap-y-5 ">
           {dataCatalogo?.map((el) => (
