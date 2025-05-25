@@ -6,12 +6,12 @@ import React, { useEffect, useState } from "react";
 export default function DescargarPdf({ catalogo }) {
   console.log(catalogo);
 
-  const [provinciaSeleccionada, setProvinciaSeleccionada] =
+  const [provinciaSeleccionada] =
     useState("mayorista");
 
   const [dataCatalogo, setDataCatalogo] = useState(catalogo.catalogospdf);
   const getUrlFromId = (pdf) => {
-    // Example ref: file-207fd9951e759130053d37cf0a558ffe84ddd1c9-mp3
+    // Example ref: file-207fd9951e759130053d37cf0a558ffe84ddd1c9-mp3s
     // We don't need the first part, unless we're using the same function for files and images
     const [_file, id, extension] = pdf?.split("-");
     return `https://cdn.sanity.io/files/ibvmpbc1/production/${id}.${extension}`;
@@ -29,7 +29,7 @@ export default function DescargarPdf({ catalogo }) {
       <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl py-5 text-xl font-semibold uppercase">
         CATALOGO {provinciaSeleccionada}
       </div>
-     {/*   <div className="mb-4 xl:flex flex flex-col items-center justify-center xl:flex-row">
+      {/*   <div className="mb-4 xl:flex flex flex-col items-center justify-center xl:flex-row">
         <label className="font-bold">Selecciona un Tipo:</label>
         <select
           className="ml-2 p-2 border rounded text-black"
