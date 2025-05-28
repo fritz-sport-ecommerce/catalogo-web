@@ -5,7 +5,7 @@ export default function LibroReclamacionesRedes() {
     <div className=" pb-5 mt-10">
       {/* libro de reclamaciones */}
       <div className="flex w-full justify-center ">
-        <a href="https://libro-reclamaciones.vercel.app/">
+        <a href="https://libro-de-reclamaciones.fritzsport.pe">
           <button>
             {/* <svg
               className="fill-black dark:fill-white hidden"
