@@ -2,20 +2,19 @@
 import { urlForImage } from "@/sanity/lib/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { track } from '@vercel/analytics';
 
 export default function DescargarPdf({ catalogo }) {
   console.log(catalogo);
 
-  const [provinciaSeleccionada] =
-    useState("mayorista");
-
+  const [provinciaSeleccionada] = useState("mayorista");
   const [dataCatalogo, setDataCatalogo] = useState(catalogo.catalogospdf);
+
   const getUrlFromId = (pdf) => {
-    // Example ref: file-207fd9951e759130053d37cf0a558ffe84ddd1c9-mp3s
-    // We don't need the first part, unless we're using the same function for files and images
     const [_file, id, extension] = pdf?.split("-");
     return `https://cdn.sanity.io/files/ibvmpbc1/production/${id}.${extension}`;
   };
+
   useEffect(() => {
     if (provinciaSeleccionada === "mayorista") {
       setDataCatalogo(catalogo.catalogospdf);
@@ -24,21 +23,29 @@ export default function DescargarPdf({ catalogo }) {
     }
   }, [provinciaSeleccionada]);
 
+  const handleDownloadClick = (el) => {
+    track('Descargar Catalogo', {
+      titulo: el.titulo,
+      mes: el.mes,
+      marca: el.marca,
+      tipo: provinciaSeleccionada
+    });
+  };
+
+  const handleViewClick = (el) => {
+    track('Ver Catalogo', {
+      titulo: el.titulo,
+      mes: el.mes,
+      marca: el.marca,
+      tipo: provinciaSeleccionada
+    });
+  };
+
   return (
     <div>
       <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl py-5 text-xl font-semibold uppercase">
         CATALOGO {provinciaSeleccionada}
       </div>
-      {/*   <div className="mb-4 xl:flex flex flex-col items-center justify-center xl:flex-row">
-        <label className="font-bold">Selecciona un Tipo:</label>
-        <select
-          className="ml-2 p-2 border rounded text-black"
-          onChange={(e) => setProvinciaSeleccionada(e.target.value)}
-        >
-          <option value={"mayorista"}>mayorista</option>
-          <option value={"emprendedor"}>emprendedor</option>
-        </select>
-      </div>*/}
       <div className="flex justify-center w-full">
         <div className="grid md:gap-x-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-10 gap-y-5 ">
           {dataCatalogo?.map((el) => (
@@ -64,7 +71,11 @@ export default function DescargarPdf({ catalogo }) {
               />
 
               <div className="w-full flex justify-center py-3">
-                <a href={getUrlFromId(el.asset?._ref)} target="_blank">
+                <a 
+                  href={getUrlFromId(el.asset?._ref)} 
+                  target="_blank"
+                  onClick={() => handleDownloadClick(el)}
+                >
                   <button
                     type="button"
                     className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
@@ -72,7 +83,11 @@ export default function DescargarPdf({ catalogo }) {
                     Descargar
                   </button>
                 </a>
-                <Link href={getUrlFromId(el.asset?._ref)} target="_blank">
+                <Link 
+                  href={getUrlFromId(el.asset?._ref)} 
+                  target="_blank"
+                  onClick={() => handleViewClick(el)}
+                >
                   <button
                     type="button"
                     className="text-white  bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
