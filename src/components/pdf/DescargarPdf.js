@@ -24,7 +24,7 @@ export default function DescargarPdf({ catalogo }) {
   }, [provinciaSeleccionada]);
 
   const handleDownloadClick = (el) => {
-    track('Descargar Catalogo', {
+    track(`Descargar ${el.titulo}`, {
       titulo: el.titulo,
       mes: el.mes,
       marca: el.marca,
@@ -33,7 +33,7 @@ export default function DescargarPdf({ catalogo }) {
   };
 
   const handleViewClick = (el) => {
-    track('Ver Catalogo', {
+    track(`Descargar ${el.titulo}`, {
       titulo: el.titulo,
       mes: el.mes,
       marca: el.marca,
