@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Raleway } from "next/font/google";
-
+import { Analytics } from '@vercel/analytics/next';
 // import Header from "@/components/Header/Header";
 import "./globals.css";
 
@@ -14,7 +14,7 @@ import { client } from "@/sanity/lib/client";
 import { SanitySlider } from "@/config/inventory";
 import { groq } from "next-sanity";
 import Footer from "@/components/footer-update/footer";
-import GoogleAnalytics from "@/app/(web)/GoogleAnalytics";
+
 import Script from "next/script";
 const raleway = Raleway({
   weight: ["800"],
@@ -79,7 +79,7 @@ whatsapp
         <link rel="icon" href="/favicon.ico" sizes="any" />
 
         {/* Meta Pixel Script */}
-        <Script
+      {/*   <Script
           id="meta-pixel"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -96,7 +96,7 @@ whatsapp
               fbq('track', 'PageView');
             `,
           }}
-        />
+        />*/}
         <noscript>
           <img
             height="1"
@@ -113,8 +113,9 @@ whatsapp
             <main className="font-normal">
               {/* <Header /> */}
               <SiteHeader />
-              <GoogleAnalytics />
+               {/*<GoogleAnalytics />*/}
               {children}
+                  <Analytics />
               <div className="fill-black">
                 <Footer tiendas={nuestrasTiendasFooter} />
               </div>
