@@ -6,7 +6,7 @@ import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 
 import { SanityProduct } from "@/config/inventory";
-
+import DetectProvinciaAnalytics from "./DetectProvinciaAnalytics";
 import { Metadata } from "next";
 
 import DescargarPdf from "@/components/pdf/DescargarPdf";
@@ -61,7 +61,7 @@ export default async function Page() {
   return (
     <div>
       {/* <object className='w-[100vw] h-[100vh]' data={getUrlFromId()} type="application/pdf"></object> */}
-
+     <DetectProvinciaAnalytics />
       <div>
         {/* <MainPdf catalogo={catalogo} items={products} /> */}
         <main className=" w-full px-6">
