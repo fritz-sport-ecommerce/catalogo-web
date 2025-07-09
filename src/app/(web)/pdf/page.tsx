@@ -1,6 +1,6 @@
-export const fetchCache = "force-no-store";
-export const revalidate = 0; // seconds
-export const dynamic = "force-dynamic";
+// export const fetchCache = "force-no-store";
+// export const revalidate = 0; // seconds
+// export const dynamic = "force-dynamic";
 
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
