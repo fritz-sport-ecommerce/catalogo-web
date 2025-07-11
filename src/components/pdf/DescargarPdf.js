@@ -51,7 +51,7 @@ export default function DescargarPdf({ catalogo }) {
             key={el._key}
             className={`relative px-4 py-5 border rounded-2xl shadow-md transition-transform duration-200 hover:scale-[1.01] bg-white dark:bg-gray-900 dark:border-blue-gray-500 border-blue-gray-200 ${
               idx === 0
-                ? "ring-4 ring-yellow-400 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30"
+                ? "ring-4 ring-yellow-400 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 soft-pulse"
                 : ""
             }`}
           >
@@ -136,3 +136,4 @@ export default function DescargarPdf({ catalogo }) {
     </div>
   );
 }
+
