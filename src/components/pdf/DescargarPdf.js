@@ -2,11 +2,10 @@
 import { urlForImage } from "@/sanity/lib/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { FaDownload, FaEye, FaStar } from "react-icons/fa";
+import { Button } from "../ui/button";
 import { track } from '@vercel/analytics';
-
 export default function DescargarPdf({ catalogo }) {
-  console.log(catalogo);
-
   const [provinciaSeleccionada] = useState("mayorista");
   const [dataCatalogo, setDataCatalogo] = useState(catalogo.catalogospdf);
 
@@ -42,63 +41,75 @@ export default function DescargarPdf({ catalogo }) {
   };
 
   return (
-    <div>
-      <div className="flex justify-center w-full 2xl:text-2xl xl:text-2xl py-5 text-xl font-semibold uppercase">
+    <div className="px-4 sm:px-6 lg:px-8">
+      <div className="text-center w-full text-xl sm:text-2xl font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100 py-5">
         CATALOGO {provinciaSeleccionada}
       </div>
-      <div className="flex justify-center w-full">
-        <div className="grid md:gap-x-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-10 gap-y-5 ">
-          {dataCatalogo?.map((el) => (
-            <section
-              key={el._key}
-              className=" px-5 py-5 border-[1px] dark:border-blue-gray-500 border-blue-gray-600 rounded-xl"
-            >
-              <div className="text-center xl:text-lg uppercase py-2">
-                {el?.titulo}
-              </div>
-              <div className="flex justify-center items-center">
-                <div className="text-xs">Catalogo: </div>
-                <span className="text-sm">{provinciaSeleccionada}</span>
-              </div>
-              <div className="flex justify-between py-2 uppercase text-xs ">
-                <div> {el?.mes}</div>
-                <div>{el?.marca}</div>
-              </div>
-              <img
-                className=""
-                src={urlForImage(el?.imgdw?.asset?._ref).url()}
-                alt=""
-              />
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        {dataCatalogo?.map((el, idx) => (
+          <section
+            key={el._key}
+            className={`relative px-4 py-5 border rounded-2xl shadow-md transition-transform duration-200 hover:scale-[1.01] bg-white dark:bg-gray-900 dark:border-blue-gray-500 border-blue-gray-200 ${
+              idx === 0
+                ? "ring-4 ring-yellow-400 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30"
+                : ""
+            }`}
+          >
+            {idx === 0 && (
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-white px-4 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md z-10">
+                <FaStar /> Destacado
+              </span>
+            )}
 
-              <div className="w-full flex justify-center py-3">
-                <a 
-                  href={getUrlFromId(el.asset?._ref)} 
-                  target="_blank"
-                  onClick={() => handleDownloadClick(el)}
-                >
-                  <button
-                    type="button"
-                    className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                  >
-                    Descargar
-                  </button>
-                </a>
-                <Link 
-                  href={getUrlFromId(el.asset?._ref)} 
-                  target="_blank"
-                  onClick={() => handleViewClick(el)}
-                >
-                  <button
-                    type="button"
-                    className="text-white  bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                  >
-                    Ver
-                  </button>
-                </Link>
-              </div>
-            </section>
-          ))}
-        </div>
+            <div className="text-center uppercase font-semibold text-gray-800 dark:text-gray-100 h-12 flex items-center justify-center text-sm sm:text-base truncate">
+              {el?.titulo}
+            </div>
+
+            <div className="flex justify-center items-center mt-1 mb-2 text-xs text-gray-600 dark:text-gray-300">
+              <span>Catálogo: </span>
+              <span className="ml-1 font-medium text-blue-700 dark:text-blue-300">
+                {provinciaSeleccionada}
+              </span>
+            </div>
+
+            <div className="flex justify-between py-1 text-xs uppercase text-gray-500 dark:text-gray-300">
+              <div className="font-bold">{el?.mes}</div>
+              <div className="font-bold">{el?.marca}</div>
+            </div>
+
+            <div className="flex justify-center py-2">
+              <img
+                className="rounded-lg shadow-md object-cover border border-gray-200 dark:border-gray-700 max-w-full h-auto"
+                src={urlForImage(el?.imgdw?.asset?._ref).url()}
+                alt={el?.titulo || "Catalogo"}
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 mt-3">
+              <a
+                href={getUrlFromId(el.asset?._ref)}
+                target="_blank"
+                onClick={() => handleDownloadClick(el)}
+                className="flex-1"
+              >
+                <Button className="w-full flex items-center justify-center gap-2 text-white bg-gradient-to-r from-gray-800 to-gray-900 hover:from-yellow-400 hover:to-yellow-500 focus:ring-yellow-300 rounded-lg text-sm px-4 py-2.5 shadow-md">
+                  <FaDownload /> Descargar
+                </Button>
+              </a>
+
+              <Link
+                href={getUrlFromId(el.asset?._ref)}
+                target="_blank"
+                onClick={() => handleViewClick(el)}
+                className="flex-1"
+              >
+                <Button className="w-full flex items-center justify-center gap-2 text-white bg-gradient-to-r from-blue-700 to-blue-900 hover:from-yellow-400 hover:to-yellow-500 focus:ring-blue-300 rounded-lg text-sm px-4 py-2.5 shadow-md">
+                  <FaEye /> Ver
+                </Button>
+              </Link>
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   );
