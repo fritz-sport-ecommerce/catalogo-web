@@ -2,23 +2,8 @@
 
 import { urlForImage } from "@/sanity/lib/image";
 import { Button } from "../ui/button";
-import { motion } from "framer-motion";
 
 export default function PaginaEmprende({ emprende }) {
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  };
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900">
       {/* Hero Section */}
@@ -40,52 +25,34 @@ export default function PaginaEmprende({ emprende }) {
         )}
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div 
-            className="text-center text-white"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+          <div className="text-center text-white animate-fade-in">
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg animate-slide-up">
               Emprende con Nosotros
             </h1>
-            <p className="text-xl md:text-2xl font-light max-w-2xl mx-auto drop-shadow-lg">
+            <p className="text-xl md:text-2xl font-light max-w-2xl mx-auto drop-shadow-lg animate-slide-up-delayed">
               Construye tu futuro empresarial con las mejores herramientas y oportunidades
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Benefits Section */}
       <section className="py-20 px-4">
-        <motion.div 
-          className="max-w-7xl mx-auto"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          <motion.h2 
-            className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-16"
-            variants={fadeInUp}
-          >
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-16 animate-fade-in">
             {emprende.titulobeneficios}
-          </motion.h2>
+          </h2>
 
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={staggerContainer}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {emprende.benficiosgrid.map((el, i) => (
-              <motion.div
+              <div
                 key={i}
-                className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700"
-                variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
+                className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative z-10 flex flex-col items-center text-center">
-                  <div className="w-24 h-24 mb-6 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 rounded-full p-4">
+                  <div className="w-24 h-24 mb-6 flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 rounded-full p-4 shadow-lg">
                     <img
                       src={urlForImage(el.img.asset._ref).url()}
                       alt={el.titulo}
@@ -96,34 +63,25 @@ export default function PaginaEmprende({ emprende }) {
                     {el.titulo}
                   </h3>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </section>
 
       {/* Emprendedor y Mayorista Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-slate-800">
         <div className="max-w-7xl mx-auto">
-          <motion.h2 
-            className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-20"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <h2 className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-20 animate-fade-in">
             {emprende.tituloemprende}
-          </motion.h2>
+          </h2>
 
           <div className="space-y-32">
             {emprende.emprendemayorista.map((el, i) => (
-              <motion.div
+              <div
                 key={el.titulo}
-                className="relative"
-                initial={{ opacity: 0, y: 60 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.2 }}
+                className="relative animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.2}s` }}
               >
                 {/* Badge */}
                 <div className="flex justify-center mb-12">
@@ -134,38 +92,22 @@ export default function PaginaEmprende({ emprende }) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                   {/* Image */}
-                  <motion.div 
-                    className="relative"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl"></div>
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl transition-all duration-300 group-hover:scale-105"></div>
                     <img
                       src={urlForImage(el.img.asset._ref).url()}
                       alt={el.Requisitos}
-                      className="relative z-10 w-full h-auto rounded-2xl shadow-2xl"
+                      className="relative z-10 w-full h-auto rounded-2xl shadow-2xl transition-transform duration-300 group-hover:scale-105"
                     />
-                  </motion.div>
+                  </div>
 
                   {/* Content */}
                   <div className="space-y-8">
-                    <motion.h3 
-                      className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white"
-                      initial={{ opacity: 0, x: 60 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.2 }}
-                    >
+                    <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white animate-slide-in-right">
                       {el.Requisitos}
-                    </motion.h3>
+                    </h3>
 
-                    <motion.div 
-                      className="space-y-6"
-                      initial={{ opacity: 0, x: 60 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.4 }}
-                    >
+                    <div className="space-y-6 animate-slide-in-right-delayed">
                       <div>
                         <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                           Beneficios Principales
@@ -197,16 +139,10 @@ export default function PaginaEmprende({ emprende }) {
                           ))}
                         </ul>
                       </div>
-                    </motion.div>
+                    </div>
 
                     {/* CTA Button */}
-                    <motion.div 
-                      className="pt-6"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.6 }}
-                    >
+                    <div className="pt-6 animate-fade-in-up">
                       <a
                         href={`https://api.whatsapp.com/send/?phone=51${emprende.pasos.empiezaahora[0].urlbutton}&text&type=phone_number&app_absent=0`}
                         target="_blank"
@@ -240,10 +176,10 @@ export default function PaginaEmprende({ emprende }) {
                           </defs>
                         </svg>
                       </a>
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -252,45 +188,25 @@ export default function PaginaEmprende({ emprende }) {
       {/* Pasos Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <motion.h2 
-            className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-20"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <h2 className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-20 animate-fade-in">
             {emprende.pasos.titulo}
-          </motion.h2>
+          </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div className="animate-slide-in-left">
               <img
                 src={urlForImage(emprende.pasos.img.asset._ref).url()}
                 alt="Pasos para emprender"
                 className="w-full h-auto rounded-2xl shadow-2xl"
               />
-            </motion.div>
+            </div>
 
-            <motion.div 
-              className="space-y-8"
-              initial={{ opacity: 0, x: 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
+            <div className="space-y-8 animate-slide-in-right">
               {emprende.pasos.afiliate.map((el, i) => (
-                <motion.div 
+                <div 
                   key={i} 
-                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  style={{ animationDelay: `${i * 0.1}s` }}
                 >
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                     {el.titulo}
@@ -298,9 +214,9 @@ export default function PaginaEmprende({ emprende }) {
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                     {el.subtitle}
                   </p>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -308,23 +224,11 @@ export default function PaginaEmprende({ emprende }) {
       {/* Final CTA Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.h2 
-            className="text-4xl md:text-5xl font-bold text-white mb-8"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 animate-fade-in">
             {emprende.pasos.title}
-          </motion.h2>
+          </h2>
 
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-6 justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up">
             {emprende.pasos.empiezaahora.map((el, i) => (
               <a
                 key={i}
@@ -361,10 +265,59 @@ export default function PaginaEmprende({ emprende }) {
                 </svg>
               </a>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(30px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-30px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease-out;
+        }
+        
+        .animate-slide-up {
+          animation: slideUp 0.8s ease-out;
+        }
+        
+        .animate-slide-up-delayed {
+          animation: slideUp 0.8s ease-out 0.2s both;
+        }
+        
+        .animate-fade-in-up {
+          animation: slideUp 0.6s ease-out;
+        }
+        
+        .animate-slide-in-right {
+          animation: slideInRight 0.8s ease-out;
+        }
+        
+        .animate-slide-in-right-delayed {
+          animation: slideInRight 0.8s ease-out 0.2s both;
+        }
+        
+        .animate-slide-in-left {
+          animation: slideInLeft 0.8s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
-
