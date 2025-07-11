@@ -56,8 +56,30 @@ export default function DescargarPdf({ catalogo }) {
             }`}
           >
             {idx === 0 && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-white px-4 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md z-10">
-                <FaStar /> Destacado
+              <span
+                className={`absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold shadow-md z-10 destacado-badge animate-pulse
+                  bg-gradient-to-r from-yellow-400 to-yellow-500 border-2 border-yellow-500 text-white
+                  dark:bg-black dark:border-yellow-400 dark:text-black`}
+                style={{
+                  textShadow: '1px 1px 8px #000, 0 0 10px #FFD600',
+                  fontWeight: 900,
+                  letterSpacing: '0.5px',
+                  boxShadow: '0 0 16px 4px #FFD600, 0 2px 8px 0 #FFB300',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4em',
+                }}
+              >
+                <FaStar style={{ filter: 'drop-shadow(0 0 4px #FFD600)' }} />
+                <span
+                  className="text-black dark:text-black"
+                  style={{
+                    textShadow: '0 1px 8px #fff, 0 0 10px #FFD600',
+                    fontWeight: 900,
+                    letterSpacing: '0.5px',
+                  }}
+                >Destacado</span>
               </span>
             )}
 
