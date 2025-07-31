@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 
 export default function PaginaEmprende({ emprende }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50   dark:to-slate-900">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
@@ -47,7 +47,7 @@ export default function PaginaEmprende({ emprende }) {
             {emprende.benficiosgrid.map((el, i) => (
               <div
                 key={i}
-                className="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 animate-fade-in-up"
+                className="group relative   rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 animate-fade-in-up"
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -70,7 +70,7 @@ export default function PaginaEmprende({ emprende }) {
       </section>
 
       {/* Emprendedor y Mayorista Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-slate-800">
+      <section className="py-20 px-4 bg-gradient-to-br    ">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-center text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-20 animate-fade-in">
             {emprende.tituloemprende}
@@ -205,7 +205,7 @@ export default function PaginaEmprende({ emprende }) {
               {emprende.pasos.afiliate.map((el, i) => (
                 <div 
                   key={i} 
-                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  className="  rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   style={{ animationDelay: `${i * 0.1}s` }}
                 >
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
