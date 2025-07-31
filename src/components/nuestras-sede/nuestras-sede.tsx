@@ -91,7 +91,7 @@ const TiendasComponent: React.FC<Props> = ({
               className={`group relative px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
                 tipoTienda === "retail"
                   ? "bg-black text-white shadow-lg shadow-black/25 border-2 border-black"
-                  : "bg-white  text-black dark:text-white border-2 border-gray-300 dark:border-gray-600 hover:border-black dark:hover:border-white"
+                  : "bg-white dark:bg-gray-800 text-black dark:text-white border-2 border-gray-300 dark:border-gray-600 hover:border-black dark:hover:border-white"
               }`}
               onClick={() => setTipoTienda("retail")}
             >
@@ -323,4 +323,3 @@ const TiendasComponent: React.FC<Props> = ({
 };
 
 export default TiendasComponent;
-
