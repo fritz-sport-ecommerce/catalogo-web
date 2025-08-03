@@ -1,6 +1,3 @@
-export const fetchCache = "force-no-store";
-export const revalidate = 0; // seconds
-export const dynamic = "force-dynamic";
 
 import NuestrasTiendas from "@/components/nuestras-sede/nuestras-sede";
 import { client } from "@/sanity/lib/client";
