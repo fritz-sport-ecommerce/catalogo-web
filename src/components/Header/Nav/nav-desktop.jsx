@@ -241,7 +241,7 @@ const dataHeader = {
             {
               id: "35",
               title: "Fritz Sport",
-              url: "/tienda?tipoproducto=catalogo&marca=fritzsport",
+              url: "/tienda?marca=fritzsport",
             },
             // {
             //   id: "35",
