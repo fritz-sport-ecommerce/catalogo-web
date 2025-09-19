@@ -54,7 +54,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
             {children}
           </div>
           <div className="flex justify-center 2-full">
-            {/* <Link href="/catalogo">
+            {/* <Link href="/tienda">
               <button
                
                 className="px-4 py-2 uppercase bg-green-500 text-white rounded hover:bg-green-600 transition-colors flex items-center justify-center gap-2"

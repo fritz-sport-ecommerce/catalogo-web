@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import { getMaintenanceMode } from "./utils/maintence-mode-cache";
-import { track } from "@vercel/analytics";
+
 async function fetchMaintenanceMode() {
   const data = await client.fetch(
     groq`*[_type == "catalogo"][0]{
@@ -11,87 +12,17 @@ async function fetchMaintenanceMode() {
   );
   return data.modo_mantenimiento || false;
 }
-// Mapeo completo de departamentos del Perú
-const peruDepartments: Record<string, string> = {
-  // Códigos comunes de APIs + nombres alternativos
-  LIMA: "Lima",
-  LIM: "Lima",
-  ARE: "Arequipa",
-  AQP: "Arequipa",
-  ANC: "Áncash",
-  APU: "Apurímac",
-  AYA: "Ayacucho",
-  CAJ: "Cajamarca",
-  CAL: "Callao",
-  CUS: "Cusco",
-  CUZ: "Cusco",
-  HUV: "Huancavelica",
-  HUC: "Huánuco",
-  ICA: "Ica",
-  JUN: "Junín",
-  LAL: "La Libertad",
-  LAM: "Lambayeque",
-
-  LOR: "Loreto",
-  MDD: "Madre de Dios",
-  MOQ: "Moquegua",
-  PAS: "Pasco",
-  PIU: "Piura",
-  PUN: "Puno",
-  SAM: "San Martín",
-  TAC: "Tacna",
-  TUM: "Tumbes",
-  UCA: "Ucayali",
-
-  // Nombres en español (por si la API los devuelve completos)
-  amazonas: "Amazonas",
-  ancash: "Áncash",
-  apurimac: "Apurímac",
-  arequipa: "Arequipa",
-  ayacucho: "Ayacucho",
-  cajamarca: "Cajamarca",
-  callao: "Callao",
-  cusco: "Cusco",
-  cuzco: "Cusco",
-  huancavelica: "Huancavelica",
-  huanuco: "Huánuco",
-  ica: "Ica",
-  junin: "Junín",
-  "la libertad": "La Libertad",
-  lambayeque: "Lambayeque",
-  lima: "Lima",
-  loreto: "Loreto",
-  "madre de dios": "Madre de Dios",
-  moquegua: "Moquegua",
-  pasco: "Pasco",
-  piura: "Piura",
-  puno: "Puno",
-  "san martin": "San Martín",
-  tacna: "Tacna",
-  tumbes: "Tumbes",
-  ucayali: "Ucayali",
-};
 
 export async function middleware(req: NextRequest) {
-  // departamentos analytics
-  console.log(req.geo);
-  const country = req.geo?.country; // 'PE' para Perú
-  const rawRegion = req.geo?.region; // Ej: 'LIM', 'Arequipa', 'cusco'
-
-  if (country === "PE" && rawRegion) {
-    const normalizedDepartment = normalizeDepartment(rawRegion);
-    track("Visita Perú", {
-      departamento: normalizedDepartment,
-      ciudad: req.geo?.city || "Desconocida",
-    });
-  }
   const url = req.url;
+  const { nextUrl, cookies } = req;
+  const pathname = nextUrl.pathname;
 
   // Obtener el estado de mantenimiento (cacheado) s
   const modo_mantenimiento = await getMaintenanceMode(fetchMaintenanceMode);
   // Redirigir si está en modo mantenimientoo
 
-  if (modo_mantenimiento) {
+  if (!modo_mantenimiento) {
     if (
       !url.includes("/mantenimiento") &&
       !url.includes("/studio") &&
@@ -99,27 +30,108 @@ export async function middleware(req: NextRequest) {
       !url.includes("/nuestras-tiendas") &&
       !url.includes("/pdf") &&
       !url.includes("/tyc") &&
-      !url.includes("/pyp") &&
-      !url.includes("-pdf/")
+      !url.includes("/pyp") && 
+      !url.includes("/libro-reclamaciones-virtual") && 
+      !url.includes("/politica-de-cambios") 
     ) {
-      const redirectUrl = new URL("/pdf", req.url);
+      const redirectUrl = new URL("/mantenimiento", req.url);
       return NextResponse.redirect(redirectUrl);
     }
   }
-  return NextResponse.next();
-}
+  // Leer token de NextAuth para obtener rol actualizado desde Sanity
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const roleFromToken = (token as any)?.role as string | undefined;
 
-// api analitycs departamentos
+  // Fallback: rol desde cookies si no hay token
+  const roleCookie =
+    cookies.get("user-role")?.value ||
+    cookies.get("rol")?.value ||
+    undefined;
 
-function normalizeDepartment(rawRegion: string): string {
-  // Limpia y estandariza el texto
-  const cleaned = rawRegion.trim().toUpperCase();
-  return peruDepartments[cleaned] || rawRegion;
+  // Detectar autenticación por presencia de token de NextAuth
+  const isAuthenticated = Boolean(token);
+
+  // Proteger /tienda y /tienda-mayorista: requiere estar autenticado y rol callcenter
+  // Importante: si está autenticado, no confiar en cookies para el rol. Partir del token.
+  let effectiveRole = isAuthenticated ? roleFromToken : (roleFromToken || roleCookie);
+
+  // Si está autenticado, obtener el rol más reciente desde Sanity usando el email del token
+  if (isAuthenticated) {
+    const email = (token as any)?.email as string | undefined;
+    if (email) {
+      try {
+        const data = await client.fetch<{ role?: string }>(
+          groq`*[_type == "user" && email == $email][0]{ role }`,
+          { email }
+        );
+        if (data?.role) {
+          effectiveRole = data.role;
+        }
+      } catch (e) {
+        // Ignorar error y continuar con el role existente
+      }
+    }
+  }
+
+  // Home "/": acceso solo para admin o callcenter; si no está autenticado o no tiene rol válido -> "/pdf"
+  if (pathname === "/") {
+    const hasAccessHome = effectiveRole === "callcenter" || effectiveRole === "admin";
+    if (!isAuthenticated || !hasAccessHome) {
+      return NextResponse.redirect(new URL("/pdf", req.url));
+    }
+  }
+
+  // Si está autenticado pero NO tiene rol válido, bloquear acceso a rutas no públicas
+  const isPublicPath =
+    pathname.startsWith("/pdf") ||
+    pathname.startsWith("/tyc") ||
+    pathname.startsWith("/pyp") ||
+    pathname.startsWith("/nuestras-tiendas") ||
+    pathname.startsWith("/emprende") ||
+    pathname.startsWith("/libro-reclamaciones-virtual") ||
+    pathname.startsWith("/politica-de-cambios") ||
+    pathname.startsWith("/mantenimiento") ||
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/api/auth") || 
+    
+      pathname.startsWith("/users");
+
+  const hasValidRole = effectiveRole === "callcenter" || effectiveRole === "admin";
+  if (isAuthenticated && !hasValidRole && !isPublicPath) {
+    return NextResponse.redirect(new URL("/pdf", req.url));
+  }
+
+  const needsProtection =
+    pathname.startsWith("/tienda") ||
+    pathname.startsWith("/tienda-mayorista") ||
+    pathname.startsWith("/pagar") ||
+    pathname.startsWith("/carrito") 
+    // pathname.startsWith("/users");
+
+  if (needsProtection) {
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL("/auth", req.url));
+    }
+    // El rol ya fue refrescado más arriba cuando isAuthenticated
+
+    const hasAccess = effectiveRole === "callcenter" || effectiveRole === "admin";
+    if (!hasAccess) {
+      return NextResponse.redirect(new URL("/pdf", req.url));
+    }
+  }
+
+  const res = NextResponse.next();
+  // Headers de diagnóstico
+  res.headers.set("x-authenticated", String(isAuthenticated));
+  if (effectiveRole) {
+    res.headers.set("x-user-role", effectiveRole);
+    res.headers.set("x-role-source", roleFromToken ? "token" : (roleCookie ? "cookie" : "none"));
+  } else {
+    res.headers.set("x-user-role", "");
+    res.headers.set("x-role-source", "none");
+  }
+  return res;
 }
 export const config = {
-  matcher: [
-    "/((?!_next|favicon.ico|mantenimiento).*)",
-    "/users/:path*",
-    "/pagar",
-  ],
+  matcher: ["/((?!_next|favicon.ico|mantenimiento|auth|api/auth).*)", "/users/:path*"],
 };

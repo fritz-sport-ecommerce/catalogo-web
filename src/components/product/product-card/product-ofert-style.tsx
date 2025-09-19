@@ -9,12 +9,11 @@ interface props {
 }
 export default function ProductOfertStyle({
   descuento,
-  descuentoSobreD,
   stock,
 }: props) {
   return (
     <>
-      {descuento || descuento > 0 || descuentoSobreD > 0 ? (
+      {descuento || descuento > 0  ? (
         <div className="absolute right-0 top-4 z-10 ">
           <div className=" mt-1 text-xs text-white ">
             <div className="flex flex-col">
@@ -23,7 +22,7 @@ export default function ProductOfertStyle({
                       <span className="flex justify-center bg-red-500 px-3 py-1">
                         {" "}
                         {!stock && descuento || descuentoSobreD >0
-                          ? `-${descuento && !descuentoSobreD ? descuento.toFixed() : descuentoSobreD.toFixed()}%`
+                          ? `-${descuento && !descuentoSobreD ? descuento.toFixed(0) : descuentoSobreD.toFixed(0)}%`
                           : "Agotado"}
                       </span>
                     ):(<></>)} */}
@@ -45,7 +44,7 @@ export default function ProductOfertStyle({
             <div className="flex flex-col">
               <>
                 {stock === 0 && (
-                  <span className="flex justify-center bg-black px-3 py-1">
+                  <span className="flex justify-center xl:text-xs text-[10px] bg-black xl:px-3 px-2 py-1">
                     Agotado
                   </span>
                 )}

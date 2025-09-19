@@ -31,9 +31,11 @@ export async function getPaginatedProducts(
   const query = groq`{
     "products": *[_type == "product" ${categoryFilter}] | order(_createdAt desc) [${start}...${end}] {
       _id,
+      _createdAt,
       name,
       "slug": slug.current,
       price,
+      popularidad,
       "images": images[].asset->url,
       "category": category->{
         name,

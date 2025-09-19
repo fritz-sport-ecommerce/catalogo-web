@@ -1,4 +1,8 @@
 import React from "react";
+import { Metadata } from "next";
+import { privacyMetadata } from "@/config/seo-config";
+
+export const metadata: Metadata = privacyMetadata;
 
 export default function index() {
   return (
@@ -133,8 +137,8 @@ export default function index() {
                 1. Derecho de Acceso e información: Como consecuencia del
                 derecho de acceso, el titular de datos personales tiene derecho
                 a obtener la información que, sobre sí mismo, sea objeto de
-                tratamiento a través de los bancos de datos de titularidad de
-                Fritz Sport
+                tratamiento a través de los bancos de datos de titularidad de Fz
+                Premium
               </p>
               <p>
                 El derecho de información, por su parte, otorga al titular el
@@ -191,8 +195,8 @@ export default function index() {
                 <strong>VI. SEGURIDAD DE DATOS PERSONALES</strong>
               </p>
               <p>
-                En cumplimiento de la normativa vigente, Fritz Sport adoptará
-                las medidas jurídicas, organizativas y técnicas apropiadas para
+                En cumplimiento de la normativa vigente, Fritz Sport adoptará las
+                medidas jurídicas, organizativas y técnicas apropiadas para
                 garantizar la seguridad de los datos personales, evitando su
                 alteración, pérdida, tratamiento indebido o acceso no
                 autorizado. Para este propósito, pone a disposición todos
@@ -203,9 +207,9 @@ export default function index() {
                 riesgos a los que se encuentran expuestos.
               </p>
               <p className="my-5 text-xl text-[var(--negro)] font-medium">
-                Fritz Sport sólo realizará tratamiento sobre datos personales
-                que estén almacenados en repositorios que reúnan las condiciones
-                de seguridad exigidas por la normativa vigente en protección de
+                Fritz Sport sólo realizará tratamiento sobre datos personales que
+                estén almacenados en repositorios que reúnan las condiciones de
+                seguridad exigidas por la normativa vigente en protección de
                 datos personales.
               </p>
             </div>

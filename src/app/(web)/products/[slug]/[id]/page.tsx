@@ -1,14 +1,8 @@
-// import { Metadata } from "next";
-// import { Metadata } from "next";
+import { client } from "@/sanity/lib/client";
+import { groq } from "next-sanity";
 // export const fetchCache = "force-no-store";
 // export const revalidate = 0; // seconds
 // export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-export const revalidate = 0; // seconds
-export const dynamic = "force-dynamic";
-import { client } from "@/sanity/lib/client";
-import { groq } from "next-sanity";
-
 // import { metadataPage } from "@/config/generateMetadata";
 import { SanityProduct } from "@/config/inventory";
 
@@ -27,12 +21,19 @@ import {
   FiltroViewProduct,
 } from "@/utils/filtro-products-slider-home";
 import { notFound } from "next/navigation";
-import Descuentos from "@/config/descuentos";
+
 import ContedorCarouselProduct from "@/components/carousel-product/contedor-carousel-product";
 import PrecioViewProductMovil from "@/components/product/product-view/precio-view-product-movil";
 import ToggleUserRole from "@/context/cambiarRol";
 import productosTraidosSistemaFritzSport from "@/config/productos-traidos-sistema-fritz-sport";
 import CarouselProduct from "@/components/carousel-product/carousel-product";
+import { useGuardarProductoVisto } from "@/components/carousel-product/guardarProductoVisto";
+import { Metadata } from "next";
+import { urlForImage } from "@/sanity/lib/image";
+import { Suspense } from "react";
+import Skeleton from "@/components/Reuseable/Skeleton/Skeleton";
+import SugeridosVestuario from "./SugeridosVestuario";
+import SugeridosZapatillas from "./SugeridosZapatillas";
 
 interface Props {
   params: {
@@ -47,7 +48,51 @@ interface Props {
 //   let meta = await metadataPage({ params });
 //   return meta;
 // };
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const productFilter = FiltroViewProduct(params);
+  const product = await client.fetch(
+    groq`${productFilter} {
+      name,
+      description,
+      images,
+      imgcatalogomain,
+      "slug": slug.current
+    }`
+  );
 
+  if (!product) return {};
+
+  const firstImage = product.images?.[0] || product?.imgcatalogomain;
+  const imageUrl = firstImage
+    ? urlForImage(firstImage.asset._ref).url()
+    : undefined;
+
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      type: "website", // ✅ Corregido
+      images: imageUrl
+        ? [
+            {
+              url: imageUrl,
+              width: 800,
+              height: 600,
+              alt: product.name,
+            },
+          ]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: product.description,
+      images: imageUrl ? [imageUrl] : [],
+    },
+  };
+}
 export default async function Page({ params }: Props) {
   const productFilter = FiltroViewProduct(params);
   const product = await client.fetch<SanityProduct>(groq`${productFilter} {
@@ -66,10 +111,11 @@ export default async function Page({ params }: Props) {
     detalles,
     colors,
     genero,
+    empresa,
     tipo,
     descuentosobred,
     descuento,
-    tallas,
+linea_liquidacion,
     preciomanual,
     "slug":slug.current
   }`);
@@ -92,9 +138,9 @@ export default async function Page({ params }: Props) {
     const generoFilterHombre = `${product?.genero}`
       ? `&& genero in ["${
           product?.genero
-        }","unisex"] && tipo in ["ropa","accesorios"] && imgcatalogomain != null && sku != "${product?.sku?.trim()}"`
+        }","unisex"] && tipo in ["ropa","accesorios"]  && sku != "${product?.sku?.trim()}" && empresa == "fritz_sport" `
       : "";
-    const filter = `*[${productFilter}${generoFilterHombre}]`;
+    const filter = `*[${productFilter}${generoFilterHombre} ] `;
 
     // await seedSanityData()
     const products = await client.fetch(`${filter} ${order} {
@@ -105,6 +151,7 @@ export default async function Page({ params }: Props) {
           images,
           marca,
           description,
+          empresa,
           descuento,
           imgcatalogomain,
           tipo,
@@ -118,16 +165,17 @@ export default async function Page({ params }: Props) {
     return await productosTraidosSistemaFritzSport(products, "LIMA");
   };
   const productosRelacionadosCalzado = async () => {
-    const order = `| order(_id) [0...10]`;
+    const order = `| order(_id) [0...20]`;
 
     const productFilter = FiltroGlobal();
 
     const generoFilterHombre = `${product?.genero}`
-      ? `&& genero in ["${
+      ? ` && genero in ["${
           product?.genero
-        }","unisex"] && tipo in ["calzado","accesorios"] && imgcatalogomain != null && sku != "${product?.sku?.trim()}"`
+        }","unisex"] && tipo in ["calzado","accesorios"]  && sku != "${product?.sku?.trim()}" && empresa == "fritz_sport" `
       : "";
     const filter = `*[${productFilter}${generoFilterHombre}]`;
+    console.log("filter", filter);
 
     // await seedSanityData()
     const products = await client.fetch(`${filter} ${order} {
@@ -137,6 +185,7 @@ export default async function Page({ params }: Props) {
           sku,
           images,
           marca,
+          empresa,
           description,
           descuento,
           imgcatalogomain,
@@ -145,34 +194,29 @@ export default async function Page({ params }: Props) {
           detalles,
           descuento,
           preciomanual,
+          popularidad,
           "slug":slug.current
         }`);
 
     return await productosTraidosSistemaFritzSport(products, "LIMA");
   };
 
-  const productosRelacionadosVestuario = await productosRelacionadosRopa();
-  const productosRelacionadosZapatillas = await productosRelacionadosCalzado();
-
-  let descuentos = await Descuentos();
-  let descuentoSobreD = product?.descuentosobred;
+  // Elimina los fetch de sugeridos aquí
+  // const productosRelacionadosVestuario = await productosRelacionadosRopa();
+  // const productosRelacionadosZapatillas = await productosRelacionadosCalzado();
 
   return (
     <>
-      <div className="absolute xl:flex hidden z-3 w-full justify-center items-center bg-transparent py-1">
+      {/* <div className="absolute xl:flex hidden z-3 w-full justify-center items-center bg-transparent py-1">
         <ToggleUserRole />
-      </div>
+      </div> */}
       <main className=" mb-0 xl:pt-16  z-[1]">
         <div className="">
           {/* Product */}
           {/* <PushIntereses users={user} product={product}></PushIntereses> */}
-          <div className=" w-full xl:flex 2xl:pb-20">
+          <div className=" w-full xl:flex 2xl:pb-20 justify-center ">
             {/* precio y nombre */}
-            <PrecioViewProductMovil
-              product={singleProduct}
-              descuentos={descuentos}
-              descuentoSobreD={descuentoSobreD}
-            />
+            <PrecioViewProductMovil product={singleProduct} />
 
             {/* Product gallery */}
             <div>
@@ -226,7 +270,7 @@ export default async function Page({ params }: Props) {
             </div>
 
             {/* Product info */}
-            <ProductInfo product={singleProduct} descuentos={descuentos} />
+            <ProductInfo product={singleProduct} />
           </div>
         </div>
       </main>
@@ -237,24 +281,35 @@ export default async function Page({ params }: Props) {
           <h5 className="text-center text-2xl uppercase">
             COMPLETA TU outfit{" "}
           </h5>
-
-          <CarouselProduct
-            products={productosRelacionadosVestuario}
-            descuentos={descuentos}
-            outlet={false}
-          />
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+              </div>
+            }
+          >
+            <SugeridosVestuario product={singleProduct} />
+          </Suspense>
         </div>
-
         <div className="mt-10">
           <h5 className="text-center text-2xl uppercase">
             QUIZÁ TAMBIÉN TE GUSTE..
           </h5>
-
-          <CarouselProduct
-            products={productosRelacionadosZapatillas}
-            descuentos={descuentos}
-            outlet={false}
-          />
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+              </div>
+            }
+          >
+            <SugeridosZapatillas product={singleProduct} />
+          </Suspense>
         </div>
       </div>
     </>

@@ -1,24 +1,32 @@
-import { urlForImage } from '@/sanity/lib/image';
-import Link from 'next/link';
-import React, { Dispatch, SetStateAction, useState, useRef } from 'react';
+import { urlForImage } from "@/sanity/lib/image";
+import Link from "next/link";
+import React, { Dispatch, SetStateAction, useState, useRef } from "react";
 
 interface Props {
   dataProduct: {
-    images: [],
-    razonsocial: string,
-    slug: string,
-    sku: string,
-    name: string
-  },
-  setLoadedImages: any,
-  setLoading: Dispatch<SetStateAction<boolean>>,
-  loading: boolean,
-  loadedImages: [],
-  currentIndex: number,
-  setCurrentIndex: Dispatch<SetStateAction<number>>
+    images: [];
+    razonsocial: string;
+    slug: string;
+    sku: string;
+    name: string;
+  };
+  setLoadedImages: any;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
+  loadedImages: [];
+  currentIndex: number;
+  setCurrentIndex: Dispatch<SetStateAction<number>>;
 }
 
-export default function ProductCarousel({ dataProduct, setLoadedImages, setLoading, loading, loadedImages, currentIndex, setCurrentIndex }: Props) {
+export default function ProductCarousel({
+  dataProduct,
+  setLoadedImages,
+  setLoading,
+  loading,
+  loadedImages,
+  currentIndex,
+  setCurrentIndex,
+}: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [startX, setStartX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -27,15 +35,18 @@ export default function ProductCarousel({ dataProduct, setLoadedImages, setLoadi
 
   const handleNext = () => {
     if (currentIndex < dataProduct.images.length - 1) {
-      setIsTransitioning(true);  // Inicia la transición
+      setIsTransitioning(true); // Inicia la transición
       setCurrentIndex((prevIndex: number) => prevIndex + 1);
-      setLoadedImages((prevImages: any) => [...prevImages, dataProduct.images[prevImages.length]]);
+      setLoadedImages((prevImages: any) => [
+        ...prevImages,
+        dataProduct.images[prevImages.length],
+      ]);
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setIsTransitioning(true);  // Inicia la transición
+      setIsTransitioning(true); // Inicia la transición
       setCurrentIndex((prevIndex: number) => prevIndex - 1);
     }
   };
@@ -44,7 +55,7 @@ export default function ProductCarousel({ dataProduct, setLoadedImages, setLoadi
     if (loadedImages.length === dataProduct?.images?.length) {
       setLoading(false);
     }
-    setIsTransitioning(false);  // Termina la transición
+    setIsTransitioning(false); // Termina la transición
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -107,14 +118,22 @@ export default function ProductCarousel({ dataProduct, setLoadedImages, setLoadi
           onClick={handlePrev}
           className="hidden xl:block absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 rounded-full z-10 transition duration-200"
         >
-          <svg viewBox="0 0 1024 1024" className="icon h-5 w-5" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000">
-            <path d="M768 903.232l-50.432 56.768L256 512l461.568-448 50.432 56.768L364.928 512z" fill="#000000"></path>
+          <svg
+            viewBox="0 0 1024 1024"
+            className="icon h-5 w-5"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#000000"
+          >
+            <path
+              d="M768 903.232l-50.432 56.768L256 512l461.568-448 50.432 56.768L364.928 512z"
+              fill="#000000"
+            ></path>
           </svg>
         </button>
       )}
 
-      <Link
-        href={`/products/${dataProduct?.slug}/${dataProduct?.sku}`}>
+      <Link href={`/products/${dataProduct?.slug}/${dataProduct?.sku}`}>
         <div
           className="flex transition-transform duration-200 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -125,9 +144,13 @@ export default function ProductCarousel({ dataProduct, setLoadedImages, setLoadi
               width={2000}
               height={2000}
               className="w-full h-auto"
-              src={image?.asset?._ref && image?.asset && loading === false && loadedImages
-                ? urlForImage(image?.asset?._ref).url()
-                : "https://cdn.sanity.io/images/ibvmpbc1/production/82e2cc60553f917f8e776fa9c89fe2b533b1fb51-2000x2000.png"
+              src={
+                image?.asset?._ref &&
+                image?.asset &&
+                loading === false &&
+                loadedImages
+                  ? urlForImage(image?.asset?._ref).url()
+                  : "https://cdn.sanity.io/images/ibvmpbc1/production/82e2cc60553f917f8e776fa9c89fe2b533b1fb51-2000x2000.png"
               }
               alt={`Imagen del producto ${dataProduct?.name}`}
               onLoad={handleImageLoad}
@@ -152,8 +175,17 @@ export default function ProductCarousel({ dataProduct, setLoadedImages, setLoadi
           onClick={handleNext}
           className="hidden xl:block absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent text-white p-2 rounded-full z-10 transition duration-200"
         >
-          <svg viewBox="0 0 1024 1024" className="icon h-5 w-5" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000">
-            <path d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z" fill="#000000"></path>
+          <svg
+            viewBox="0 0 1024 1024"
+            className="icon h-5 w-5"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#000000"
+          >
+            <path
+              d="M256 120.768L306.432 64 768 512l-461.568 448L256 903.232 659.072 512z"
+              fill="#000000"
+            ></path>
           </svg>
         </button>
       )}
@@ -162,8 +194,10 @@ export default function ProductCarousel({ dataProduct, setLoadedImages, setLoadi
         {dataProduct?.images?.map((_: any, index: number) => (
           <div
             key={index}
-            className={`h-1 mx-1 rounded-full transition duration-200 ${currentIndex === index ? 'bg-black' : 'bg-gray-300'}`}
-            style={{ width: '30px' }}
+            className={`h-1 mx-1 rounded-full transition duration-200 ${
+              currentIndex === index ? "bg-black" : "bg-gray-300"
+            }`}
+            style={{ width: "30px" }}
           />
         ))}
       </div>

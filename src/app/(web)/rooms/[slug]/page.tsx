@@ -9,7 +9,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 import { getRoom } from '@/libs/apis';
-import LoadingSpinner from '../../loading';
+import LoadingSpinner from '../../loading__2';
 import HotelPhotoGallery from '@/components/HotelPhotoGallery/HotelPhotoGallery';
 import BookRoomCta from '@/components/BookRoomCta/BookRoomCta';
 import toast from 'react-hot-toast';

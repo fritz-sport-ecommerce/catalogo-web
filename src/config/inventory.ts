@@ -61,6 +61,8 @@ export interface SanityProduct extends Omit<InventoryProduct, "images"> {
   priceemprendedor: number;
 
   preciomanual: number | undefined;
+  popularidad: number | undefined;
+  cantidadVendidos: number | undefined;
   sku: any;
   tallas: any;
   price: any;
@@ -74,6 +76,8 @@ export interface SanityProduct extends Omit<InventoryProduct, "images"> {
 }
 export interface SanitySlider extends Omit<InventorySlider, "images"> {
   _id: string;
+  active: boolean | undefined,
+  product_cards: undefined
   _createdAt: Date;
   bannerhome: {
     bannerhome: {

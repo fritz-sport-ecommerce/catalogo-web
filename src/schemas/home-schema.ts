@@ -13,6 +13,12 @@ export const home = defineType({
       type: "string",
       initialValue: "Home Page",
     }),
+    defineField({
+      name: "modo_mantenimiento",
+       type: 'boolean',
+      title: "Modo Mantenimiento",
+      // initialValue:true,
+    }),
     // slider
     {
       name: "slider",
@@ -333,8 +339,328 @@ export const home = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     },
+    {
+      title: "Product Cards",
+      name: "product_cards",
+      type: "object",
+      fields: [
+        {
+          name: "active",
+          title: "Activar Product Cards",
+          type: "boolean",
+          initialValue: true,
+          description: "Activar o desactivar la sección de product cards",
+        },
+        {
+          name: "cards",
+          title: "Tarjetas de Productos",
+          type: "array",
+          of: [
+            {
+              title: "Product Card",
+              type: "object",
+              name: "productCard",
+              fields: [
+                {
+                  title: "Image",
+                  name: "image",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                  options: {
+                    hotspot: true,
+                  },
+                },
+                {
+                  title: "Alt Text",
+                  name: "alt",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Title",
+                  name: "title",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Subtitle",
+                  name: "subtitle",
+                  type: "string",
+                  description: "Optional subtitle (e.g., 'THE NEXT GENERATION OF SMART GLASSES')",
+                },
+                {
+                  title: "Description",
+                  name: "description",
+                  type: "text",
+                  description: "Product description",
+                },
+                {
+                  title: "Button Text",
+                  name: "buttonText",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  initialValue: "Comprar",
+                },
+                {
+                  title: "Link",
+                  name: "link",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  description: "URL or search query (e.g., '/tienda?search=louis+vuitton')",
+                },
+              ],
+              preview: {
+                select: {
+                  title: "title",
+                  subtitle: "subtitle",
+                  media: "image",
+                },
+                prepare(selection) {
+                  const { title, subtitle, media } = selection
+                  return {
+                    title: title || "Product Card",
+                    subtitle: subtitle || "No subtitle",
+                    media: media,
+                  }
+                },
+              },
+            },
+          ],
+          validation: (rule) => rule.required().min(1).max(10),
+        },
+      ],
+    },
+    {
+      title: "Brands & Categories",
+      name: "brands_categories",
+      type: "object",
+      fields: [
+        {
+          name: "active",
+          title: "Activar Brands & Categories",
+          type: "boolean",
+          initialValue: true,
+          description: "Activar o desactivar la sección de marcas y categorías",
+        },
+        {
+          name: "title",
+          title: "Título de la Sección",
+          type: "string",
+          initialValue: "COMPRA LO ÚLTIMO DE SNEAKERS Y STREETWEAR EN PERÚ",
+          description: "Título principal de la sección",
+        },
+        {
+          name: "brands",
+          title: "Marcas",
+          type: "array",
+          of: [
+            {
+              title: "Marca",
+              type: "object",
+              name: "brand",
+              fields: [
+                {
+                  title: "Nombre",
+                  name: "name",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Logo",
+                  name: "logo",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                  options: {
+                    hotspot: true,
+                  },
+                  description: "Logo de la marca (formato recomendado: PNG con fondo transparente)",
+                },
+                {
+                  title: "Link",
+                  name: "link",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  description: "URL personalizada para la marca (ej: /tienda?search=nike, /categoria/zapatillas)",
+                },
+                {
+                  title: "Color de Fondo",
+                  name: "background",
+                  type: "string",
+                  initialValue: "bg-white",
+                  description: "Clase CSS para el color de fondo (ej: bg-red-600, bg-white)",
+                },
+              ],
+              preview: {
+                select: {
+                  title: "name",
+                  media: "logo",
+                },
+                prepare(selection) {
+                  const { title, media } = selection
+                  return {
+                    title: title || "Marca",
+                    media: media,
+                  }
+                },
+              },
+            },
+          ],
+          validation: (rule) => rule.required().min(1).max(20),
+        },
+        {
+          name: "categories",
+          title: "Categorías",
+          type: "array",
+          of: [
+            {
+              title: "Categoría",
+              type: "object",
+              name: "category",
+              fields: [
+                {
+                  title: "Nombre",
+                  name: "name",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                },
+                {
+                  title: "Imagen",
+                  name: "image",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                  options: {
+                    hotspot: true,
+                  },
+                  description: "Imagen de la categoría (formato recomendado: cuadrado)",
+                },
+                {
+                  title: "Link",
+                  name: "link",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  description: "URL personalizada para la categoría (ej: /tienda?search=zapatillas, /categoria/novedades)",
+                },
+                {
+                  title: "Color de Fondo",
+                  name: "background",
+                  type: "string",
+                  initialValue: "bg-gray-900",
+                  description: "Clase CSS para el color de fondo (ej: bg-gray-900, bg-amber-900)",
+                },
+              ],
+              preview: {
+                select: {
+                  title: "name",
+                  media: "image",
+                },
+                prepare(selection) {
+                  const { title, media } = selection
+                  return {
+                    title: title || "Categoría",
+                    media: media,
+                  }
+                },
+              },
+            },
+          ],
+          validation: (rule) => rule.required().min(1).max(20),
+        },
+      ],
+    },
+    {
+      title: "Trends",
+      name: "trends",
+      type: "object",
+      fields: [
+        {
+          name: "active",
+          title: "Activar Trends",
+          type: "boolean",
+          initialValue: true,
+          description: "Activar o desactivar la sección de trends",
+        },
+        {
+          name: "title",
+          title: "Título Principal",
+          type: "string",
+          initialValue: "TRENDS",
+          description: "Título principal de la sección",
+        },
+        {
+          name: "subtitle",
+          title: "Subtítulo",
+          type: "string",
+          initialValue: "Descubre las tendencias más populares en deportes",
+          description: "Subtítulo descriptivo de la sección",
+        },
+        {
+          name: "trends_items",
+          title: "Items de Trends",
+          type: "array",
+          of: [
+            {
+              title: "Trend Item",
+              type: "object",
+              name: "trendItem",
+              fields: [
+                {
+                  title: "Título",
+                  name: "title",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  description: "Título del trend (ej: RUNNING, TRAINING)",
+                },
+                {
+                  title: "Subtítulo",
+                  name: "subtitle",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  description: "Descripción corta del trend",
+                },
+                {
+                  title: "Imagen",
+                  name: "image",
+                  type: "image",
+                  validation: (rule) => rule.required(),
+                  options: {
+                    hotspot: true,
+                  },
+                  description: "Imagen de fondo del trend (formato recomendado: 800x600)",
+                },
+                {
+                  title: "Link",
+                  name: "link",
+                  type: "string",
+                  validation: (rule) => rule.required(),
+                  description: "URL del trend (ej: /tienda?search=running)",
+                },
+              ],
+              preview: {
+                select: {
+                  title: "title",
+                  subtitle: "subtitle",
+                  media: "image",
+                },
+                prepare(selection) {
+                  const { title, subtitle, media } = selection
+                  return {
+                    title: title || "Trend Item",
+                    subtitle: subtitle || "No subtitle",
+                    media: media,
+                  }
+                },
+              },
+            },
+          ],
+          validation: (rule) => rule.required().min(1).max(8),
+        },
+      ],
+    },
   ],
   initialValue: {
-    activemodal: false
+    activemodal: false,
+    modo_mantenimiento: false
+
   }
+
 });

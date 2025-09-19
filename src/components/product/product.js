@@ -4,11 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { urlForImage } from "@/sanity/lib/image";
-import { groq } from "next-sanity";
 
-import { precioProduct } from "@/config/precio-product";
-import LoveFollow from "../love-follow/love-follow";
-import { FiltroProducts } from "@/utilits/filtro-products";
 
 // import LoveFollow from "../love-follow/love-follow";
 
@@ -22,7 +18,7 @@ export default function Product({
   const [stock, setStock] = useState();
 
   const [hoverImage, setHoverImage] = useState(
-    products.images[0]?.asset
+    products?.images[0]?.asset
       ? urlForImage(products.images[0]?.asset._ref).url()
       : "http://via.placeholder.com/2000x2000"
   );
@@ -130,18 +126,18 @@ export default function Product({
           <div className="border-t-[1px] border-blue-gray-300 mt-2">
             <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
               <span className="font-medium">Precio Retail:</span> S/
-              {products?.priceecommerce?.toFixed()}
+              {products?.priceecommerce?.toFixed(2)}
             </div>
             <div className="mt-2 text-sm font-semibold uppercase xl:text-sm 2xl:text-lg ">
               <span className="font-medium">Precio Emprendedor:</span> S/
-              {products?.priceemprendedor?.toFixed()}
+              {products?.priceemprendedor?.toFixed(2)}
             </div>
             {products.tipoproducto === "web" ? (
               <></>
             ) : (
               <div className="mt-2 text-xs font-semibold uppercase xl:text-sm 2xl:text-lg ">
                 <span className="font-medium">Precio Mayorista:</span> S/
-                {products?.pricemayorista?.toFixed()}
+                {products?.pricemayorista?.toFixed(2)}
               </div>
             )}
           </div>

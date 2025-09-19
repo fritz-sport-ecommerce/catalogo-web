@@ -47,6 +47,26 @@ export default function UserViewPedidos({data}:any) {
                     S/{producto.unit_price}
                   </div>
                 </div>
+                
+                {/* Información del almacén */}
+                {/* {producto.almacen_info && (
+                  <div className="ml-10 mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
+                    <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                      📦 Información del Almacén
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                      <div>
+                        <span className="font-medium">Almacén:</span> {producto.almacen_info.nombre_almacen}
+                      </div>
+                      <div>
+                        <span className="font-medium">Ubicación:</span> {producto.almacen_info.provincia}
+                      </div>
+                      <div>
+                        <span className="font-medium">Código:</span> {producto.almacen_info.codigo_almacen}
+                      </div>
+                    </div>
+                  </div>
+                )} */}
 
             
               </div>

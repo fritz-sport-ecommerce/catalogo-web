@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import CantidadProduct from "../cantidad-product/cantidad-product";
-import Link from "next/link";
-import { precioProduct } from "@/config/precio-product";
+import ProductPrecioDescuento from "./product-precio-descuento";
+
 interface props {
   dataProduct: {
     slug: string;
@@ -18,6 +18,7 @@ interface props {
     razonsocial: string;
     preciomanual: number;
     marca: string;
+    precio_original: number | null;
     genero: string;
   };
   descuento: number;
@@ -39,53 +40,22 @@ export default function ProductInfo({
 }: props) {
   return (
     <div className="px-2">
-      <div className="h-5">
+      <div className="h-5 xl:block hidden">
         <CantidadProduct stock={dataProduct?.stock} sku={dataProduct?.sku} />
       </div>
       <div className="flex items-center justify-between mt-1  text-xs text-blue-gray-800 dark:text-white">
-        <h2 className="font-medium capitalize">
-          {dataProduct?.marca} - {dataProduct?.genero}{" "}
-          {dataProduct?.subgenero_ninos && `- ${dataProduct?.subgenero_ninos}`}
+        <h2 className="font-medium capitalize text-xs">
+          {dataProduct?.genero}
         </h2>
-        <h5 className="  font-medium">Sku: {dataProduct?.sku}</h5>
+        <h5 className="  font-medium">{dataProduct?.sku}</h5>
       </div>
-      <div className="flex justify-between w-full items-start">
-        <h3 className="mt-2 text-sm font-bold capitalize  xl:text-sm 2xl:text-sm w-full h-10">
+      <div className="flex justify-between w-full items-start mb-2">
+        <h3 className=" text-sm font-bold capitalize  xl:text-sm 2xl:text-sm w-full h-10">
           {dataProduct?.name}
         </h3>
       </div>
-      <h3 className="mt-2 text-sm font-semibold uppercase xl:text-lg 2xl:text-xl ">
-        {dataProduct?.razonsocial}
-      </h3>
-      <div className="flex mt-2 flex-col-reverse items-end justify-center">
-        <div className="flex justify-between items-center w-full">
-          <div className="uppercase">Precio Retail:</div>
-          <div className={`dark:text-white text-black font-bold text-base`}>
-            S/
-            {dataProduct?.priceecommerce
-              ? dataProduct?.priceecommerce?.toFixed(2)
-              : "----"}
-          </div>
-        </div>
-        <div className="flex justify-between items-center w-full">
-          <div className="uppercase">Precio Emprendedor:</div>
-          <div className={`dark:text-white text-black font-bold text-base`}>
-            S/
-            {dataProduct?.priceemprendedor
-              ? dataProduct?.priceemprendedor?.toFixed(2)
-              : "----"}
-          </div>
-        </div>
-        <div className="flex justify-between items-center w-full">
-          <div className="uppercase">Precio Mayorista:</div>
-          <div className={` text-red-500 font-bold text-lg`}>
-            S/
-            {dataProduct?.pricemayorista
-              ? dataProduct?.pricemayorista?.toFixed(2)
-              : "----"}
-          </div>
-        </div>
-      </div>
+
+      <ProductPrecioDescuento dataProduct={dataProduct} />
     </div>
   );
 }

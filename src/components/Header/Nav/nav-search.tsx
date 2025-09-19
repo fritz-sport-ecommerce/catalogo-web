@@ -13,14 +13,14 @@ export default function NavSearch() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const searchQuery = formData.get("search");
-    router.replace(`/catalogo?search=${searchQuery}`);
+    router.replace(`/tienda?search=${searchQuery}`);
   }
 
   function onChange(event: React.ChangeEvent<HTMLInputElement>) {
     event.preventDefault();
 
     const searchQuery = event.target.value;
-    router.replace(`/catalogo?search=${searchQuery}`);
+    router.replace(`/tienda?search=${searchQuery}`);
   }
   return (
     <div className="w-4/6 xl:w-auto">

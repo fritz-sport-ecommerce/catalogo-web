@@ -4,45 +4,55 @@ interface Producto {
   sku: string;
 }
 
-// const ALMACENES: string[] = ["0009", "0002", "2001"]; // Agrega aquí todos los almacenes disponibles
-const controller = new AbortController();
-const timeoutId = setTimeout(() => controller.abort(), 20000);
 async function buscarEnAlmacen(
   productos: Producto[],
   codigoAlmacen: string
 ): Promise<any[]> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
+
   try {
     const skusTransformados = productos.flatMap((p) => {
-      const sku = String(p.sku); // Asegurar que sea string
+      const sku = String(p.sku);
       return sku.includes("-") ? [sku, sku.replace(/-/g, " ")] : [sku];
     });
 
     const solicitud = {
       codigoAlmacen,
-      codigosGrupo: Array.from(new Set(skusTransformados)), // Eliminar duplicados
+      codigosGrupo: Array.from(new Set(skusTransformados)),
     };
 
-    const response = await fetch(
-      `${process.env.URL_API_FRITZ_SPORT}/api/productos-precios/grupos`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(solicitud),
-        signal: controller.signal,
-      }
+    // URL con timestamp para evitar caché
+    const apiUrl = new URL(
+      `${process.env.URL_API_FRITZ_SPORT}/api/productos-precios/grupos`
     );
+    apiUrl.searchParams.append("_t", Date.now().toString());
+
+    const response = await fetch(apiUrl.toString(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+      body: JSON.stringify(solicitud),
+      signal: controller.signal,
+      cache: "no-store", // Esto es clave para Next.js fetch
+    });
+
     clearTimeout(timeoutId);
-    if (response.ok) {
-      return await response.json();
-    } else {
-      console.error(
-        `Error en la solicitud (${codigoAlmacen}): ${response.statusText}`
-      );
-      return [];
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
     }
+
+    return await response.json();
   } catch (error) {
     console.error(`Error al obtener productos de ${codigoAlmacen}:`, error);
     return [];
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -50,51 +60,41 @@ export async function fetchProductosPrecios(
   productos: Producto[],
   provincia: string | undefined
 ): Promise<any[]> {
-  // const ALMACENES = ["0009", "0002", "2001"];
-  let provinciaT = provincia ? provincia : "LIMA";
+  // TODOS LOS ALMACENES DISPONIBLES
+  const ALMACENES: string[] = [
+    "0002", // Tienda Grau
+    "0009", // Almacen Iquitos
+    "4001", // Fritz Sport Los Olivos
+    "2001", // Aguas Verdes
+    "0006", // Huánuco
+  ];
 
-  let ALMACENES: string[] = [];
-
-  switch (provinciaT) {
-    case "LIMA":
-      ALMACENES = ["0009"];
-      break;
-    case "TUMBES":
-      ALMACENES = ["2001"];
-      break;
-    case "HUANUCO":
-      ALMACENES = ["0002"];
-      break;
-  }
+  console.log(`🔍 fetchProductosPrecios - Buscando en ${ALMACENES.length} almacenes:`, ALMACENES);
 
   try {
     let productosEncontrados: any[] = [];
     const skusEncontrados = new Set<string>();
     let productosFaltantes = [...productos];
 
-    // Buscar en cada almacén
-    for (const almacen of ALMACENES) {
-      if (productosFaltantes.length === 0) break; // Si ya se encontraron todos, salir del loop
+    // Usamos Promise.all para paralelizar las búsquedas en todos los almacenes
+    const resultados = await Promise.all(
+      ALMACENES.map((almacen) => buscarEnAlmacen(productosFaltantes, almacen))
+    );
 
-      const data = await buscarEnAlmacen(productosFaltantes, almacen);
+    // Procesamos todos los resultados
+    resultados.forEach((data, index) => {
+      console.log(`📦 Almacén ${ALMACENES[index]}: ${data?.length || 0} productos encontrados`);
       productosEncontrados.push(...data);
       data.forEach((p: any) => skusEncontrados.add(p.sku));
+    });
 
-      // Filtrar los productos que aún no se han encontrado
-      productosFaltantes = productos.filter(
-        ({ sku }) => !skusEncontrados.has(sku)
-      );
-    }
+    console.log(`✅ Total productos encontrados: ${productosEncontrados.length}`);
 
-    // Si no se encontró ningún producto, devolver []
-    if (productosEncontrados.length === 0) {
-      return [];
-    }
-
-    // Organizar y devolver los productos encontrados
-    return organizarProductos(productosEncontrados);
+    return productosEncontrados.length > 0
+      ? organizarProductos(productosEncontrados)
+      : [];
   } catch (error) {
-    console.error("Error al obtener productos:", error);
+    console.error("Error en fetchProductosPrecios:", error);
     return [];
   }
 }

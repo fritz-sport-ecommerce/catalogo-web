@@ -99,7 +99,7 @@ export const product = defineType({
           { title: "Puma", value: "puma" },
           { title: "Reebok", value: "reebok" },
           { title: "Cat", value: "cat" },
-          { title: "Fritz Sport", value: "fritzsport" },
+          { title: "Fz Premium", value: "fritzsport" },
           { title: "joma", value: "joma" },
         ], // <-- predefined values
       },
@@ -232,7 +232,7 @@ export const product = defineType({
       validation: (rule) => rule.required(),
       options: {
         list: [
-          { title: "Fritz Sport", value: "fritzsport" },
+          { title: "Fz Premium", value: "fritzsport" },
           { title: "Fritz Duran", value: "fritzduran" },
           { title: "Alexander Skate", value: "alexanderskate" },
         ], // <-- predefined values

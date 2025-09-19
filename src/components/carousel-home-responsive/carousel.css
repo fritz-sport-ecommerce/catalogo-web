@@ -1,0 +1,96 @@
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.fade-out {
+  opacity: 0;
+}
+
+/* .carousel-container {
+  aspect-ratio: 16/9;
+  min-height: 160px;
+  max-height: 260px;
+  width: 100vw;
+  max-width: 600px;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  margin-left: auto;
+  margin-right: auto;
+} */
+@media (min-width: 600px) {
+  /* .carousel-container {
+    min-height: 200px;
+    max-height: 320px;
+    max-width: 900px;
+  } */
+}
+@media (min-width: 1024px) {
+  /* .carousel-container {
+    min-height: 260px;
+    max-height: 400px;
+    max-width: 1200px;
+  } */
+}
+@media (min-width: 1280px) {
+  /* .carousel-container {
+    min-height: 320px;
+    max-height: 500px;
+    max-width: 1400px;
+  } */
+}
+@media (min-width: 1800px) {
+  .carousel-container {
+    min-height: 600px;
+    max-height: 1000px;
+    /* width: 100vw; */
+    max-width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .carousel-skeleton,
+  .carousel-container > .swiper,
+  .carousel-image-full {
+    min-height: 600px;
+    max-height: 900px;
+    height: 100%;
+    /* width: 100vw; */
+    max-width: 100vw;
+  }
+
+  .carousel-image-full {
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    max-height: inherit;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+}
+
+.carousel-skeleton,
+.carousel-container > .swiper {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  max-height: inherit;
+}
+
+.carousel-skeleton {
+  background: linear-gradient(90deg, #f3f3f3 25%, #e0e0e0 50%, #f3f3f3 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+  border-radius: 12px;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+

@@ -14,6 +14,12 @@ export const homefz = defineType({
       initialValue: "Home Page",
     }),
     defineField({
+      name: "modo_mantenimiento",
+       type: 'boolean',
+      title: "Modo Mantenimiento",
+      // initialValue:true,
+    }),
+    defineField({
       name: "active_banner",
        type: 'boolean',
       title: "Activar Banner top",
@@ -368,6 +374,7 @@ export const homefz = defineType({
     },
   ],
   initialValue: {
-    active_carousel_promo: false
+    active_carousel_promo: false,
+    modo_mantenimiento: false
   }
 });

@@ -9,16 +9,19 @@ import { homefz } from "./home-schema-fz";
 import { nuestras_tiendas } from "./nuestras-tiendas-schema";
 import { pedidos } from "./pedidos";
 import { product } from "./product-schema";
-import verificationToken from "./verificationToken";
-// import { test } from "./test";
-import { descuento_registro } from "./descuento-registro";
+import review from "./review";
 import user from "./user";
+import verificationToken from "./verificationToken";
+import { test } from "./test";
+import { descuento_registro } from "./descuento-registro";
+import { validationErrors } from "./products-errors";
 
 export const schemaTypes = [
   user,
   home,
   homefz,
   product,
+  validationErrors,
   nuestras_tiendas,
   emprende,
   descuentos,
@@ -26,9 +29,10 @@ export const schemaTypes = [
   pedidos,
   catalogo,
   account,
-  // test,
+
+      test,
   // booking,
   // hotelRoom,
   // review,
-  verificationToken,
+    // verificationToken,
 ];

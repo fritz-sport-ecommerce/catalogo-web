@@ -8,9 +8,6 @@ const nextConfig = {
     ],
   },
   reactStrictMode: false,
-    experimental: {
-    runtime: "edge", // Habilita Edge Runtime para el middleware
-  },
 };
 
 module.exports = nextConfig;

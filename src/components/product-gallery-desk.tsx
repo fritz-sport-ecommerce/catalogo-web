@@ -31,7 +31,7 @@ export function ProductGalleryDesk({ product }: Props) {
     <div className="flex flex-col ">
       {/* Image Grid */}
       <div className=" h-full w-full ">
-        <ul className="grid   justify-start gap-[2px] sm:grid-cols-2 lg:col-span-3 2xl:grid-cols-2">
+        <ul className={`grid   justify-start gap-[2px] sm:grid-cols-2 lg:col-span-3 ${product?.images?.length > 2 ? "2xl:grid-cols-2" : "2xl:grid-cols-1"}`}>
           {product?.images?.length ? (
             <>
               {product?.images?.slice(0, loadMore).map((image, index) => (
@@ -59,8 +59,9 @@ export function ProductGalleryDesk({ product }: Props) {
             </>
           ) : (
             <>
+    
               {product?.imgcatalogomain ? (
-                <li className="col-span-2 h-full w-full sm:col-span-1 lg:col-span-2 2xl:col-span-1">
+                <li className="col-span-2 h-full w-full sm:col-span-1 lg:col-span-2 2xl:col-span-1 bg-white ">
                   <PhotoProvider>
                     <PhotoView src={urlForImage(product.imgcatalogomain).url()}>
                       <Image

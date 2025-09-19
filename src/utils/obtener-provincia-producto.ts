@@ -5,19 +5,17 @@ export function obtenerProvinciaProducto(
   almacenes: { provincia: string; stock: number }[]
 ): { provincia: string; stock: number }[] {
   const provincia = (() => {
-    if (codigoAlmacen === "0002") {
-      return ["ALM0001STO1", "ALM0002STO1", "ALM0003STO1"].includes(
-        almacenTabla
-      )
-        ? "LIMA"
-        : "HUANUCO";
-    }
-
     switch (codigoAlmacen) {
-      case "2001":
-        return "TUMBES";
+      case "0002":
+        return "LIMA"; // Tienda Grau
       case "0009":
-        return "LIMA";
+        return "LORETO"; // Iquitos
+      case "2001":
+        return "TUMBES"; // Aguas Verdes
+      case "4001":
+        return "LIMA"; // Fritz Sport Los Olivos
+      case "0006":
+        return "HUANUCO"; // Huánuco
       default:
         return "DESCONOCIDO";
     }

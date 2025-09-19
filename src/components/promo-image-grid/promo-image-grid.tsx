@@ -18,11 +18,17 @@ export default function PromoImageGrid({
 }: Props) {
   return (
     <Link href={url}>
-      <div className="relative my-10 flex w-full flex-col hover:opacity-70 hover:mt-5 transition-all items-center justify-center xl:flex ">
-        <img src={urlImg} alt="" className=" " width={350} height={400} />
+      <div className="relative my-10 flex w-full flex-col xl:hover:opacity-70 xl:hover:mt-5 transition-all items-center justify-center xl:flex  rounded-xl">
+        <img
+          src={urlImg}
+          alt=""
+          className="rounded-lg "
+          width={350}
+          height={400}
+        />
         {/* <div className="mt-1 "> */}
-          {/* <h3 className="font-extrabold uppercase xl:text-xl">{titulo}</h3> */}
-          {/* <p className="mb-3 mt-2 text-xs">{subtitulo}</p>
+        {/* <h3 className="font-extrabold uppercase xl:text-xl">{titulo}</h3> */}
+        {/* <p className="mb-3 mt-2 text-xs">{subtitulo}</p>
         <Button className="mt-1 rounded-none uppercase">Comprar Ahora</Button> */}
         {/* </div> */}
       </div>

@@ -12,17 +12,17 @@ export const metadata = {
     title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
     description:
       "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
-    url: `${process.env.URL_DOMINIO}`,
+    url: `${process.env.URL_DOMINIO || "https://fritzsport.pe"}`,
     siteName: "Fritz Sport",
     images: [
       {
-        url: `${process.env.URL_DOMINIO}/ecommerce-share.jpg`,
+        url: `${process.env.URL_DOMINIO || "https://fritzsport.pe"}/images/ecommerce-share.jpg`,
         width: 800,
         height: 600,
         alt: `Fritz Sport share Imagen`,
       },
       {
-        url: `${process.env.URL_DOMINIO}/ecommerce-share.jpg`,
+        url: `${process.env.URL_DOMINIO || "https://fritzsport.pe"}/images/ecommerce-share.jpg`,
 
         width: 1200,
         height: 630,

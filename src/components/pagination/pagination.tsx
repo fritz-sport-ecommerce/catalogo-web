@@ -4,6 +4,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Loader from "@/components/loader/loader";
 import { Button } from "../ui/button";
+
 interface PaginationProps {
   currentPage: number;
   itemsPerPage: number;
@@ -20,6 +21,15 @@ export default function Pagination({
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<number | null>(null);
+  const [windowWidth, setWindowWidth] = useState<number>(0);
+
+  useEffect(() => {
+    // Set initial width and add resize listener
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const buildPageUrl = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -39,7 +49,8 @@ export default function Pagination({
 
   const getVisiblePages = () => {
     const visiblePages = [];
-    const range = 2;
+    // Show fewer pages on mobile
+    const range = windowWidth < 640 ? 1 : 2;
 
     for (
       let i = Math.max(1, currentPage - range);
@@ -59,29 +70,30 @@ export default function Pagination({
       {/* Loading indicator positioned absolutely to not affect layout */}
       {isLoading && <Loader />}
 
-      <div className="flex justify-center mt-8 gap-2">
-        {/* Previous Button */}
-        {currentPage > 1 && (
-          <Button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={isLoading !== null}
-            className="px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
-          >
-            Anterior
-          </Button>
-        )}
+      <div className="flex flex-wrap justify-center mt-8 gap-1 sm:gap-2">
+        {/* Previous Button - Always show but make text shorter on mobile */}
+        <Button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={isLoading !== null || currentPage <= 1}
+          className="px-2 sm:px-4 py-2 border rounded hover:bg-black dark:hover:text-white dark:hover:bg-blue-gray-700 disabled:opacity-50 transition-colors"
+        >
+          <span className="hidden sm:inline">Anterior</span>
+          <span className="sm:hidden">{"<"}</span>
+        </Button>
 
-        {/* First page */}
-        {currentPage - 2 > 1 && (
+        {/* First page - hide on small screens if not in visible range */}
+        {(currentPage - 2 > 1 && windowWidth >= 640) && (
           <>
             <Button
               onClick={() => handlePageChange(1)}
               disabled={isLoading !== null}
-              className="px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+              className="hidden sm:block px-2 sm:px-4 py-2 border rounded hover:bg-black dark:hover:text-white dark:hover:bg-blue-gray-700 disabled:opacity-50 transition-colors"
             >
               1
             </Button>
-            {currentPage - 2 > 2 && <span className="px-4 py-2">...</span>}
+            {(currentPage - 2 > 2 && windowWidth >= 640) && (
+              <span className="hidden sm:flex items-center px-2">...</span>
+            )}
           </>
         )}
 
@@ -91,43 +103,49 @@ export default function Pagination({
             key={page}
             onClick={() => handlePageChange(page)}
             disabled={isLoading !== null || page === currentPage}
-            className={`px-4 py-2 border rounded transition-colors ${
+            className={`px-2 sm:px-4 py-2 border rounded transition-colors min-w-[36px] ${
               page === currentPage
                 ? "bg-blue-gray-500 text-white"
-                : "hover:bg-gray-100 disabled:opacity-50"
+                : "hover:bg-black dark:hover:text-white dark:hover:bg-blue-gray-700 disabled:opacity-50"
             }`}
           >
             {page}
           </Button>
         ))}
 
-        {/* Last page */}
-        {currentPage + 2 < totalPages && (
+        {/* Last page - hide on small screens if not in visible range */}
+        {(currentPage + 2 < totalPages && windowWidth >= 640) && (
           <>
-            {currentPage + 2 < totalPages - 1 && (
-              <span className="px-4 py-2">...</span>
+            {(currentPage + 2 < totalPages - 1 && windowWidth >= 640) && (
+              <span className="hidden sm:flex items-center px-2">...</span>
             )}
             <Button
               onClick={() => handlePageChange(totalPages)}
               disabled={isLoading !== null}
-              className="px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+              className="hidden sm:block px-2 sm:px-4 py-2 border rounded hover:bg-black dark:hover:text-white dark:hover:bg-blue-gray-700 disabled:opacity-50 transition-colors"
             >
               {totalPages}
             </Button>
           </>
         )}
 
-        {/* Next Button */}
-        {currentPage < totalPages && (
-          <Button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={isLoading !== null}
-            className="px-4 py-2 border rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
-          >
-            Siguiente
-          </Button>
-        )}
+        {/* Next Button - Always show but make text shorter on mobile */}
+        <Button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={isLoading !== null || currentPage >= totalPages}
+          className="px-2 sm:px-4 py-2 border rounded hover:bg-black dark:hover:text-white dark:hover:bg-blue-gray-700 disabled:opacity-50 transition-colors"
+        >
+          <span className="hidden sm:inline">Siguiente</span>
+          <span className="sm:hidden">{">"}</span>
+        </Button>
       </div>
+
+      {/* Current page indicator for mobile */}
+      {windowWidth < 640 && (
+        <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          Página {currentPage} de {totalPages}
+        </div>
+      )}
     </div>
   );
 }

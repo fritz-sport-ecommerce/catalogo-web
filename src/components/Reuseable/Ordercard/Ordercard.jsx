@@ -263,7 +263,7 @@ const Ordercard = (props) => {
       <div className="orderdescriptiont">
         <div className="odleft">
           <Tabitem text={orderplaced} title="Order Placed" />
-          <Tabitem text={"$" + order.ordercost.toFixed(0)} title="Total" />
+          <Tabitem text={"$" + order.ordercost.toFixed(2)} title="Total" />
           <Tabitem
             text={order.shippinginfo.name + " " + order.shippinginfo.lastname}
             title="Ship To"

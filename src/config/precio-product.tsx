@@ -41,7 +41,7 @@ export function precioProduct(
             if (Number(resultado) <= 20) {
               return 999;
             } else {
-              return Number(resultado.toFixed(0));
+              return Number(resultado.toFixed(2));
             }
           }else{
 
@@ -55,7 +55,7 @@ export function precioProduct(
             if (Number(resultado) <= 20) {
               return 999;
             } else {
-              return Number(resultado.toFixed(0));
+              return Number(resultado.toFixed(2));
             }
           }else{
 
@@ -65,7 +65,7 @@ export function precioProduct(
               if (Number(resultado) <= 20) {
                 return 999;
               } else {
-                return Number(resultado.toFixed(0));
+                return Number(resultado.toFixed(2));
               }
             }else{
               const operation = (Number(razonSocial) / 100) * Number(precio);
@@ -73,7 +73,7 @@ export function precioProduct(
               if (Number(resultado) <= 20) {
                 return 999;
               } else {
-                return Number(resultado.toFixed(0));
+                return Number(resultado.toFixed(2));
               }
             }
 
@@ -87,7 +87,7 @@ export function precioProduct(
         if (Number(resultado) <= 20) {
           return 999;
         } else {
-          return Number(resultado.toFixed(0));
+          return Number(resultado.toFixed(2));
         }
       }
     }

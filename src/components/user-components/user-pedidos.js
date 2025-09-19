@@ -1,373 +1,545 @@
 "use client";
 
-import Link from "next/link";
-import React, { useState } from "react";
-import ModalDesk from "../modal/Modal";
-import { urlForImage } from "@/sanity/lib/image";
 
+import React, { useState,useEffect } from "react";
+import ModalDesk from "../modal/Modal";
+import distritos from "@/json/distritos.json";
+import provincias from "@/json/provincias.json";
+import departamentos from "@/json/departamentos.json";
 export default function PedidosTabsUser({ dataPedidos }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [selectedPedido, setSelectedPedido] = useState(null);
+  const [filterEstado, setFilterEstado] = useState("pendiente");
+  const [sortBy, setSortBy] = useState("fecha"); // fecha | total
+  const [sortOrder, setSortOrder] = useState("desc"); // asc | desc
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  // Controles de productos en vista previa
+  const [prodSortBy, setProdSortBy] = useState("nombre"); // nombre | talla | cantidad | subtotal
+  const [prodSortOrder, setProdSortOrder] = useState("asc"); // asc | desc
+  const [prodSearch, setProdSearch] = useState("");
+// 
+const [allValues, setAllValues] = useState({
+  departamento: selectedPedido?.departamento,
+  provincia: selectedPedido?.provincia,
+  distrito: selectedPedido?.distrito,
+});
+const [departamento, setDepartamento] = useState([]);
+const [provincia, setProvincia] = useState([]);
+
+// Sincroniza los valores cuando cambia el pedido seleccionado
+useEffect(() => {
+  if (selectedPedido) {
+    setAllValues({
+      departamento: selectedPedido.departamento,
+      provincia: selectedPedido.provincia,
+      distrito: selectedPedido.distrito,
+    });
+  }
+}, [selectedPedido]);
+
+// Carga la lista de provincias y distritos según el departamento/provincia actual
+useEffect(() => {
+  // Provincias por departamento (allValues.departamento es nombre)
+  const depSel = departamentos?.find(
+    (el) => el.nombre_ubigeo === `${allValues?.departamento || ""}`
+  );
+  if (depSel && typeof depSel.id_ubigeo !== "undefined") {
+    const provList = provincias?.[depSel.id_ubigeo] || [];
+    setDepartamento(provList);
+  } else {
+    setDepartamento([]);
+  }
+
+  // Distritos por provincia (allValues.provincia es id)
+  if (allValues?.provincia) {
+    const distList = distritos?.[String(allValues.provincia)] || [];
+    setProvincia(distList);
+  } else {
+    setProvincia([]);
+  }
+}, [allValues?.departamento, allValues?.provincia]);
+  const calcularDiasTranscurridos = (fechaISO) => {
+    try {
+      const created = new Date(fechaISO);
+      const now = new Date();
+      const diffMs = now.getTime() - created.getTime();
+      return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    } catch (e) {
+      return 0;
+    }
+  };
+
+  const pedidosFiltradosOrdenados = Array.isArray(dataPedidos)
+    ? dataPedidos
+        .filter((el) => (filterEstado === "pendiente" ? el?.estado === "pendiente" : true))
+        .filter((el) => {
+          if (!startDate && !endDate) return true;
+          const created = new Date(el._createdAt);
+          const from = startDate ? new Date(startDate + "T00:00:00") : null;
+          const to = endDate ? new Date(endDate + "T23:59:59") : null;
+          if (from && created < from) return false;
+          if (to && created > to) return false;
+          return true;
+        })
+        .sort((a, b) => {
+          if (sortBy === "total") {
+            const ta = Number(a.cart_total) || 0;
+            const tb = Number(b.cart_total) || 0;
+            return sortOrder === "desc" ? tb - ta : ta - tb;
+          }
+          const da = new Date(a._createdAt).getTime();
+          const db = new Date(b._createdAt).getTime();
+          return sortOrder === "desc" ? db - da : da - db;
+        })
+    : [];
+
+  const totalPedidos = pedidosFiltradosOrdenados.length;
+  const sumaTotal = pedidosFiltradosOrdenados.reduce((acc, p) => acc + (Number(p.cart_total) || 0), 0);
+
+  const estadoBadgeClasses = (estado) => {
+    switch ((estado || "").toLowerCase()) {
+      case "pendiente":
+        return "bg-yellow-100 text-yellow-800 border border-yellow-200";
+      case "porentregar":
+      case "en camino":
+        return "bg-blue-100 text-blue-800 border border-blue-200";
+      case "entregado":
+        return "bg-green-100 text-green-800 border border-green-200";
+      case "devuelto":
+      case "cancelado":
+        return "bg-red-100 text-red-800 border border-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 border border-gray-200";
+    }
+  };
 
   return (
     <div>
-      {dataPedidos && (
-        <div className="grid grid-flow-row gap-y-5">
-          {dataPedidos.map((el, i) => (
-            <div
-              key={i}
-              className="xl:flex  items-center border-y-[1px] border-blue-gray-300 p-5"
-            >
-              <div className="w-full pl-5 flex flex-col ">
-                <div>
-                  <div>
-                    <span className="font-bold"> Ultima Modificación </span> :
-                    {el._createdAt.split("T")[0]}
-                  </div>
-                  <div>
-                    <span className="font-bold"> Total </span>: S/
-                    {el.cart_total}
-                  </div>
-                  {el.tipoEntrega === "envio" ? (
-                    <>
-                      <div>
-                        <span className="font-bold"> Tipo de Entrega </span> :{" "}
-                        <span className="uppercase"> {el.tipoEntrega}</span>
-                      </div>
-                      <div>
-                        <span className="font-bold"> Dirección </span> :{" "}
-                        {el.direccion}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        <span className="font-bold"> Tipo de Entrega </span> :{" "}
-                        <span className="uppercase">
-                          {" "}
-                          {el.tipoEntrega} en tienda
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-bold"> Dirección </span> : <br />{" "}
-                        Tienda Fritz Sport, Av. Miguel Grau 231, Lima 15001
-                      </div>
-                    </>
-                  )}
-                </div>
-                <div className="flex flex-col mb-10 gap-10 mt-10 ">
-                  <div className="text-start xl:text-xl">
-                    Seguimiento de Pedido:
-                  </div>
-                  {/*  */}
-                  <div
-                    className={`flex items-center w-full ${
-                      el.estado === "porentregar" || "porentregar"
-                        ? "text-green-400"
-                        : "text-black dark:text-white"
-                    } `}
-                  >
-                    <div
-                      className={`border-[2px] flex justify-center items-center ${
-                        el.estado === "porentregar" || "porentregar"
-                          ? " border-green-300 fill-green-300 "
-                          : " dark:border-white dark:fill-white border-black fill-black"
-                      }w-10 h-10 text-center rounded-full`}
-                    >
-                      <svg
-                        className="fill-neutral-700 min-w-min transition-all duration-300 cursor-default"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clip-rule="evenodd"
-                          d="M11.634 9.123a.716.716 0 0 1 .448-.001l1.774.577-.012-6.53a.287.287 0 0 0-.288-.287l-3.431.007a.288.288 0 0 0-.288.288l.007 6.536 1.79-.59Z"
-                        ></path>
-                        <path
-                          fillRule="evenodd"
-                          clip-rule="evenodd"
-                          d="M18.708 12.24c.649 0 1.272.095 1.86.276.193.06.396-.08.395-.283l-.008-4.073c-.01-1.575-.538-2.957-1.488-3.907-.912-.903-2.141-1.373-3.572-1.373h-.325c-.16 0-.289.13-.288.289l.018 7.516c0 .23-.115.45-.297.585a.734.734 0 0 1-.644.106l-2.496-.816-2.515.835a.682.682 0 0 1-.643-.106.693.693 0 0 1-.298-.575l-.009-7.532a.288.288 0 0 0-.292-.288l-.323.005c-3.024.01-5.05 2.131-5.05 5.29v.019l.01 7.622c.01 1.527.48 2.832 1.373 3.792.912.98 2.189 1.498 3.687 1.498h.019l4.496-.009c.205 0 .344-.208.279-.402a6.36 6.36 0 0 1-.33-2.027 6.449 6.449 0 0 1 6.441-6.442Z"
-                        ></path>
-                        <path
-                          fillRule="evenodd"
-                          clip-rule="evenodd"
-                          d="M21.727 15.18a.72.72 0 0 0-1.019 0l-3.604 3.61-1.488-1.488a.721.721 0 0 0-1.018 1.018l1.998 1.997a.724.724 0 0 0 1.018 0l4.114-4.119a.721.721 0 0 0-.001-1.018Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <span className="ml-10">Envio creado</span>
-                  </div>
-                  {/*  */}
+      {/* Controles y resumen */}
+      <div className="p-4 border border-gray-200 rounded-lg  dark:bg-black">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Estado */}
+          <div className="inline-flex rounded-md shadow-sm overflow-hidden border">
+            <button
+              className={`px-3 py-1.5 text-sm ${filterEstado === 'pendiente' ? 'bg-yellow-100 text-yellow-900' : ' '} hover:bg-yellow-50`}
+              onClick={() => setFilterEstado('pendiente')}
+            >Pendientes</button>
+            <button
+              className={`px-3 py-1.5 text-sm ${filterEstado === 'todos' ? 'bg-blue-100 text-blue-900' : ' '} hover:bg-blue-50 border-l`}
+              onClick={() => setFilterEstado('todos')}
+            >Todos</button>
+          </div>
 
-                  {/* estado entregado  */}
-                  {el.estado != "devuelto" ? (
-                    <>
-                      {el.tipoEntrega === "envio" && (
-                        <>
-                          <div
-                            className={`flex items-center w-full ${
-                              el.estado === "porentregar" ||
-                              el.estado === "entregado"
-                                ? "text-green-400"
-                                : "text-black dark:text-white"
-                            } `}
-                          >
-                            <div
-                              className={`border-[2px] flex justify-center items-center ${
-                                el.estado === "porentregar" ||
-                                el.estado === "entregado"
-                                  ? " border-green-300 fill-green-300 "
-                                  : "dark:border-white dark:fill-white border-black fill-black"
-                              } w-10 h-10 text-center rounded-full`}
-                            >
-                              <svg
-                                className="fill-neutral-700 min-w-min transition-all duration-300 cursor-default fill-neutral-400"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  clip-rule="evenodd"
-                                  d="M11.005 20.126c-.26-.002-.563-.225-.571-.533a.544.544 0 0 1 .287-.493c.015-.006.025-.018.039-.025a.578.578 0 0 1 .209-.05h.015a.56.56 0 0 1 .557.532.554.554 0 0 1-.536.57Zm9.88-4.52a.753.753 0 0 0-.976-.417l-7.434 2.988a2.074 2.074 0 0 0-1.558-.652c-.014.001-.028.006-.042.006L6.588 6.944a.753.753 0 0 0-.484-.439l-2.081-.609A.75.75 0 0 0 3.6 7.335l1.733.508 4.178 10.318a2.035 2.035 0 0 0-.578 1.476 2.056 2.056 0 0 0 2.056 1.99c.019 0 .037 0 .057-.002a2.052 2.052 0 0 0 1.99-2.058l7.43-2.986a.75.75 0 0 0 .418-.976Z"
-                                ></path>
-                                <path
-                                  fillRule="evenodd"
-                                  clip-rule="evenodd"
-                                  d="M12.182 10.479c-.564.216-.98.595-1.201 1.096-.23.518-.225 1.133.01 1.729l.642 1.682c.359.926 1.11 1.455 1.967 1.455.268 0 .546-.052.826-.16l2.686-1.04c.564-.214.978-.593 1.2-1.093.228-.518.225-1.134-.01-1.731l-.642-1.682c-.47-1.211-1.613-1.745-2.793-1.296l-2.685 1.04ZM8.836 8.088c.36.918 1.111 1.444 1.966 1.444.267 0 .546-.052.825-.16l2.688-1.03.004-.001c1.167-.46 1.656-1.626 1.187-2.834l-.644-1.683c-.236-.603-.652-1.06-1.172-1.287-.5-.22-1.062-.217-1.619.002l-2.69 1.03c-1.169.46-1.657 1.628-1.188 2.835l.643 1.684Z"
-                                ></path>
-                              </svg>
-                            </div>
-                            <span className="ml-10">Coordinar Envió</span>
-                          </div>
+          {/* Ordenar por */}
+          <div className="inline-flex rounded-md shadow-sm overflow-hidden border dark:border-neutral-700">
+  <button
+    className={`px-3 py-1.5 text-sm transition-colors
+      ${sortBy === "fecha"
+        ? "bg-gray-200 dark:bg-neutral-700 text-black dark:text-black"
+        : "bg-white dark:bg-neutral-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
+      }`}
+    onClick={() => setSortBy("fecha")}
+  >
+    Por fecha
+  </button>
+  <button
+    className={`px-3 py-1.5 text-sm border-l transition-colors
+      ${sortBy === "total"
+        ? "bg-gray-200 dark:bg-neutral-700 text-black dark:text-black"
+        : "bg-white dark:bg-neutral-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
+      }`}
+    onClick={() => setSortBy("total")}
+  >
+    Por total
+  </button>
+</div>
 
-                          <div
-                            className={`flex items-center w-full ${
-                              el.estado === "entregado"
-                                ? "text-green-400"
-                                : "text--white "
-                            } `}
-                          >
-                            <div
-                              className={`border-[2px] flex justify-center items-center ${
-                                el.estado === "entregado"
-                                  ? " border-green-300 fill-green-300 "
-                                  : "dark:border-white dark:fill-white border-black fill-black"
-                              } w-10 h-10 text-center rounded-full`}
-                            >
-                              <svg
-                                className="fill-neutral-700 min-w-min transition-all duration-300 cursor-default fill-neutral-400"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  clip-rule="evenodd"
-                                  d="M18.6 13.16h1.65v1.94c0 .74-.6 1.33-1.33 1.33h-.17c-.25-.86-.93-1.55-1.8-1.8V9.16l2.34 1.03c.58.25.96.83.96 1.47H18.6c-.42 0-.75.34-.75.75 0 .42.33.75.75.75Zm-2.4 5.19c-.55 0-1-.37-1.13-.87-.03-.1-.04-.2-.04-.3 0-.36.16-.68.42-.89.2-.17.46-.27.75-.27s.55.1.75.28a1.163 1.163 0 0 1-.75 2.05ZM8.96 8.22H5.39a.749.749 0 1 1 0-1.5h3.57a.749.749 0 1 1 0 1.5Zm-.74 8.97c0 .03 0 .05-.01.08-.04.61-.54 1.08-1.16 1.08-.63 0-1.15-.51-1.16-1.15v-.02c0-.64.52-1.16 1.16-1.16.65 0 1.17.52 1.17 1.16v.01Zm11.67-8.37-2.94-1.3v-.54c0-1.56-1.27-2.83-2.83-2.83H5.05c-1.55 0-2.8 1.26-2.8 2.8v2.128c0 .167.134.301.3.3.864-.005 3.353-.018 4.29-.018a.749.749 0 1 1 0 1.5c-1.137 0-3.462-.007-4.29-.01a.3.3 0 0 0-.3.3v3.95c0 1.35.96 2.49 2.23 2.76a2.661 2.661 0 0 0 5.13.07h4.03a2.667 2.667 0 0 0 2.56 1.92c1.21 0 2.23-.81 2.55-1.92h.17c1.56 0 2.83-1.27 2.83-2.83v-3.44c0-1.24-.73-2.36-1.86-2.84Z"
-                                ></path>
-                              </svg>
-                            </div>
-                            <span className="ml-10">
-                              En Camino a ser entregado
-                            </span>
-                          </div>
-                        </>
-                      )}
-                      <div
-                        className={`flex items-center w-full ${
-                          el.estado === "entregado"
-                            ? "text-green-400"
-                            : "text--white "
-                        } `}
-                      >
-                        <div
-                          className={`border-[2px] flex justify-center items-center ${
-                            el.estado === "entregado"
-                              ? " border-green-300 fill-green-300 "
-                              : "dark:border-white dark:fill-white border-black fill-black"
-                          } w-10 h-10 text-center rounded-full`}
-                        >
-                          <svg
-                            className="fill-neutral-700 min-w-min transition-all duration-300 cursor-default fill-neutral-400"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              clip-rule="evenodd"
-                              d="M12.387 6.81a.728.728 0 0 1 .452 0l.98.322-.008-4.393c0-.16-.13-.288-.288-.288l-1.845.005a.288.288 0 0 0-.287.289l.004 4.395.992-.33Z"
-                            ></path>
-                            <path
-                              fillRule="evenodd"
-                              clip-rule="evenodd"
-                              d="M9.024 10.108c1.632-.039 3.139.288 4.406.595 1.08.274 1.937.93 2.457 1.797.096.16.313.21.46.093.172-.137.343-.269.51-.393a3.71 3.71 0 0 1 2.84-.693c.186.03.367-.107.366-.297l-.009-4.75c0-1.316-.355-2.343-1.056-3.034-.662-.653-1.632-1.008-2.822-.989l-.636.007a.288.288 0 0 0-.285.288l.009 5.388c0 .23-.115.452-.298.586a.754.754 0 0 1-.653.106l-1.699-.567-1.709.576a.947.947 0 0 1-.23.03.691.691 0 0 1-.423-.135.723.723 0 0 1-.297-.586V2.744a.288.288 0 0 0-.288-.288h-.7c-1.2 0-2.142.336-2.785.99-.691.69-1.037 1.718-1.037 3.062l.009 4.228c0 .219.235.358.431.26.997-.493 2.116-.855 3.439-.888Z"
-                            ></path>
-                            <path
-                              fillRule="evenodd"
-                              clip-rule="evenodd"
-                              d="M20.88 13.398a2.528 2.528 0 0 0-3.304-.242c-.296.222-.593.465-.894.712-.5.41-1.006.821-1.53 1.15.04-.18.062-.365.062-.557 0-1.232-.83-2.272-2.072-2.59-1.189-.293-2.6-.588-4.092-.56-2.114.049-3.661 1.108-5.158 2.133l-.517.352a.719.719 0 1 0 .804 1.195l.526-.359c1.444-.988 2.691-1.842 4.377-1.88 1.304-.026 2.562.231 3.71.515.596.153.982.621.982 1.194 0 .69-.543 1.19-1.292 1.19h-.231a10.98 10.98 0 0 0-.791 0h-.537a.71.71 0 0 0-.686.556.442.442 0 0 0-.013.061c-.005.036-.021.066-.021.103 0 .021.01.038.013.06 0 .027-.01.054-.005.083.007.048.032.088.048.133l.002.006a.714.714 0 0 0 .767.469c.151-.022.31-.025.468-.031h.764l.141.004c.309.011.617.02.924.015 1.718-.035 3.074-1.148 4.27-2.13.285-.233.566-.464.845-.672a1.085 1.085 0 0 1 1.42.107c.203.202.316.475.316.766 0 .291-.113.563-.32.769l-.207.208c-1.416 1.426-2.639 2.659-4.458 3.371-2.631 1.018-5.074.539-7.995-.034-1.188-.234-2.252-.254-3.42-.254a.72.72 0 0 0 0 1.44c1.091 0 2.081.017 3.232.244 1.654.325 3.256.639 4.883.639 1.248 0 2.511-.186 3.823-.693 2.105-.824 3.49-2.221 4.958-3.698l.202-.205c.478-.475.742-1.11.742-1.787a2.5 2.5 0 0 0-.737-1.783Z"
-                            ></path>
-                          </svg>
-                        </div>
-                        <span className="ml-10">
-                          {el.tipoEntrega === "envio"
-                            ? "Entrega en domicilio"
-                            : "Listo para recojo"}{" "}
-                        </span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <div className={`flex items-center w-full text-red-300`}>
-                        <div
-                          className={`border-[2px] flex justify-center items-center border-red-300 fill-red-300  w-10 h-10 text-center rounded-full`}
-                        >
-                          <svg
-                            className="fill-neutral-700 min-w-min transition-all duration-300 cursor-default fill-neutral-400"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              clip-rule="evenodd"
-                              d="M12.387 6.81a.728.728 0 0 1 .452 0l.98.322-.008-4.393c0-.16-.13-.288-.288-.288l-1.845.005a.288.288 0 0 0-.287.289l.004 4.395.992-.33Z"
-                            ></path>
-                            <path
-                              fillRule="evenodd"
-                              clip-rule="evenodd"
-                              d="M9.024 10.108c1.632-.039 3.139.288 4.406.595 1.08.274 1.937.93 2.457 1.797.096.16.313.21.46.093.172-.137.343-.269.51-.393a3.71 3.71 0 0 1 2.84-.693c.186.03.367-.107.366-.297l-.009-4.75c0-1.316-.355-2.343-1.056-3.034-.662-.653-1.632-1.008-2.822-.989l-.636.007a.288.288 0 0 0-.285.288l.009 5.388c0 .23-.115.452-.298.586a.754.754 0 0 1-.653.106l-1.699-.567-1.709.576a.947.947 0 0 1-.23.03.691.691 0 0 1-.423-.135.723.723 0 0 1-.297-.586V2.744a.288.288 0 0 0-.288-.288h-.7c-1.2 0-2.142.336-2.785.99-.691.69-1.037 1.718-1.037 3.062l.009 4.228c0 .219.235.358.431.26.997-.493 2.116-.855 3.439-.888Z"
-                            ></path>
-                            <path
-                              fillRule="evenodd"
-                              clip-rule="evenodd"
-                              d="M20.88 13.398a2.528 2.528 0 0 0-3.304-.242c-.296.222-.593.465-.894.712-.5.41-1.006.821-1.53 1.15.04-.18.062-.365.062-.557 0-1.232-.83-2.272-2.072-2.59-1.189-.293-2.6-.588-4.092-.56-2.114.049-3.661 1.108-5.158 2.133l-.517.352a.719.719 0 1 0 .804 1.195l.526-.359c1.444-.988 2.691-1.842 4.377-1.88 1.304-.026 2.562.231 3.71.515.596.153.982.621.982 1.194 0 .69-.543 1.19-1.292 1.19h-.231a10.98 10.98 0 0 0-.791 0h-.537a.71.71 0 0 0-.686.556.442.442 0 0 0-.013.061c-.005.036-.021.066-.021.103 0 .021.01.038.013.06 0 .027-.01.054-.005.083.007.048.032.088.048.133l.002.006a.714.714 0 0 0 .767.469c.151-.022.31-.025.468-.031h.764l.141.004c.309.011.617.02.924.015 1.718-.035 3.074-1.148 4.27-2.13.285-.233.566-.464.845-.672a1.085 1.085 0 0 1 1.42.107c.203.202.316.475.316.766 0 .291-.113.563-.32.769l-.207.208c-1.416 1.426-2.639 2.659-4.458 3.371-2.631 1.018-5.074.539-7.995-.034-1.188-.234-2.252-.254-3.42-.254a.72.72 0 0 0 0 1.44c1.091 0 2.081.017 3.232.244 1.654.325 3.256.639 4.883.639 1.248 0 2.511-.186 3.823-.693 2.105-.824 3.49-2.221 4.958-3.698l.202-.205c.478-.475.742-1.11.742-1.787a2.5 2.5 0 0 0-.737-1.783Z"
-                            ></path>
-                          </svg>
-                        </div>
-                        <span className="ml-10">Cancelado</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-                {/* comprobante de pago */}
+{/* Dirección de orden */}
+<div className="inline-flex rounded-md shadow-sm overflow-hidden border dark:border-neutral-700">
+  <button
+    className={`px-3 py-1.5 text-sm transition-colors
+      ${sortOrder === "desc"
+        ? "bg-gray-200 dark:bg-neutral-700 text-black dark:text-black"
+        : "bg-white dark:bg-neutral-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
+      }`}
+    onClick={() => setSortOrder("desc")}
+  >
+    Desc
+  </button>
+  <button
+    className={`px-3 py-1.5 text-sm border-l transition-colors
+      ${sortOrder === "asc"
+        ? "bg-gray-200 dark:bg-neutral-700 text-black dark:text-black"
+        : "bg-white dark:bg-neutral-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800"
+      }`}
+    onClick={() => setSortOrder("asc")}
+  >
+    Asc
+  </button>
+</div>
 
-                {el.comprobante_img ? (
-                  <>
-                    <button
-                      onClick={() => setIsOpen(true)}
-                      className="bg-green-800 py-2 text-md uppercase  cursor-pointer text-white"
-                    >
-                      ver boleta de pago
-                    </button>
-                    <ModalDesk isOpen={isOpen} onClose={() => setIsOpen(false)}>
-                      <div className="p-2 flex flex-col relative w-full items-center">
-                        <Link
-                          className="w-full"
-                          href={`/nuevo-pedido?id_p=${el?.id_payer}&?user=${el?.userId}`}
-                        >
-                          <button className="text-white flex items-center bg-green-800 py-2 px-3 text-md uppercase absolute cursor-pointer right-0 top-0 z-50">
-                            <svg
-                              className="mr-1 stroke-white"
-                              width="24px"
-                              height="24px"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                              <g
-                                id="SVGRepo_tracerCarrier"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              ></g>
-                              <g id="SVGRepo_iconCarrier">
-                                {" "}
-                                <path
-                                  d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                ></path>{" "}
-                                <path
-                                  d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                ></path>{" "}
-                              </g>
-                            </svg>
-                            Editar
-                          </button>
-                        </Link>
-                        <img
-                          src={urlForImage(
-                            el.comprobante_img?.asset?._ref
-                          ).url()}
-                          alt="Vista previa"
-                          className="xl:w-[500px] h-[500px] w-full rounded-lg shadow"
-                        />
-                      </div>
-                    </ModalDesk>
-                  </>
-                ) : (
-                  <Link
-                    href={`/nuevo-pedido?id_p=${el.id_payer}&?user=${el.userId}?`}
-                  >
-                    <div className="w-full flex bg-orange-50 justify-center">
-                      <button className="w-full bg-red-800 py-2 text-md uppercase  cursor-pointer text-white">
-                        Completar Pago
-                      </button>
-                    </div>
-                  </Link>
-                )}
-              </div>
-              <div className="grid grid-columns-1 tailwind w-full p-5 gap-1">
-                {el.productos?.map((producto, i) => (
-                  <div
-                    key={i}
-                    className="flex  items-center w-full p-2  border-b-[1px] border-blue-gray-300"
-                  >
-                    <div>
-                      <img src={producto.picture_url} width={56} alt="" />
-                    </div>
-                    <div className="text-sm">
-                      <div className="ml-10 ">
-                        <div>{producto.name}</div>
-                      </div>
-                      {/* <div className="ml-10">
-                        <div>{producto.sku}</div>
-                      </div> */}
-                      <div className="ml-10">
-                        <div>
-                          {" "}
-                          <span className="font-bold">Talla</span> :
-                          {producto.talla}
-                        </div>
-                      </div>
-                      <div className="ml-10">
-                        <div>
-                          {" "}
-                          <span className="font-bold">Cantidad</span> : x
-                          {producto.cantidad}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+
+          {/* Rango de fechas */}
+          <div className="flex items-center gap-2">
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    className="text-sm border rounded px-2 py-1 
+               bg-white text-black
+               dark:bg-neutral-900 dark:text-black dark:border-neutral-700"
+  />
+  <span className="text-sm text-black dark:text-gray-300">a</span>
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    className="text-sm border rounded px-2 py-1 
+               bg-white text-black
+               dark:bg-neutral-900 dark:text-black dark:border-neutral-700"
+  />
+  <button
+    onClick={() => { setStartDate(''); setEndDate(''); }}
+    className="text-xs px-3 py-1 border rounded 
+               hover:bg-gray-100 dark:hover:bg-gray-800
+               text-black dark:text-gray-200 dark:border-neutral-700"
+  >
+    Limpiar
+  </button>
+</div>
+
         </div>
+
+        {/* Resumen */}
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="p-3 rounded-lg border  ">
+            <div className="text-xs text-gray-500">Pedidos</div>
+            <div className="text-lg font-bold">{totalPedidos}</div>
+          </div>
+          <div className="p-3 rounded-lg border  ">
+            <div className="text-xs text-gray-500">Suma total</div>
+            <div className="text-lg font-bold">S/{sumaTotal.toFixed(2)}</div>
+          </div>
+          <div className="p-3 rounded-lg border  ">
+            <div className="text-xs text-gray-500">Rango</div>
+            <div className="text-sm">{startDate || '—'} a {endDate || '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-flow-row gap-y-5 mt-4">
+        <div className="px-5 py-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 text-yellow-800 dark:text-yellow-200 rounded">
+          <span className="font-bold">{filterEstado === "pendiente" ? "Pedidos pendientes" : "Todos mis pedidos"}</span>
+          <span className="ml-2 text-sm">(ordenados por fecha de creación)</span>
+        </div>
+
+        <div className="overflow-x-auto rounded-lg border dark:border-neutral-800">
+          <table className="min-w-full text-sm">
+            <thead className="  sticky top-0 z-10">
+              <tr className="text-left border-b dark:border-neutral-800">
+                <th className="py-2 pr-3">Producto</th>
+                <th className="py-2 pr-3">Apellido</th>
+                <th className="py-2 pr-3">Fecha</th>
+                <th className="py-2 pr-3">Hora</th>
+                <th className="py-2 pr-3">Días</th>
+                <th className="py-2 pr-3">Total</th>
+                <th className="py-2 pr-3">Estado</th>
+                <th className="py-2 pr-3">Tipo entrega</th>
+                <th className="py-2 pr-3">Dirección</th>
+                <th className="py-2 pr-3">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y dark:divide-neutral-800">
+              {pedidosFiltradosOrdenados.map((el, i) => {
+                const firstProd = Array.isArray(el.productos) && el.productos.length > 0 ? el.productos[0] : null;
+                const fecha = el._createdAt?.split("T")[0];
+                const hora = (() => {
+                  try {
+                    const d = new Date(el._createdAt);
+                    return d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+                  } catch {
+                    return el._createdAt?.split("T")[1]?.slice(0,5) || "";
+                  }
+                })();
+                return (
+                  <tr key={i} className="">
+                    <td className="py-2 pr-3">
+                      {firstProd?.picture_url ? (
+                        <img
+                          src={firstProd.picture_url}
+                          alt="Producto"
+                          width={40}
+                          height={40}
+                          className="rounded-md shadow-sm"
+                        />
+                      ) : (
+                        <span className="text-xs text-gray-400">Sin imagen</span>
+                      )}
+                    </td>
+                    <td className="py-2 pr-3">{el.apellidos || ""}</td>
+                    <td className="py-2 pr-3">{fecha}</td>
+                    <td className="py-2 pr-3">{hora}</td>
+                    <td className="py-2 pr-3">{calcularDiasTranscurridos(el._createdAt)} días</td>
+                    <td className="py-2 pr-3 font-semibold">S/{Number(el.cart_total || 0).toFixed(2)}</td>
+                    <td className="py-2 pr-3"><span className={`px-2 py-0.5 rounded-full text-xs uppercase ${estadoBadgeClasses(el.estado)}`}>{el.estado}</span></td>
+                    <td className="py-2 pr-3 uppercase">{el.tipoEntrega}</td>
+                    <td className="py-2 pr-3">{el.tipoEntrega === 'envio' ? el.direccion : 'Recojo en tienda'}</td>
+                    <td className="py-2 pr-3">
+                      <button onClick={() => { setSelectedPedido(el); setIsPreviewOpen(true); }} className="text-white bg-blue-700 hover:bg-blue-800 px-3 py-1 rounded text-xs">
+                        Vista previa
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {isPreviewOpen && selectedPedido && (
+        <ModalDesk isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
+     <div className="p-6 max-w-5xl w-full   text-black dark:text-white rounded-2xl shadow-lg space-y-6">
+  {/* Encabezado del pedido */}
+  <div className="flex items-center justify-between border-b pb-3 dark:border-neutral-800">
+    <div>
+      <h3 className="text-xl font-bold">
+        Pedido {selectedPedido.id_payer ? `#${selectedPedido.id_payer}` : ''}
+      </h3>
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        Creado: {selectedPedido._createdAt?.split('T')[0]} ·{" "}
+        {calcularDiasTranscurridos(selectedPedido._createdAt)} días
+      </p>
+    </div>
+    <span
+      className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase shadow-sm ${estadoBadgeClasses(
+        selectedPedido.estado
+      )}`}
+    >
+      {selectedPedido.estado}
+    </span>
+  </div>
+
+  {/* Información en columnas */}
+  <div className="grid md:grid-cols-3 gap-5">
+    {/* Pedido */}
+    <div className="border dark:border-neutral-800 p-4 rounded-xl ">
+      <h4 className="font-semibold text-sm uppercase text-gray-600 dark:text-gray-300 mb-2">
+        Información del pedido
+      </h4>
+      <p className="text-sm">Fecha: {selectedPedido._createdAt?.split("T")[0]}</p>
+      <p className="text-sm">
+        Días transcurridos: {calcularDiasTranscurridos(selectedPedido._createdAt)} días
+      </p>
+      <p className="text-sm">Estado: {selectedPedido.estado}</p>
+      {selectedPedido.id_payer && (
+        <p className="text-sm">ID Pedido: {selectedPedido.id_payer}</p>
+      )}
+      <p className="text-sm font-bold mt-3">
+        Total:{" "}
+        <span className="text-green-600 dark:text-green-400">
+          S/{Number(selectedPedido.cart_total || 0).toFixed(2)}
+        </span>
+      </p>
+    </div>
+
+    {/* Cliente */}
+    <div className="border dark:border-neutral-800 p-4 rounded-xl ">
+      <h4 className="font-semibold text-sm uppercase text-gray-600 dark:text-gray-300 mb-2">
+        Cliente
+      </h4>
+      <p className="text-sm">
+        Nombres: {selectedPedido.nombres} {selectedPedido.apellido}
+      </p>
+      <p className="text-sm">Email: {selectedPedido.email}</p>
+      <p className="text-sm">Documento: {selectedPedido.documento}</p>
+      <p className="text-sm">Teléfono: {selectedPedido.telefono}</p>
+      {selectedPedido.ruc && <p className="text-sm">RUC: {selectedPedido.ruc}</p>}
+      <p className="text-sm">Comprobante: {selectedPedido.comprobante}</p>
+    </div>
+
+    {/* Entrega */}
+    <div className="border dark:border-neutral-800 p-4 rounded-xl ">
+      <h4 className="font-semibold text-sm uppercase text-gray-600 dark:text-gray-300 mb-2">
+        Entrega
+      </h4>
+      <p className="text-sm">Tipo: {selectedPedido.tipoEntrega}</p>
+      <p className="text-sm">Dirección: {selectedPedido.direccion}</p>
+      <p className="text-sm">Departamento: {selectedPedido.departamento}</p>
+      <p className="text-sm">Provincia:       {departamento?.find((el) => el.id_ubigeo === selectedPedido.provincia)
+            ?.nombre_ubigeo
+            ? departamento?.find((el) => el.id_ubigeo === selectedPedido.provincia)
+                ?.nombre_ubigeo
+            : selectedPedido.provincia}</p>
+      <p className="text-sm">Distrito:   {provincia?.find((el) => el.id_ubigeo === selectedPedido.distrito)
+            ?.nombre_ubigeo
+            ? provincia?.find((el) => el.id_ubigeo === selectedPedido.distrito)
+                ?.nombre_ubigeo
+            : selectedPedido.distrito}</p>
+   
+     
+      {selectedPedido.adicional && (
+        <p className="text-sm">Info adicional: {selectedPedido.adicional}</p>
+      )}
+    </div>
+  </div>
+
+  {/* Controles */}
+  <div className="flex flex-wrap items-center gap-3">
+    <div className="inline-flex rounded-lg overflow-hidden border dark:border-neutral-800 shadow-sm">
+      <button
+        className={`px-3 py-1.5 text-xs font-medium transition ${
+          prodSortBy === "nombre"
+            ? "bg-gray-200 dark:bg-black"
+            : "hover:bg-gray-300 dark:hover:bg-neutral-800"
+        }`}
+        onClick={() => setProdSortBy("nombre")}
+      >
+        Nombre
+      </button>
+      <button
+        className={`px-3 py-1.5 text-xs border-l dark:border-neutral-800 font-medium transition ${
+          prodSortBy === "talla"
+            ? "bg-gray-200 dark:bg-black"
+            : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+        }`}
+        onClick={() => setProdSortBy("talla")}
+      >
+        Talla
+      </button>
+      <button
+        className={`px-3 py-1.5 text-xs border-l dark:border-neutral-800 font-medium transition ${
+          prodSortBy === "cantidad"
+            ? "bg-gray-200 dark:bg-black"
+            : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+        }`}
+        onClick={() => setProdSortBy("cantidad")}
+      >
+        Cantidad
+      </button>
+      <button
+        className={`px-3 py-1.5 text-xs border-l dark:border-neutral-800 font-medium transition ${
+          prodSortBy === "subtotal"
+            ? "bg-gray-200 dark:bg-black"
+            : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+        }`}
+        onClick={() => setProdSortBy("subtotal")}
+      >
+        Subtotal
+      </button>
+    </div>
+
+    <div className="inline-flex rounded-lg overflow-hidden border dark:border-neutral-800 shadow-sm">
+      <button
+        className={`px-3 py-1.5 text-xs font-medium transition ${
+          prodSortOrder === "asc"
+            ? "bg-gray-200 dark:bg-black"
+            : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+        }`}
+        onClick={() => setProdSortOrder("asc")}
+      >
+        Asc
+      </button>
+      <button
+        className={`px-3 py-1.5 text-xs border-l dark:border-neutral-800 font-medium transition ${
+          prodSortOrder === "desc"
+            ? "bg-gray-200 dark:bg-black"
+            : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+        }`}
+        onClick={() => setProdSortOrder("desc")}
+      >
+        Desc
+      </button>
+    </div>
+
+    <input
+      value={prodSearch}
+      onChange={(e) => setProdSearch(e.target.value)}
+      placeholder="Buscar producto..."
+      className="text-xs px-3 py-2 border rounded-lg  dark:border-neutral-800 focus:ring-2 focus:ring-blue-500 outline-none transition"
+    />
+  </div>
+
+  {/* Tabla de productos */}
+  <div className="border dark:border-neutral-800 p-4 rounded-xl ">
+    <h4 className="font-semibold text-sm uppercase text-gray-600 dark:text-gray-300 mb-3">
+      Productos
+    </h4>
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm">
+        <thead className="">
+          <tr className="text-left">
+            <th className="py-2 px-3">Producto</th>
+            <th className="py-2 px-3">Talla</th>
+            <th className="py-2 px-3">Cantidad</th>
+            <th className="py-2 px-3">Precio unit.</th>
+            <th className="py-2 px-3">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedPedido.productos
+            ?.filter((p) => {
+              if (!prodSearch) return true;
+              const name = (p.name || p.title || "").toString().toLowerCase();
+              return name.includes(prodSearch.toLowerCase());
+            })
+            ?.sort((a, b) => {
+              const getSubtotal = (x) =>
+                (x.cantidad || x.quantity || 0) * (x.unit_price || 0);
+              const map = {
+                nombre: (x) => (x.name || x.title || "").toString().toLowerCase(),
+                talla: (x) => (x.talla || x.category_id || "").toString().toLowerCase(),
+                cantidad: (x) => Number(x.cantidad || x.quantity || 0),
+                subtotal: (x) => Number(getSubtotal(x)),
+              };
+              const va = map[prodSortBy](a);
+              const vb = map[prodSortBy](b);
+              if (va < vb) return prodSortOrder === "asc" ? -1 : 1;
+              if (va > vb) return prodSortOrder === "asc" ? 1 : -1;
+              return 0;
+            })
+            ?.map((p, idx) => (
+              <tr
+                key={idx}
+                className="border-b   transition"
+              >
+                <td className="py-2 px-3 flex items-center gap-2">
+                  {p.picture_url && (
+                    <img
+                      src={p.picture_url}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="rounded-md shadow-sm"
+                    />
+                  )}
+                  <span>{p.name || p.title}</span>
+                </td>
+                <td className="py-2 px-3">{p.talla || p.category_id}</td>
+                <td className="py-2 px-3">{p.cantidad || p.quantity}</td>
+                <td className="py-2 px-3">
+                  S/
+                  {p.unit_price?.toFixed
+                    ? p.unit_price.toFixed(2)
+                    : Number(p.unit_price || 0).toFixed(2)}
+                </td>
+                <td className="py-2 px-3 font-medium">
+                  S/
+                  {(((p.cantidad || p.quantity) || 0) * (p.unit_price || 0)).toFixed(
+                    2
+                  )}
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+        </ModalDesk>
       )}
     </div>
   );

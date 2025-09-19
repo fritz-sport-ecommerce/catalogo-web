@@ -20,7 +20,7 @@ function Loading() {
   {Array.from({ length: 8 }).map((_, index) => (
     <div
       key={index}
-      className="w-full bg-gray-200 dark:bg-gray-700 rounded-md p-4 animate-pulse"
+      className="w-full bg-gray-200 dark:bg-gray-700 rounded-md p-4   "
     >
       <div className="h-96 bg-gray-300 dark:bg-gray-600 rounded-md mb-4"></div>
       <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded-md mb-2"></div>
@@ -91,10 +91,10 @@ export function ProductGrid({
         {products.slice(0, loadMore).map((product, i) => (
           <div key={i} ref={i === loadMore - 1 ? lastProductRef : null}>
             <Product
-              outlet={outlet}
+             
               products={product}
          
-              descuentos={descuentos}
+         
             />
           </div>
         ))}

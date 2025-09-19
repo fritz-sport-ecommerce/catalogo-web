@@ -1,38 +1,16 @@
+export const fetchCache = "force-no-store";
+export const revalidate = 0; // seconds
+export const dynamic = "force-dynamic";
 
 import NuestrasTiendas from "@/components/nuestras-sede/nuestras-sede";
 import { client } from "@/sanity/lib/client";
 import getSanityFileUrl from "@/utils/get-url-video";
+import { Metadata } from "next";
+import { storesMetadata } from "@/config/seo-config";
 
 import { groq } from "next-sanity";
 
-export const metadata = {
-  title:
-    "Nuestras Tiendas Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
-  description:
-    "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
-  openGraph: {
-    title: " Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
-    description:
-      "Bienvenido(a) al sitio oficial de Fritz Sport Perú. Encuentra Nuestro catalogo digital de zapatillas y ropa deportiva, creados con tecnología y diseño. ¡Conoce más!",
-    url: `${process.env.URL_DOMINIO}`,
-    siteName: "Fritz Sport",
-    images: [
-      {
-        url: `${process.env.URL_DOMINIO}/ecommerce-share.jpg`,
-        width: 800,
-        height: 600,
-        alt: `Fritz Sport share Imagen`,
-      },
-      {
-        url: `${process.env.URL_DOMINIO}/ecommerce-share.jpg`,
-
-        width: 1200,
-        height: 630,
-        alt: `Fritz Sport share Imagen`,
-      },
-    ],
-  },
-};
+export const metadata: Metadata = storesMetadata;
 // test
 export default async function page() {
   const nuestrasTiendas = await client.fetch(

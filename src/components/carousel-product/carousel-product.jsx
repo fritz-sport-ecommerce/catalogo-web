@@ -23,7 +23,7 @@ const responsive = {
   },
 };
 
-const CarouselProduct = ({ products, descuentos, outlet, nuevo = false }) => {
+const CarouselProduct = ({ products }) => {
   return (
     <>
       {/* <div>
@@ -31,7 +31,7 @@ const CarouselProduct = ({ products, descuentos, outlet, nuevo = false }) => {
         <Button onClick={() => setCategoria("casacas")}>casacas</Button>
       </div> */}
 
-      <div className="parent ">
+      <div className="parent relative carousel-sugeridos">
         <Carousel
           responsive={responsive}
           time={2000}
@@ -54,9 +54,6 @@ const CarouselProduct = ({ products, descuentos, outlet, nuevo = false }) => {
             <ProductRelacionados
               key={index}
               products={el}
-              descuentos={descuentos}
-              outlet={outlet}
-              nuevo={nuevo}
             />
           ))}
         </Carousel>

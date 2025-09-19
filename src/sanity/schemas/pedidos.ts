@@ -150,6 +150,44 @@ export const pedidos = defineType({
               title: "picture_url",
               type: "string",
             },
+            {
+              name: "almacenes_disponibles",
+              title: "Almacenes Disponibles",
+              type: "array",
+              description: "Lista de almacenes donde está disponible esta talla",
+              of: [
+                {
+                  type: "object",
+                  fields: [
+                    {
+                      name: "codigo_almacen",
+                      title: "Código de Almacén",
+                      type: "string",
+                    },
+                    {
+                      name: "nombre_almacen",
+                      title: "Nombre del Almacén",
+                      type: "string",
+                    },
+                    {
+                      name: "almacen_tabla",
+                      title: "Almacén Tabla",
+                      type: "string",
+                    },
+                    {
+                      name: "provincia",
+                      title: "Provincia",
+                      type: "string",
+                    },
+                    {
+                      name: "stock_disponible",
+                      title: "Stock Disponible",
+                      type: "number",
+                    },
+                  ],
+                }
+              ],
+            },
           ],
         }),
       ],

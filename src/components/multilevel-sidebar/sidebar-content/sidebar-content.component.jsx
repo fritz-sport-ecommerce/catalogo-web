@@ -32,6 +32,7 @@ const SidebarContent = (props) => {
                       <li
                         className={classNames({
                           disabled: list.disabled,
+                          'sale-item': list.title === "SALE" || list.title === "OUTLET",
                         })}
                         onClick={() => handleTabClick(list)}
                       >
@@ -39,10 +40,14 @@ const SidebarContent = (props) => {
                           onClick={() => onToggle(false)}
                           className="flex-align-start h-full"
                         >
-                          {list.icon && list.icon}
+                          {list.icon && (
+                            <span className={list.title === "SALE" ? "sale-badge" : ""}>
+                              {list.icon}
+                            </span>
+                          )}
                           <span
                             className={`${
-                              list.title === "OUTLET" && "text-red-500"
+                              (list.title === "OUTLET" || list.title === "SALE") && "text-red-500 font-bold"
                             }`}
                           >
                             {list.title}
@@ -53,12 +58,25 @@ const SidebarContent = (props) => {
                     </Link>
                   ) : (
                     <li
-                      className={classNames({ disabled: list.disabled })}
+                      className={classNames({ 
+                        disabled: list.disabled,
+                        'sale-item': list.title === "SALE" || list.title === "OUTLET",
+                      })}
                       onClick={() => handleTabClick(list)}
                     >
                       <span className="flex-align-center">
-                        {list.icon && list.icon}
-                        <span>{list.title}</span>
+                        {list.icon && (
+                          <span className={list.title === "SALE" ? "" : ""}>
+                            {list.icon}
+                          </span>
+                        )}
+                        <span
+                          className={`${
+                            (list.title === "OUTLET" || list.title === "SALE") && "text-red-500 font-bold"
+                          }`}
+                        >
+                          {list.title}
+                        </span>
                       </span>
                       {children && list.children && <AngleRight />}
                     </li>
@@ -100,23 +118,23 @@ const SidebarContent = (props) => {
                     <FaUserCircle size={22} className="cursor-pointer" />
                   )}
                 </Link>
-                <Link href="/follows">
+                {/* <Link href="/follows">
                   <div className="flex items-center">
                     <Heart className={`w-5 h-5 xl:h-auto xl:w-auto `} />
 
                     <div className="ml-2">Favoritos</div>
                   </div>
-                </Link>
+                </Link> */}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-y-6">
-                <Link href="/follows">
+                {/* <Link href="/follows">
                   <div className="flex items-center">
                     <Heart className={`w-5 h-5 xl:h-auto xl:w-auto `} />
 
                     <div className="ml-2">Favoritos</div>
                   </div>
-                </Link>
+                </Link> */}
                 <Link href="/auth">
                   <div className="flex">
                     <User className="h-6 w-6" />

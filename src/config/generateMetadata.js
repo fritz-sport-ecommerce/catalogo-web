@@ -1,7 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { urlForImage } from "@/sanity/lib/image";
 import { groq } from "next-sanity";
-
+// traer cambios
 export async function metadataPage({ params }) {
   const product = await client.fetch(
     groq`*[_type == "product" && slug.current == "${params.slug}"][0] {

@@ -2,24 +2,150 @@
 
 import Link from "next/link";
 
+import ModalPreguntasFrecuentes from "../modal/modal-preguntas-frecuentes";
+
 interface Props {
   urlWhatsApp: {
     whatsapp: string;
   };
 }
-
+// traer cambios
 export default function IconWhatapp({ urlWhatsApp }: Props) {
+
   return (
     <>
-      {/* Botón Emprende */}
+      <ModalPreguntasFrecuentes>
+        <>
+          <div className="bg-white">
+            <div className=" overflow-y-scroll xl:h-[60vh] h-[80vh] xl:w-[40vw] w-full xl:p-8 xl:py-5 p-2">
+              <div>
+     
+
+                <div className="font-extrabold pt-5 pb-2">MEDIOS DE PAGO</div>
+                <p className="text-xs xl:text-base ">
+                  Contamos con diversos medios de pago. - Pago con tarjeta de
+                  crédito o débito al finalizar tu compra en el carrito. Visa /
+                  Mastercard / AMEX / Dinners.
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿CUÁNTO DEMORA EN LLEGAR MI PEDIDO?
+                </div>
+                <p className="text-xs xl:text-base">
+                  De 3 hasta 10 días hábiles según el destino de entrega. -
+                  Entregas de 5 a 7 días hábiles: Cercado de lima, Magdalena,
+                  San Miguel, Jesús María, Lince, Pueblo Libre, Miraflores, San
+                  Borja, Chorrillos, Callao, Barranco, Surquillo, Surco, Breña,
+                  San Luis, San Isidro, Santa Anita, La Victoria, Ate, La
+                  Molina, Carabayllo, Comas, Independencia, Los Olivos, San
+                  Martín de Porres, Ventanilla (Hasta Refinería), Rímac, San
+                  Juan de Miraflores y Callao. - Entregas de 7 a 10 días
+                  hábiles: Provincias del País. - Recojos en tienda de 3 a 5
+                  días hábiles.
+                </p>
+                <p className="text-xs xl:text-base">
+                  Nuestros tiempos pueden variar según coyunturas y casos
+                  extraordinarios. Los días hábiles son considerados de Lunes a
+                  Viernes, no cuentan fines de semana ni feriados. Atención al
+                  cliente:{" "}
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300"
+                  >
+                    consultas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿SI COMPRO CON EL MÉTODO RECOJO EN TIENDA PUEDO IR HOY MISMO?
+                </div>
+                <p className="text-xs xl:text-base">
+                  La opción de recojo en tienda para una compra por
+                  www.fritzsport.pe, recibirás una llamada cuando tu pedido esté
+                  listo para que puedes pasar a recoger el producto.Cualquier detalle
+                  adicional por favor comunícate con
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    consultas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  CAMBIOS Y DEVOLUCIONES
+                </div>
+                <p className="text-xs xl:text-base">
+                  Cuentas con 7 días para poder realizar cambio y/o devoluciones
+                  posteriores a la entrega. Atención al cliente:{" "}
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    consultas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿TODOS SUS PRODUCTOS SON 100% ORIGINALES?
+                </div>
+                <p className="text-xs xl:text-base">
+                  Sí, trabajamos directamente con las marcas globales para
+                  ofrecerles nuestros productos en calidad y precio retail de
+                  las marcas.
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿TODOS LOS PRODUCTOS DE TIENDA SE ENCUENTRAN EN WEB?
+                </div>
+                <p className="text-xs xl:text-base">
+                  La web contiene todos los productos de nuestras marcas.
+                  Cualquier detalle estamos a tu disposición en
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    Preguntas
+                  </a>
+                </p>
+              </div>
+              <div>
+                <div className="font-extrabold pt-5 pb-2">
+                  ¿POR QUÉ MI COMPRA FUE CANCELADA?
+                </div>
+                <p className="text-xs xl:text-base">
+                  Si tu compra fuera cancelada, por favor comunícate con
+                  <a
+                    href="https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0"
+                    target="_blank"
+                    className="text-green-300 ml-2"
+                  >
+                    consulta sobre tu pedido
+                  </a>{" "}
+                  para que te puedan brindar mayor detalle.
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      </ModalPreguntasFrecuentes>
       <Link
         href="/emprende"
-        className="z-header fixed bottom-5 left-5 xl:bottom-[80px] xl:left-16 z-[999]"
+        className="z-header  sticky-0 fixed bottom-20 left-4 z-[999] flex items-center justify-center xl:bottom-[80px] xl:left-16 "
         rel="noreferrer"
       >
-        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full  shadow-md">
-          <span className="absolute h-[30px] w-[30px] animate-ping rounded-full bg-black dark:bg-white xl:h-[50px] xl:w-[50px]"></span>
-          <div className="z-10 flex flex-col items-center justify-center">
+        <div className=" relative mb-[6vh] mr-1 flex  h-[50px] cursor-pointer  items-center  justify-end rounded-r-full    pl-1 md:w-10">
+          <span className="absolute h-[30px] w-[30px] animate-ping rounded-full bg-black  dark:bg-white xl:h-[50px] xl:w-[50px]"></span>
+          <div className="flex flex-col items-center justify-center xl:h-[50px] xl:w-[50px] xl:justify-start">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -33,29 +159,28 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
                 d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
               />
             </svg>
-            <span className="hidden xl:block text-xs text-orange-500 font-semibold mt-1">
+            <span className=" hidden text-orange-500 xl:block xl:text-sm font-semibold">
               Emprende
             </span>
           </div>
         </div>
       </Link>
-
-      {/* Botón WhatsApp */}
       <Link
-        href={`https://api.whatsapp.com/send/?phone=51${urlWhatsApp.whatsapp}&text&type=phone_number&app_absent=0`}
+        href={`https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0`}
         target="_blank"
-        className="z-header fixed bottom-5 right-5 xl:bottom-[80px] xl:right-16 z-[999]"
+        className="z-header sticky-0 fixed bottom-0 right-5 z-[999] xl:right-16"
         rel="noreferrer"
       >
-        <div className="relative flex h-[50px] w-[50px] items-center justify-center rounded-full  shadow-md">
+        <div className=" relative mb-[6vh] mr-1  flex h-[50px]  cursor-pointer  items-center  justify-end  rounded-r-full pl-1 md:w-28">
           <span className="absolute h-[30px] w-[30px] animate-ping rounded-full bg-green-600 xl:h-[50px] xl:w-[50px]"></span>
+
           <svg
-            className="z-10 h-[30px] w-[30px] xl:h-[40px] xl:w-[40px]"
+            className="z-20 h-[30px] w-[30px] xl:h-[50px] xl:w-[50px]  "
             viewBox="0 0 30 30"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clipPath="url(#clip0)">
+            <g clipPath="url(#clip0_21_26)">
               <circle cx="15.5" cy="15.5" r="11.5" fill="white" />
               <path
                 fillRule="evenodd"
@@ -65,8 +190,12 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
               />
             </g>
             <defs>
-              <clipPath id="clip0">
-                <rect width="28.8733" height="28.8733" transform="translate(0.789474 0.578953)" />
+              <clipPath id="clip0_21_26">
+                <rect
+                  width="28.8733"
+                  height="28.8733"
+                  transform="translate(0.789474 0.578953)"
+                />
               </clipPath>
             </defs>
           </svg>
@@ -75,4 +204,4 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
     </>
   );
 }
-
+//

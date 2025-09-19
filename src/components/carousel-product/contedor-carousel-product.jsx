@@ -8,7 +8,6 @@ export default async function ContedorCarouselProduct({
   genero,
   cantidad = "80",
   descuentos,
-  nuevo = false,
   tipoCategoria,
   outlet,
 }) {
@@ -30,6 +29,7 @@ export default async function ContedorCarouselProduct({
           sku,
           images,
           imgcatalogomain,
+           linea_liquidacion,
           marca,
           description,
           genero,
@@ -39,6 +39,7 @@ export default async function ContedorCarouselProduct({
           categories,
           stock,
           preciomanual,
+          popularidad,
           razonsocial,
           descuentosobred,
           "slug":slug.current
@@ -53,9 +54,6 @@ export default async function ContedorCarouselProduct({
     <div className="">
       <CarouselProduct
         products={products}
-        descuentos={descuentos}
-        outlet={outlet}
-        nuevo={nuevo}
       />
     </div>
   );

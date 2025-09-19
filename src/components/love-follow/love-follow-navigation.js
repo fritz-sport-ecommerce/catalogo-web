@@ -13,7 +13,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { CircleX, Heart } from "lucide-react";
+import { CircleX, Heart, ShoppingBag, ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -24,104 +24,62 @@ import { ItemsFollow } from "./items-follow";
 import { CartItemsEmpty } from "../cart-items-empty";
 import { CartItemsFollows } from "../cart-items-follows";
 
-export default function LoveFollowNavigation() {
-  const [open, setOpen] = React.useState(false);
-  const [loadingFollow, setLoadingFollow] = useState(false);
-  const [follows, setFollows] = useState({
-    intereses: [],
-  });
+export function LoveFollowNavigation() {
   const { data: session } = useSession();
-  const handleOpen = () => setOpen(!open);
+  const [followsCount, setFollowsCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    setLoadingFollow(true);
-    if (session?.user.id) {
+    if (session?.user?.id) {
+      setLoading(true);
       client
         .fetch(
-          groq`*[_type == "user" && _id match "${session?.user.id}" ][0] {
-        intereses,
-        _id
-      }`
+          groq`*[_type == "user" && _id == $userId][0] {
+            intereses
+          }`,
+          { userId: session.user.id }
         )
-        .then((el) => {
-          console.log(el);
-
-          setFollows(el);
-
-          setLoadingFollow(false);
+        .then((user) => {
+          if (user?.intereses) {
+            setFollowsCount(user.intereses.length);
+          } else {
+            setFollowsCount(0);
+          }
+          setLoading(false);
         })
         .catch((error) => {
-          // setLoadingFollow(false);
-
-          console.log(error);
+          console.error("Error fetching follows count:", error);
+          setLoading(false);
         });
     } else {
-      console.log("error");
+      setFollowsCount(0);
     }
-  }, [session?.user.id]);
+  }, [session?.user?.id]);
 
-  if (loadingFollow && session?.user.id) {
+  if (!session?.user?.id) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900" />
-      </div>
-    );
-  } else {
-    return (
-      <>
-        <div className="h-full container ">
-          <div className="grid place-items-center gap-4 ">
-            <div>MI LISTA DE FAVORITOS</div>
-
-            {follows.intereses?.length === 0 || !follows.intereses ? (
-              <>
-                {session?.user.id && (
-                  <div className="flex justify-center w-full">
-                    <div className="flex flex-col gap-2">
-                      <p> ARTÍCULOS</p>
-                      <div className="text-center font-normal">
-                        Aún no has añadido ningún artículo a tu lista de
-                        favoritos. Comienza a comprar y añade tus favoritos.
-                      </div>
-                      {<CartItemsFollows />}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <></>
-            )}
-            <div
-              className={`h-full  w-full grid ${
-                follows.intereses?.length === 0 ? "grid-cols-1" : "grid-cols-2"
-              }  gap-2 `}
-            >
-              {follows.intereses?.map((el, i) => (
-                <button onClick={() => setOpen(!open)} key={i}>
-                  <ItemsFollow id={follows?._id} sku={el} ind={i}></ItemsFollow>
-                </button>
-              ))}
-            </div>
-          </div>
-          {!session?.user.id && (
-            <div className="space-x-2">
-              <div className="flex justify-evenly w-full">
-                <Link href={"/auth"}>
-                  <Button color="blue-gray" onClick={handleOpen}>
-                    Iniciar Session
-                  </Button>
-                </Link>
-                <Link href={"/auth"}>
-                  <Button color="blue-gray" onClick={handleOpen}>
-                    Regístrate
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </>
+      <Link href="/auth">
+        <Button className="z-10 hover:bg-gray-100 dark:hover:bg-gray-800 p-0 bg-transparent xl:px-2 px-1 py-[1px] relative">
+          <Heart className="w-5 h-5 xl:h-5 xl:w-5 text-black dark:text-white hover:text-red-500 transition-colors duration-200" />
+          <span className="sr-only">Favoritos</span>
+        </Button>
+      </Link>
     );
   }
+
+  return (
+    <Link href="/follows">
+      <Button className="z-10 hover:bg-gray-100 dark:hover:bg-gray-800 p-0 bg-transparent xl:px-2 px-1 py-[1px] relative">
+        <Heart className="w-5 h-5 xl:h-5 xl:w-5 text-black dark:text-white hover:text-red-500 transition-colors duration-200" />
+        {followsCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            {followsCount}
+          </span>
+        )}
+        <span className="sr-only">Favoritos</span>
+      </Button>
+    </Link>
+  );
 }
 
 // import React from "react";

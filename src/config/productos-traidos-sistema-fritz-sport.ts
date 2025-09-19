@@ -2,6 +2,9 @@ import { fetchProductosPrecios } from "@/lib/fetchProductosPrecios";
 import determinarRazonSocial from "@/utils/calcular-razon-social";
 import convertUSSizeToEuropean from "@/utils/convertir-talla-usa-eu";
 import determinarSubgeneroPorTalla from "@/utils/determinar-subgenero-ninos";
+import { calcularPrecioConDescuento } from "./descuento-fz-premium";
+
+import { client } from "@/sanity/lib/client";
 
 // Función para obtener el stock total en Lima
 function obtenerStockEnLima(
@@ -15,23 +18,100 @@ function obtenerStockEnLima(
     .reduce((total, p) => total + (p.stock ?? 0), 0);
 }
 
+/**
+ * Aplica el descuento de stock por talla a un array de productos según el objeto stockDescontado.
+ * @param productos Array de productos (cada uno con propiedad tallas y stock)
+ * @param stockDescontado Objeto { [sku]: { [talla]: cantidadDescontada } }
+ * @returns Nuevo array de productos con tallas y stock descontados
+ */
+export function aplicarDescuentoStockPorTalla(productos: any[], stockDescontado: Record<string, Record<string, number>>) {
+  return productos.map((producto) => {
+    let tallasConvertidas = producto.tallas;
+    let stockGeneral = producto.stock;
+    if (stockDescontado[producto?.sku]) {
+      // Descontar del stock general
+      const totalDescontado = Object.values(stockDescontado[producto.sku]).reduce((a, b) => a + b, 0);
+      stockGeneral = Math.max(0, stockGeneral - totalDescontado);
+      // Descontar por talla
+      tallasConvertidas = tallasConvertidas.map((tallaObj: any) => {
+        if (typeof tallaObj === "object" && tallaObj.talla) {
+          const descuento = stockDescontado[producto.sku][tallaObj.talla] || 0;
+          return {
+            ...tallaObj,
+            stock: Math.max(0, (tallaObj.stock ?? 0) - descuento),
+          };
+        }
+        if (typeof tallaObj === "string") {
+          return { talla: tallaObj, stock: 0, _id: "" };
+        }
+        return tallaObj;
+      });
+    }
+    return {
+      ...producto,
+      stock: stockGeneral,
+      tallas: tallasConvertidas,
+    };
+  });
+}
+
+/**
+ * Aplica el descuento de stock por talla a un solo producto según el objeto stockDescontado.
+ * @param producto Producto individual (con propiedad tallas y stock)
+ * @param stockDescontado Objeto { [sku]: { [talla]: cantidadDescontada } }
+ * @returns Producto con tallas y stock descontados
+ */
+export function aplicarDescuentoStockPorTallaUnitario(producto: any, stockDescontado: Record<string, Record<string, number>>) {
+  let tallasConvertidas = producto.tallas;
+  let stockGeneral = producto.stock;
+  if (stockDescontado[producto?.sku]) {
+    // Descontar del stock general
+    const totalDescontado = Object.values(stockDescontado[producto.sku]).reduce((a, b) => a + b, 0);
+    stockGeneral = Math.max(0, stockGeneral - totalDescontado);
+    // Descontar por talla
+    tallasConvertidas = tallasConvertidas.map((tallaObj: any) => {
+      if (typeof tallaObj === "object" && tallaObj.talla) {
+        const descuento = stockDescontado[producto.sku][tallaObj.talla] || 0;
+        return {
+          ...tallaObj,
+          stock: Math.max(0, (tallaObj.stock ?? 0) - descuento),
+        };
+      }
+      if (typeof tallaObj === "string") {
+        return { talla: tallaObj, stock: 0, _id: "" };
+      }
+      return tallaObj;
+    });
+  }
+  return {
+    ...producto,
+    stock: stockGeneral,
+    tallas: tallasConvertidas,
+  };
+}
+
 export default async function productosTraidosSistemaFritzSport(
   productos: any[] = [],
   provincia: string | undefined,
-  razonsocial: string | undefined =undefined
+  razonsocial: string | undefined = undefined
 ) {
-  if (!Array.isArray(productos) || productos.length === 0) {
+  console.log(`🔄 productosTraidosSistemaFritzSport - Iniciando procesamiento`);
+  console.log(`📊 Productos recibidos: ${productos?.length || 0}`);
+  console.log(`🌍 Provincia: ${provincia}`);
+  console.log(`🏢 Razón social: ${razonsocial}`);
+  
+  if (!Array.isArray(productos) || productos.length === 0 ) {
     console.error("❌ Error: No hay productos para procesar.");
     return [];
   }
 
-  const SkuProducts = productos
-    .map((el) => ({ sku: el.sku }))
-    .filter((el: any) => el.empresa != "fz_premium");
+  const SkuProducts = productos?.map((el) => ({ sku: el?.sku }));
+  console.log(`🔢 SKUs a buscar: ${SkuProducts?.length || 0}`);
 
   let precioDeProductos: any[] = [];
   try {
     precioDeProductos = await fetchProductosPrecios(SkuProducts, provincia);
+    console.log(`💰 Precios obtenidos del sistema: ${precioDeProductos?.length || 0}`);
     if (!Array.isArray(precioDeProductos))
       throw new Error("Datos inválidos recibidos.");
   } catch (error) {
@@ -39,10 +119,50 @@ export default async function productosTraidosSistemaFritzSport(
     return [];
   }
 
-  // Generar nuevo array con precios asignados
+  // --- NUEVO: Consultar pedidos pagados en Sanity y calcular stock descontado ---
+  // Traer todos los pedidos pagados
+  let pedidosPagados = [];
+  try {
+    pedidosPagados = await client.fetch(
+      `*[_type == "pedidos" && estado == "pagado"]{ productos[] }`
+    );
+  } catch (error) {
+    console.error("❌ Error al obtener pedidos pagados de Sanity:", error);
+    pedidosPagados = [];
+  }
+
+  // Crear un mapa para saber cuántos productos se han vendido por SKU y talla  /
+  const stockDescontado: Record<string, Record<string, number>> = {};
+  for (const pedido of pedidosPagados) {
+    if (!pedido.productos) continue;
+    for (const prod of pedido.productos) {
+      if (!prod.sku || !prod.talla || !prod.cantidad) continue;
+      if (!stockDescontado[prod.sku]) stockDescontado[prod.sku] = {};
+      if (!stockDescontado[prod.sku][prod.talla]) stockDescontado[prod.sku][prod.talla] = 0;
+      stockDescontado[prod.sku][prod.talla] += prod.cantidad;
+    }
+  }
+
+  // Generar nuevo array con precios asignados (sin descontar stock por talla aún)
   const productosConPrecio = productos.map((producto) => {
     const precio = precioDeProductos.find((p) => p.sku === producto.sku);
-
+    // Descontar stock general (pero NO por talla ni pedidos aún)
+    let stockGeneral = precio?.stockDisponible ?? 0;
+    // 1. Convertir tallas a formato europeo (o el que corresponda)
+    let tallasConvertidas = convertUSSizeToEuropean(
+      precio?.tallas,
+      producto?.genero,
+      producto?.marca,
+      producto?.genero === "niños"
+        ? determinarSubgeneroPorTalla(
+            precio?.tallas_catalogo,
+            producto?.marca,
+            producto?.tipo
+          )
+        : undefined,
+      producto?.tipo
+    );
+    // NO descontar stock por talla aquí
     return {
       ...producto,
       razonsocial: determinarRazonSocial(
@@ -52,50 +172,29 @@ export default async function productosTraidosSistemaFritzSport(
       ),
       images: producto?.images,
       subgenero_ninos:
-        producto.genero === "niños"
+        producto?.genero === "niños"
           ? determinarSubgeneroPorTalla(
               precio?.tallas_catalogo,
               producto?.marca,
               producto?.tipo
             )
           : undefined,
-      tipoproducto: precio?.stockDisponible > 6 ? "catalogo" : "web",
-      stock: precio?.stockDisponible ?? 0,
+      tipoproducto: stockGeneral > 6 ? "catalogo" : "web",
+      stock: stockGeneral,
       talla_sistema: precio?.tallas_catalogo?.filter(Boolean).join(", ") || "",
-      tallascatalogo: precio?.tallas_catalogo
-        ? convertUSSizeToEuropean(
-            precio?.tallas_catalogo,
-            producto?.genero,
-            producto?.marca,
-            producto.genero === "niños"
-              ? determinarSubgeneroPorTalla(
-                  precio?.tallas_catalogo,
-                  producto?.marca,
-                  producto?.tipo
-                )
-              : undefined,
-            producto?.tipo
-          )
-        : "",
-      tallas: precio?.tallas || [],
+      precio_original: precio?.precio_retail ,
+      tallas: tallasConvertidas,
       priceecommerce: precio?.precio_retail ?? null,
       priceemprendedor: precio?.precio_emprendedor ?? null,
-      pricemayorista: precio?.precio_mayorista ?? null,
+      pricemayorista:  precio?.precio_mayorista ?? null ,
       provincias: precio?.provincias || [],
     };
   });
 
-  // Ordenar por _createdAt y filtrar
-  const productosOrdenadosConPrecio = productosConPrecio
-    .sort(
-      (a, b) =>
-        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime()
-    )
-    .filter(
-      (el) =>
-        // obtenerStockEnLima(el.provincias, provincia) > 10 &&
-        el.stock > 1
-    )
+  // Filtrar productos válidos (sin ordenar por stock aquí)
+  console.log(`🔍 Productos con precio asignado: ${productosConPrecio?.length || 0}`);
+  
+  let productosOrdenadosConPrecio = productosConPrecio
     .filter(
       (el) =>
         el.pricemayorista !== undefined &&
@@ -104,16 +203,41 @@ export default async function productosTraidosSistemaFritzSport(
         el.pricemayorista !== null &&
         el.priceemprendedor !== null &&
         el.priceecommerce !== null &&
-        el.empresa !== "fz_premium"
+        el.empresa! &&
+        el.empresa === "fritz_sport" &&
+        el.priceecommerce > 0 
     );
+    
+  console.log(`✅ Productos válidos después del filtrado: ${productosOrdenadosConPrecio?.length || 0}`);
 
-  if (razonsocial) {
-    return productosOrdenadosConPrecio.filter(
-      (el) =>
-        // obtenerStockEnLima(el.provincias, provincia) > 10 &&
-        el.razonsocial === "fritzsport"
-    );
-  } else {
-    return productosOrdenadosConPrecio;
-  }
+  // Ahora SÍ: aplicar descuento de stock SOLO al stock general según pedidos pagados SOLO a los productos filtrados
+  productosOrdenadosConPrecio = productosOrdenadosConPrecio.map((producto) => {
+    let stockGeneral = producto.stock;
+    if (stockDescontado[producto?.sku]) {
+      // Descontar del stock general
+      const totalDescontado = Object.values(stockDescontado[producto.sku]).reduce((a, b) => a + b, 0);
+      stockGeneral = Math.max(0, stockGeneral - totalDescontado);
+    }
+    return {
+      ...producto,
+      stock: stockGeneral,
+      // tallas: producto.tallas, // No modificar tallas
+    };
+  });
+
+  // (opcional) console.log(productosOrdenadosConPrecio.filter(el=>el.sku == "ID2056")[0]?.tallas);
+
+  // Eliminar productos duplicados por SKU (mantener solo el primero encontrado)
+  const productosUnicos = productosOrdenadosConPrecio.reduce((acc, producto) => {
+    if (!acc.find((p: any) => p.sku === producto.sku)) {
+      acc.push(producto);
+    }
+    return acc;
+  }, [] as any[]);
+
+  console.log(`🎯 Productos únicos finales: ${productosUnicos?.length || 0}`);
+  console.log(`🏁 productosTraidosSistemaFritzSport - Procesamiento completado`);
+  
+  return productosUnicos;
 }
+

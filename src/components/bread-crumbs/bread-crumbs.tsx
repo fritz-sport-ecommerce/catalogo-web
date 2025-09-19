@@ -23,13 +23,13 @@ export function BreadcrumbsDefault({ product }: Props) {
         inicio
       </Link>
       <Link
-        href={`/catalogo?genero=${product?.genero}`}
+        href={`/tienda?genero=${product?.genero}`}
         className="border-b-[1px] border-black text-black  dark:border-white  xl:dark:text-white dark:text-white"
       >
         {product.genero}
       </Link>
       <Link
-        href={`/catalogo?genero=${product.genero}&tipo=${product?.tipo}`}
+        href={`/tienda?genero=${product.genero}&tipo=${product?.tipo}`}
         className="border-b-[1px] border-black text-black dark:border-white xl:dark:text-white dark:text-white"
       >
         {product?.tipo}

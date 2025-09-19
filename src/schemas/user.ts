@@ -6,6 +6,23 @@ const user = {
   type: "document",
   fields: [
     defineField({
+      name: "role",
+      title: "Rol",
+      type: "string",
+      description: "Rol del usuario",
+      options: {
+        list: [
+          { title: "Mayorista", value: "mayorista" },
+          { title: "Call Center", value: "callcenter" },
+          { title: "Admin", value: "admin" },
+          { title: "Usuario", value: "user" }, // opción por defecto
+        ],
+        layout: "radio", // también puedes usar "dropdown"
+      },
+      initialValue: "user", // 👈 por defecto será "user"
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "isAdmin",
       title: "Is Admin",
       type: "boolean",

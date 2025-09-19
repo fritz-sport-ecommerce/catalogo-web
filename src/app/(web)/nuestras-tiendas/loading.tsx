@@ -1,6 +1,6 @@
 export default function LoadingSpinner() {
   return (
-    <div className="p-4 animate-pulse">
+    <div className="p-4   ">
       <div className="flex justify-center flex-col w-full items-center">
         <div className="flex gap-4 mb-4">
           <div className="xl:px-4 px-3 py-2 rounded bg-gray-300 w-32 h-10"></div>

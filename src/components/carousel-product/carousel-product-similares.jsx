@@ -32,56 +32,56 @@ const CarouselProductSimilares = ({ children }) => {
   const dataCategorias = {
     adidas: [
       {
-        img: "https://cdn.sanity.io/images/ibvmpbc1/production/def4074c1b5cfaf8317c95ab9405575f9bc94389-420x640.jpg",
-        url: "/catalogo?coleccion=samba",
+        img: "https://cdn.sanity.io/images/ibvmpbc1/production/9e5542811530ac3747416cf81319ace5662b51b7-420x640.png",
+        url: "/tienda?search=samba",
       },
       {
-        img: "https://cdn.sanity.io/images/ibvmpbc1/production/6116786d1ea4f8d900bdddd3aee0ace7efb031ab-420x640.jpg",
-        url: "/catalogo?coleccion=superstar",
+        img: "https://cdn.sanity.io/images/ibvmpbc1/production/6b27ada316e008eedeb4f5aa4cf48a5782edd446-420x640.png",
+        url: "/tienda?search=superstar",
       },
       {
-        img: "https://cdn.sanity.io/images/ibvmpbc1/production/d7f1f560cecada98d6c195e55c083a19ac1ac4d0-420x640.jpg",
-        url: "/catalogo?coleccion=forum",
+        img: "https://cdn.sanity.io/images/ibvmpbc1/production/c566f60c87eaccd27240d3bbce5266f24c8eed7b-420x640.png",
+        url: "/tienda?search=forum",
       },
       {
-        img: "https://cdn.sanity.io/images/ibvmpbc1/production/12358e578ba6bb168c457f6fe266a51311986ef4-420x640.jpg",
+        img: "https://cdn.sanity.io/images/ibvmpbc1/production/76217c8bec8a10cf4afe730e47a2ef68319f0c0e-420x640.png",
 
-        url: "/catalogo?coleccion=stansmith",
+        url: "/tienda?search=stan-smith",
       },
       {
-        img: "https://cdn.sanity.io/images/ibvmpbc1/production/bc16f1f1b866b4ba40b691fadf050396ff31edf1-420x640.jpg",
-        url: "/catalogo?coleccion=gazelle",
+        img: "https://cdn.sanity.io/images/ibvmpbc1/production/e88af2517f2daf0b02898baf82e3051fed1594bb-420x640.png",
+        url: "/tienda?search=gazelle",
       },
       {
-        img: "https://cdn.sanity.io/images/ibvmpbc1/production/3e2ce05e043c21006791b518f7ea67f7ada6618c-420x640.jpg",
-        url: "/catalogo?coleccion=campus",
+        img: "https://cdn.sanity.io/images/ibvmpbc1/production/260e712d92d913c1bfe16e4d333689cc1bcf3690-420x640.png",
+        url: "/tienda?search=campus",
       },
     ],
     nike: [
       {
         img: "https://cdn.sanity.io/images/ibvmpbc1/production/9110cf611b16d8c338a6a2325868f45816621a5c-420x640.jpg",
-        url: "/catalogo?coleccion=samba",
+        url: "/tienda?search=air-force",
       },
 
       {
         img: "https://cdn.sanity.io/images/ibvmpbc1/production/d53be04fd4c6994dc06b0b03858686ffa5564b27-420x640.jpg",
-        url: "/catalogo?coleccion=campus",
+        url: "/tienda?search=jordan",
       },
       {
         img: "https://cdn.sanity.io/images/ibvmpbc1/production/35861c9edaec560367bc8c1d62d6b02747db28ee-420x640.jpg",
-        url: "/catalogo?coleccion=campus",
+        url: "/tienda?search=dunk",
       },
       {
         img: "https://cdn.sanity.io/images/ibvmpbc1/production/37f0f6ee505f4ecbde2bc9bc875d4245abbc375c-420x640.jpg",
-        url: "/catalogo?coleccion=campus",
+        url: "/tienda?search=airmax",
       },
       {
         img: "https://cdn.sanity.io/images/ibvmpbc1/production/a3e5a4b2b98b4b0f951790f74feec52914b001b9-420x640.jpg",
-        url: "/catalogo?coleccion=campus",
+        url: "/tienda?coleccion=blazer",
       },
     ],
   };
-  console.log(marcaCategoriaDestacada);
+
   const [dataCategoria, setDataCategoria] = useState(dataCategorias.adidas);
   const handlerCategoria = (marca) => {
     switch (marca) {
@@ -107,7 +107,7 @@ const CarouselProductSimilares = ({ children }) => {
         <div className="grid w-full grid-flow-col container mt-5 gap-x-8 ">
           <Button
             onClick={() => handlerCategoria("adidas")}
-            className={`uppercase p-0  hover:text-white rounded-none dark:hover:text-black ${
+            className={`uppercase p-0  hover:text-white rounded-none dark:hover:text-black rounded-lg ${
               marcaCategoriaDestacada === "adidas"
                 ? "bg-black dark:bg-white "
                 : " bg-transparent border-[1px] border-black dark:border-white text-black dark:text-white"
@@ -117,7 +117,7 @@ const CarouselProductSimilares = ({ children }) => {
           </Button>
           <Button
             onClick={() => handlerCategoria("nike")}
-            className={`uppercase p-0  hover:text-white rounded-none dark:hover:text-black  ${
+            className={`uppercase p-0  hover:text-white rounded-none dark:hover:text-black rounded-lg  ${
               marcaCategoriaDestacada === "nike"
                 ? "bg-black dark:bg-white "
                 : " bg-transparent border-[1px] border-black dark:border-white text-black dark:text-white"

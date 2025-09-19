@@ -1,27 +1,46 @@
-"use client"
-import React, { useEffect, useRef, useState } from 'react';
+"use client";
+import React, { useEffect, useState } from "react";
 
-const images: string[] = [
-  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p',
-  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p',
-  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p',
-  'https://images.falabella.com/v3/assets/bltf4ed0b9a176c126e/bltfd7a2eb3b0d90e1c/66e88ff484fac34ddf2ca47a/full-ancho-170924-tv.png?auto=webp&quality=70&width=90p'
-];
+interface InfoBannerProps {
+  bannerTopInfo: {
+    active_banner: boolean;
+    banner_top: string[];
+  };
+}
 
-const InfiniteCarousel: React.FC = () => {
+const InfoBanner: React.FC<InfoBannerProps> = ({ bannerTopInfo }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setCurrentIndex(
+          (prevIndex) => (prevIndex + 1) % bannerTopInfo.banner_top.length
+        );
+        setVisible(true);
+      }, 1000); // Duración de la desaparición
+    }, 5000); // Tiempo que muestra cada mensaje
+
+    return () => clearInterval(interval);
+  }, [bannerTopInfo.banner_top.length]);
+
   return (
-    <div className="relative overflow-hidden w-full max-w-lg mx-auto">
-      <div className="carousel-wrapper">
-        <div className="carousel-inner">
-          {images.concat(images).map((image, i) => (
-            <div key={i} className="carousel-item">
-              <img src={image} alt={`Slide ${i}`} className="w-full h-auto object-cover" />
-            </div>
-          ))}
+    <>
+      {bannerTopInfo.active_banner && (
+        <div className="dark:bg-white bg-black dark:text-black text-white py-2 text-center text-xs font-bold font-sans tracking-normal">
+          <div
+            className={`transition-opacity duration-1000 ${
+              visible ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {bannerTopInfo.banner_top[currentIndex]}
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
-export default InfiniteCarousel;
+export default InfoBanner;

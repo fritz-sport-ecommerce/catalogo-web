@@ -14,7 +14,7 @@ export default function CantidadProduct({ stock, sku }: Props) {
   return (
     <div>
       {cantidadP != 0 && (
-        <div className="text-xs xl:text-sm mt-1 text-red-300">
+        <div className="text-xs xl:text-sm mt-1 text-red-300 min-h-[20px]">
           {" "}
           {cantidadP <= 20 &&
             `Solo ${cantidadP === 1 ? "queda" : "quedan"} ${cantidadP} ${

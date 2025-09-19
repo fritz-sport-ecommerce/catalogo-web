@@ -10,7 +10,7 @@ export async function seedSanityData(data: {
   productos: any;
   comprobante: any;
   id_payer: any;
-  rol_compra:any;
+  rol_compra?: any;
   id_mercado_pago: any;
   nombres: any;
   apellidos: any;
@@ -24,6 +24,9 @@ export async function seedSanityData(data: {
   info_adicional: any;
   ruc: any;
   userId: any;
+  deliveryPrice?: any;
+  descuentoUser?: any;
+  isPrimeraCompra?: any;
 }) {
   const transaction = client.transaction();
 
@@ -37,6 +40,8 @@ export async function seedSanityData(data: {
       category_id: any;
       unit_price: any;
       picture_url: any;
+      almacen_info?: any;
+      almacenes_disponibles?: any[];
     }) => {
       let result = {
         name: el.title,
@@ -44,7 +49,11 @@ export async function seedSanityData(data: {
         sku: el.type,
         talla: el.category_id,
         picture_url: el.picture_url,
-        unit_price: Number(el.unit_price.toFixed(0)),
+        unit_price: Number(el.unit_price.toFixed(2)),
+        // Mantener compatibilidad con almacen_info existente
+        almacen_info: el.almacen_info || null,
+        // Nuevo campo para múltiples almacenes
+        almacenes_disponibles: el.almacenes_disponibles || [],
       };
       return result;
     }
@@ -59,21 +68,24 @@ export async function seedSanityData(data: {
     razon: data.razon,
     id_mercado_pago: data.id_mercado_pago,
     nombres: data.nombres,
-    rol_compra:data.rol_compra,
+    rol_compra: data.rol_compra || "emprendedor",
     apellidos: data.apellidos,
     email: data.email,
     documento: data.documento,
-    cart_total: Number(data.cart_total.toFixed(0)),
+    cart_total: data.deliveryPrice > 0 ? data.cart_total + data.deliveryPrice : Number(data.cart_total.toFixed(2)) ,
     telefono: data.telefono,
     departamento: data.departamento,
     distrito: data.distrito,
-    provincia: data.provincia,
-    comprobante: data.comprobante,
-    direccion: data.direccion,
-    info_adicional: data.info_adicional,
-    ruc: data.ruc,
+    provincia: data?.provincia,
+    comprobante: data?.comprobante,
+    direccion: data?.direccion,
+    info_adicional: data?.info_adicional,
+    ruc: data?.ruc,
     productos: produc,
     userId: data.userId,
+    deliveryPrice: data.deliveryPrice || 0,
+    descuentoUser: data.descuentoUser || 0,
+    isPrimeraCompra: data.isPrimeraCompra || false,
     // description: item.description,
   };
   transaction.createOrReplace(pedidos);

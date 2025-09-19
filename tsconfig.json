@@ -35,6 +35,6 @@
     "src/components/Footer/Footer.jsx",
     "src/app/(web)/exito/page.js",
     "src/components/user-components/user-form-info-cuenta.js"
-, "src/components/promo-image/promo-image.js", "src/components/comunicado/comunicado.js"  ],
+, "src/components/promo-image/promo-image.js", "src/components/comunicado/comunicado.js", "src/components/pagar/pagar.jsx", "src/components/user-components/user-pedidos.js"  ],
   "exclude": ["node_modules"]
 }

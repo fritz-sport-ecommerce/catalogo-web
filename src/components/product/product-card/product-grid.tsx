@@ -43,7 +43,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   filter,
   order,
 }) => {
-  console.log(products);
+
 
   return (
     <div className="flex flex-col w-full">
@@ -63,9 +63,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             {products.map((product, index) => (
               <Product
                 key={index}
-                outlet={outlet}
+              
                 products={product}
-                descuentos={descuentos}
+              
               />
             ))}
           </div>

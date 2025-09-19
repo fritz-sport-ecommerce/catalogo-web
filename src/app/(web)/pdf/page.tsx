@@ -10,6 +10,7 @@ import DetectProvinciaAnalytics from "./DetectProvinciaAnalytics";
 import { Metadata } from "next";
 
 import DescargarPdf from "@/components/pdf/DescargarPdf";
+import { PhoneCall } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Fritz Sport Perú Sitio Web ofical | Zapatillas y ropa deportiva",
@@ -70,7 +71,24 @@ export default async function Page() {
             className="flex pb-24 pt-6"
           >
             {/* Product grid */}
-            <DescargarPdf catalogo={catalogo} />
+            <div className="w-full">
+              <a
+                href="tel:+51983478551"
+                className="mb-4 block rounded-md  text-white dark:text-black p-3 hover:bg-neutral-900 transition"
+                aria-label="Llamar al Call Center"
+              >
+                <div className="flex items-center justify-center gap-2 text-black dark:text-white">
+                  <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
+                    <PhoneCall className="h-4 w-4" />
+                  </span>
+                  <span className="font-medium">Call Center:</span>
+                  <span className="ml-1 underline font-semibold tracking-wide">
+                    Llamar ahora
+                  </span>
+                </div>
+              </a>
+              <DescargarPdf catalogo={catalogo} />
+            </div>
           </section>
         </main>
       </div>

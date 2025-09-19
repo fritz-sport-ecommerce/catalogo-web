@@ -24,19 +24,30 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === 'development',
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    session: async ({ session, token }) => {
-      const userEmail = token.email;
-      const userIdObj = await sanityClient.fetch<{ _id: string }>(
+    // Incluir el rol en el JWT en cada request
+    async jwt({ token }) {
+      if (!token?.email) return token;
+      const userData = await sanityClient.fetch<{ _id: string; role?: string }>(
         `*[_type == "user" && email == $email][0] {
-            _id
+          _id,
+          role
         }`,
-        { email: userEmail }
+        { email: token.email }
       );
+
+      if (userData?._id) token.id = userData._id;
+      if (userData?.role) token.role = userData.role;
+      return token as typeof token & { id?: string; role?: string };
+    },
+
+    // Propagar id y role a la sesión del cliente
+    async session({ session, token }) {
       return {
         ...session,
         user: {
           ...session.user,
-          id: userIdObj._id,
+          id: (token as any).id,
+          role: (token as any).role,
         },
       };
     },

@@ -3,15 +3,14 @@
 import { XCircle } from "lucide-react";
 
 import { SanityProduct } from "@/config/inventory";
-
-import Product from "../product/product_2";
+import Product from "../product/product-card/product";
 
 interface Props {
   products: SanityProduct[];
-  descuentos: any;
+
 }
 
-export function ProductGridTab({ products, descuentos }: Props) {
+export function ProductGridTab({ products }: Props) {
   if (products.length === 0) {
     return (
       <div className="mx-auto grid h-40 w-full place-items-center rounded-md border-2 border-dashed bg-gray-50 py-10 text-center dark:bg-gray-900">
@@ -26,18 +25,11 @@ export function ProductGridTab({ products, descuentos }: Props) {
   }
 
   return (
-    <div className=" grid w-full grid-cols-2 gap-x-4 gap-y-10 xl:container xl:grid xl:grid-cols-3 xl:justify-center xl:gap-4">
+    <div className="grid  w-full grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-3  2xl:grid-cols-4 xl:gap-4 2xl:gap-8">
       {products
         // .filter((el) => el.stock > 0)
         .map((product, i) => (
-          <Product
-            descuentos={descuentos}
-            key={i}
-            generoSku={true}
-            outlet={false}
-            products={product}
-            relacionados={false}
-          />
+          <Product key={i} products={product} />
         ))}
     </div>
   );

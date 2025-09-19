@@ -13,6 +13,10 @@
 // };
 
 import { obtenerProvinciaProducto } from "./obtener-provincia-producto";
+import {
+  obtenerNombreAlmacen,
+  obtenerProvinciaAlmacen,
+} from "./mapear-almacenes";
 
 // type Talla = {
 //   _id: string;
@@ -177,6 +181,13 @@ type Talla = {
   precio_tienda: number;
   precio_emprendedor: number;
   precio_mayorista: number;
+  almacenes: {
+    almacen: string;
+    codigoAlmacen: string;
+    nombreAlmacen: string;
+    provincia: string;
+    stock: number;
+  }[];
 };
 interface Almacen {
   almacen: string;
@@ -247,6 +258,10 @@ export default function (data: Producto[]): ProductoOrdenado[] {
       precio3,
       precio6,
     }) => {
+      // Ignorar stock de ALM0004STO1
+      if (almacenTabla === "ALM0004STO1") {
+        stockDisponible = 0;
+      }
       if (!groupedProducts[grupo]) {
         groupedProducts[grupo] = {
           almacenTabla,
@@ -291,6 +306,26 @@ export default function (data: Producto[]): ProductoOrdenado[] {
           existingTalla.precio_mayorista,
           precio6,
         ]);
+
+        // Agregar o actualizar información del almacén para esta talla
+        // Agrupar por codigoAlmacen únicamente para evitar duplicados
+        const existingAlmacenTalla = existingTalla.almacenes.find(
+          (alm) => alm.codigoAlmacen === codigoAlmacen
+        );
+
+        if (existingAlmacenTalla) {
+          existingAlmacenTalla.stock += stockDisponible;
+          // Actualizar almacenTabla si es necesario (mantener el más reciente)
+          existingAlmacenTalla.almacen = almacenTabla;
+        } else if (stockDisponible > 0) {
+          existingTalla.almacenes.push({
+            almacen: almacenTabla,
+            codigoAlmacen: codigoAlmacen,
+            nombreAlmacen: obtenerNombreAlmacen(codigoAlmacen, almacenTabla),
+            provincia: obtenerProvinciaAlmacen(codigoAlmacen, almacenTabla),
+            stock: stockDisponible,
+          });
+        }
       } else if (stockDisponible > 0) {
         groupedProducts[grupo].tallas.push({
           _id: codigoArticulo,
@@ -300,6 +335,15 @@ export default function (data: Producto[]): ProductoOrdenado[] {
           precio_tienda: precio2,
           precio_emprendedor: precio3,
           precio_mayorista: precio6,
+          almacenes: [
+            {
+              almacen: almacenTabla,
+              codigoAlmacen: codigoAlmacen,
+              nombreAlmacen: obtenerNombreAlmacen(codigoAlmacen, almacenTabla),
+              provincia: obtenerProvinciaAlmacen(codigoAlmacen, almacenTabla),
+              stock: stockDisponible,
+            },
+          ],
         });
         groupedProducts[grupo].tallas_catalogo.add(tallaPeruana);
       }

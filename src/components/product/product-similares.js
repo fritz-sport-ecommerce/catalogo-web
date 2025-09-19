@@ -34,6 +34,7 @@ export default function ProductSimilares({ products, relacionados }) {
       stock,
       descuento,
       preciomanual,
+      popularidad,
       "slug":slug.current
     }`
       )

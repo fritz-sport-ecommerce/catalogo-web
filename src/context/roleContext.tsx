@@ -1,8 +1,8 @@
 import { createContext, Dispatch, SetStateAction } from "react";
 
 type RoleContextType = {
-  userRole: "emprendedor" | "mayorista";
-  setUserRole: Dispatch<SetStateAction<"emprendedor" | "mayorista">>;
+  userRole: "emprendedor" | "mayorista" | "callcenter";
+  setUserRole: Dispatch<SetStateAction<"emprendedor" | "mayorista" | "callcenter">>;
 };
 
 const RoleContext = createContext<RoleContextType>({

@@ -1,4 +1,9 @@
 import React from "react";
+import { Metadata } from "next";
+import { termsMetadata } from "@/config/seo-config";
+
+export const metadata: Metadata = termsMetadata;
+
 export default function index() {
   return (
     <>
@@ -73,33 +78,20 @@ export default function index() {
             <strong>CANCELACIÓN AUTOMÁTICA DE PEDIDOS</strong>
           </p>
           <p>
-            Para las compras realizadas con el método de envío “Recojo en
-            Tienda”, el Cliente o el tercero autorizado tendrá un plazo máximo
+            Para las compras realizadas con el método de envío &ldquo;Recojo en
+            Tienda&rdquo;, el Cliente o el tercero autorizado tendrá un plazo máximo
             de 10 días calendario, contando desde la recepción del mail de
             confirmación que el pedido está en tienda para efectuar el recojo de
             la compra en la tienda seleccionada. Transcurrido este plazo sin que
             el cliente o tercero autorizado haya procedido con el retiro, se
             entenderá que el cliente ha desistido de la compra y por lo cual
-            Fritz Sport procederá a anular dicho pedido y a realizar la
-            devolución del monto pagado a través de una Nota de Crédito, la cual
-            será enviada al correo electrónico registrado en nuestra plataforma.
-            El Cliente acepta expresamente esta anulación y autoriza a Fritz
-            Sport a realizarla, sin restricción alguna y bajo su entera
-            responsabilidad.
+            Fritz Sport procederá a anular dicho pedido y a realizar la devolución
+            del monto pagado a través de una Nota de Crédito, la cual será
+            enviada al correo electrónico registrado en nuestra plataforma. El
+            Cliente acepta expresamente esta anulación y autoriza a Fritz Sport a
+            realizarla, sin restricción alguna y bajo su entera responsabilidad
           </p>
-          <br />
-          <p>
-            El reembolso de la tienda virtual en caso de devolución de dinero se
-            realizará utilizando el mismo método de pago que utilizaste al
-            realizar la compra y puede tomar entre 5 a 7 días hábiles en
-            procesarse o dependiendo de las políticas de tu institución
-            financiera. Esperamos que esta política aclare cualquier duda que
-            puedas tener sobre nuestros precios, disponibilidad y políticas de
-            compra. Si necesitas más información o asistencia, no dudes en
-            ponerte en contacto con nuestro equipo de atención al cliente.
-            Gracias por confiar en nosotros para tus compras en línea.
-          </p>
-          <br />
+
           <p>
             El presente Política de Privacidad establece los términos en que
             Fritz Sport usa y protege la información que es proporcionada por
@@ -113,6 +105,46 @@ export default function index() {
             continuamente esta página para asegurarse que está de acuerdo con
             dichos cambios.
           </p>
+          <p className="my-3 text-xl ">
+            <strong>TRATAMIENTO DE DATOS PERSONALES PARA PUBLICIDAD Y MARKETING</strong>
+          </p>
+          <p>
+            Fritz Sport, en cumplimiento de la Ley de Protección de Datos Personales (Ley N° 29733) y su Reglamento, 
+            informa que sus datos personales serán tratados para las siguientes finalidades:
+          </p>
+          <ul className="list-disc pl-6 my-3 space-y-2">
+            <li>
+              <strong>Marketing Directo:</strong> Envío de información sobre productos, ofertas especiales, 
+              promociones, descuentos y novedades de Fritz Sport a través de correo electrónico, SMS, 
+              WhatsApp y otros medios de comunicación digital.
+            </li>
+            <li>
+              <strong>Personalización de Experiencia:</strong> Análisis de preferencias de compra para 
+              ofrecer productos y servicios más relevantes según sus intereses.
+            </li>
+            <li>
+              <strong>Investigación de Mercado:</strong> Análisis estadístico para mejorar nuestros 
+              productos y servicios, así como para desarrollar nuevas ofertas comerciales.
+            </li>
+            <li>
+              <strong>Fidelización:</strong> Programas de lealtad, recompensas y beneficios exclusivos 
+              para nuestros clientes registrados.
+            </li>
+          </ul>
+          <p>
+            <strong>Base Legal:</strong> El tratamiento de sus datos para estas finalidades se basa en 
+            su consentimiento expreso, que puede ser revocado en cualquier momento.
+          </p>
+          <p>
+            <strong>Conservación:</strong> Sus datos serán conservados mientras mantenga una relación 
+            comercial con nosotros o hasta que revoque su consentimiento.
+          </p>
+          <p>
+            <strong>Derechos:</strong> Puede ejercer sus derechos de acceso, rectificación, cancelación, 
+            oposición y revocación del consentimiento, así como el derecho a la portabilidad de sus datos, 
+            enviando un correo electrónico a nuestra dirección de contacto.
+          </p>
+
           <p className="my-3 text-xl ">
             <strong>Información que es recogida</strong>
           </p>
@@ -144,7 +176,7 @@ export default function index() {
             no exista ningún acceso no autorizado.
           </p>
           <p className="my-3 text-xl ">
-            <strong>Cookies</strong>
+            <strong>Cookies y Tecnologías de Seguimiento</strong>
           </p>
           <p>
             Una cookie se refiere a un fichero que es enviado con la finalidad
@@ -170,6 +202,40 @@ export default function index() {
             configuración de su ordenador para declinar las cookies. Si se
             declinan es posible que no pueda utilizar algunos de nuestros
             servicios.
+          </p>
+          
+          <p className="my-3 text-lg">
+            <strong>Tipos de Cookies que Utilizamos:</strong>
+          </p>
+          <ul className="list-disc pl-6 my-3 space-y-2">
+            <li>
+              <strong>Cookies Esenciales:</strong> Necesarias para el funcionamiento básico del sitio web.
+            </li>
+            <li>
+              <strong>Cookies de Rendimiento:</strong> Nos ayudan a entender cómo interactúan los visitantes con el sitio web.
+            </li>
+            <li>
+              <strong>Cookies de Funcionalidad:</strong> Permiten recordar sus preferencias y personalizar su experiencia.
+            </li>
+            <li>
+              <strong>Cookies de Marketing:</strong> Utilizadas para mostrar anuncios relevantes y medir la efectividad de nuestras campañas publicitarias.
+            </li>
+            <li>
+              <strong>Cookies de Redes Sociales:</strong> Permiten compartir contenido en redes sociales y mostrar contenido personalizado.
+            </li>
+          </ul>
+          
+          <p>
+            <strong>Publicidad Personalizada:</strong> Utilizamos cookies de terceros, incluyendo Google Analytics, 
+            Facebook Pixel y otras herramientas de marketing digital, para mostrarle anuncios relevantes basados 
+            en sus intereses y comportamiento de navegación. Estas cookies también nos ayudan a medir la 
+            efectividad de nuestras campañas publicitarias.
+          </p>
+          
+          <p>
+            <strong>Control de Cookies:</strong> Puede gestionar sus preferencias de cookies a través de la 
+            configuración de su navegador o utilizando nuestro panel de gestión de cookies. Tenga en cuenta 
+            que deshabilitar ciertas cookies puede afectar la funcionalidad del sitio web.
           </p>
           <p className="my-3 text-xl ">
             <strong>Enlaces a Terceros</strong>
@@ -201,6 +267,27 @@ export default function index() {
             personal que es recopilada sin su consentimiento, salvo que sea
             requerido por un juez con un orden judicial.
           </p>
+          
+          <p className="my-3 text-xl ">
+            <strong>REVOCACIÓN DEL CONSENTIMIENTO</strong>
+          </p>
+          <p>
+            Usted puede revocar su consentimiento para el tratamiento de datos personales con fines de marketing 
+            y publicidad en cualquier momento, sin que ello afecte la legalidad del tratamiento basado en el 
+            consentimiento previo a su revocación. Para revocar su consentimiento puede:
+          </p>
+          <ul className="list-disc pl-6 my-3 space-y-2">
+            <li>Enviar un correo electrónico a nuestra dirección de contacto solicitando la revocación.</li>
+            <li>Utilizar el enlace de &ldquo;Cancelar suscripción&rdquo; incluido en todos nuestros correos electrónicos promocionales.</li>
+            <li>Actualizar sus preferencias en su cuenta de usuario en nuestro sitio web.</li>
+            <li>Contactarnos a través de nuestros canales de atención al cliente.</li>
+          </ul>
+          <p>
+            Una vez recibida su solicitud de revocación, procederemos a eliminar sus datos de nuestras bases 
+            de datos de marketing en un plazo máximo de 30 días hábiles, salvo que exista una obligación legal 
+            que requiera conservar dicha información.
+          </p>
+          
           <p className="my-5 text-xl text-[var(--negro)] font-medium">
             Fritz Sport Se reserva el derecho de cambiar los términos de la
             presente Política de Privacidad en cualquier momento.
