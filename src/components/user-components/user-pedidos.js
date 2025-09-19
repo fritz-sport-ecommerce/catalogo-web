@@ -301,7 +301,7 @@ useEffect(() => {
 
       {isPreviewOpen && selectedPedido && (
         <ModalDesk isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
-     <div className="p-6 max-w-5xl w-full   text-black dark:text-white rounded-2xl shadow-lg space-y-6">
+     <div className="p-6 max-w-5xl w-full  bg-white dark:bg-black   text-black dark:text-white rounded-2xl shadow-lg space-y-6">
   {/* Encabezado del pedido */}
   <div className="flex items-center justify-between border-b pb-3 dark:border-neutral-800">
     <div>
@@ -387,7 +387,7 @@ useEffect(() => {
   </div>
 
   {/* Controles */}
-  <div className="flex flex-wrap items-center gap-3">
+  {/* <div className="flex flex-wrap items-center gap-3">
     <div className="inline-flex rounded-lg overflow-hidden border dark:border-neutral-800 shadow-sm">
       <button
         className={`px-3 py-1.5 text-xs font-medium transition ${
@@ -460,7 +460,7 @@ useEffect(() => {
       placeholder="Buscar producto..."
       className="text-xs px-3 py-2 border rounded-lg  dark:border-neutral-800 focus:ring-2 focus:ring-blue-500 outline-none transition"
     />
-  </div>
+  </div> */}
 
   {/* Tabla de productos */}
   <div className="border dark:border-neutral-800 p-4 rounded-xl ">
