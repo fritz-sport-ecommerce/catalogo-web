@@ -1,7 +1,7 @@
 const LoadingSpinner = () => (
   <div>
     {/* Hero/Banner Section */}
-    <section className="bg-gray-200 h-[90vh] md:h-[70vh] lg:h-[80vh] relative flex justify-center animate-pulse">
+    <section className="bg-gray-200 h-[90vh] md:h-[70vh] lg:h-[80vh] relative flex justify-center ">
       <div className="bg-transparent h-8 w-[40%] md:w-[20%] lg:w-[20%] rounded absolute bottom-5 flex items-center justify-around">
         {Array(4)
           .fill(0)
@@ -23,7 +23,7 @@ const LoadingSpinner = () => (
             .map((_, index) => (
               <div
                 key={index}
-                className="bg-transparent shadow-md flex flex-col justify-center items-start px-3 animate-pulse md:hidden"
+                className="bg-transparent shadow-md flex flex-col justify-center items-start px-3  md:hidden"
               >
                 <div className="bg-gray-300 h-[250px] w-full mb-4 rounded"></div>
                 <div className="bg-gray-300 h-6 w-3/4 rounded mb-2"></div>
@@ -36,7 +36,7 @@ const LoadingSpinner = () => (
             .map((_, index) => (
               <div
                 key={index}
-                className="bg-transparent shadow-md flex flex-col justify-center items-start px-3 animate-pulse hidden md:block"
+                className="bg-transparent shadow-md flex flex-col justify-center items-start px-3  hidden md:block"
               >
                 <div className="bg-gray-300 h-[450px]  xl:h-[300px] 2xl:h-[450px] w-full mb-4 rounded"></div>
                 <div className="bg-gray-300 h-6 w-3/4 rounded mb-2"></div>
@@ -48,7 +48,7 @@ const LoadingSpinner = () => (
     </section>
 
     {/* Products Section */}
-    <div className="bg-white h-[300px] md:h-[300px] lg:h-[400px] shadow-md flex flex-col justify-center items-center p-4 animate-pulse"></div>
+    <div className="bg-white h-[300px] md:h-[300px] lg:h-[400px] shadow-md flex flex-col justify-center items-center p-4 "></div>
   </div>
 );
 
