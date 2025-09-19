@@ -1115,8 +1115,8 @@ export default function FormPagar({ tipoEntrega, userInfo, isPrimeraCompra, inva
 
       {/* Order confirmation modal */}
       <ModalDesk isOpen={orderModalOpen} onClose={() => setOrderModalOpen(false)}>
-        <div className="bg-black text-white rounded-xl p-0 overflow-y-auto">
-          <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-black/90 backdrop-blur">
+        <div className="bg-white dark:bg-black text-black dark:text-white rounded-xl p-0 overflow-y-auto">
+          <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 border-b border-neutral-800  backdrop-blur">
             <div>
               <h3 className="text-lg sm:text-xl font-bold">¡Pedido creado con éxito!</h3>
               <p className="text-xs sm:text-sm text-neutral-300">
