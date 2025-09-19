@@ -293,6 +293,7 @@ export default function FormPagar({ tipoEntrega, userInfo, isPrimeraCompra, inva
   }, [itemsToRemove, removeItem]);
 
   const handlesubmit = async () => {
+    setLoadingSuggestions(true);
     // Validar stock y precio antes de pagar
     const skus = [...new Set(items.map((item) => item.objectID))];
     console.log("[DEBUG] SKUs a validar:", skus);
@@ -1174,8 +1175,7 @@ export default function FormPagar({ tipoEntrega, userInfo, isPrimeraCompra, inva
                     <div><span className="text-neutral-400">Tipo: </span>{lastOrder.tipoEntrega}</div>
                     <div><span className="text-neutral-400">Dirección: </span>{lastOrder.direccion || '—'}</div>
                     <div><span className="text-neutral-400">Departamento: </span>{lastOrder.departamento}</div>
-                    <div><span className="text-neutral-400">Provincia: </span>{lastOrder.provincia}</div>
-                    <div><span className="text-neutral-400">Distrito: </span>{lastOrder.distrito}</div>
+          
                     {lastOrder.adicional && <div><span className="text-neutral-400">Adicional: </span>{lastOrder.adicional}</div>}
                   </div>
                 </div>
