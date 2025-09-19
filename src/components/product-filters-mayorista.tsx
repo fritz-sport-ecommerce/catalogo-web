@@ -65,7 +65,7 @@ export function ProductFiltersMayorista({ mayorista }: { mayorista: boolean }) {
   const hasActiveFilters = selectedLinea !== null;
 
   return (
-    <div className="space-y-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800 shadow-lg">
+    <div className="sticky top-16  space-y-4 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800 shadow-lg">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-bold text-blue-800 dark:text-blue-200 flex items-center gap-2">
           <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
