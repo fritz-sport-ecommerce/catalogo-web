@@ -1,7 +1,7 @@
 
 export default function LoadingSpinner() {
   return (
-    <main className="w-full px-6 animate-pulse">
+    <main className="w-full px-6 ">
       <section aria-labelledby="products-heading" className="flex pb-24 pt-6">
         <div className="flex justify-center w-full">
           <div className="grid md:gap-x-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-x-10 gap-y-5 w-full h-full">
