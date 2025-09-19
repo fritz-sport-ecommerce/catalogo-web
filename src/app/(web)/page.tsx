@@ -1,5 +1,5 @@
 // export const fetchCache = "force-no-store";
-export const revalidate = 10; // seconds
+// export const revalidate = 10; // seconds
 // export const dynamic = "force-dynamic";
 import { Metadata } from "next";
 import { client } from "@/sanity/lib/client";
