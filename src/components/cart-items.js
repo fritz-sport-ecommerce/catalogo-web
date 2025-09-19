@@ -15,7 +15,7 @@ import RoleContext from "@/context/roleContext";
 export function CartItems() {
   const [clientState, setClientState] = useState(false);
   const { toast } = useToast();
-  const { items, removeItem } = useCart();
+  const { items, removeItem, updateItem } = useCart();
   const { userRole } = useContext(RoleContext);
   const [invalidItems, setInvalidItems] = useState({}); // {id: {reason, newPrice}}
   const [itemsToRemove, setItemsToRemove] = useState([]); // [{id, delay}]
@@ -139,6 +139,15 @@ export function CartItems() {
     }).format(price);
   };
 
+  const handleSelectAlmacen = (cartItem, codigoAlmacen) => {
+    if (!cartItem?.almacenes_disponibles) return;
+    const selected = cartItem.almacenes_disponibles.find(
+      (o) => String(o.codigo_almacen) === String(codigoAlmacen)
+    );
+    updateItem(cartItem.id, { almacen_seleccionado: selected || null });
+    toast({ title: "Almacén actualizado", description: selected ? `${selected.nombre_almacen} (${selected.provincia})` : "Sin selección" });
+  };
+
   return (
     <>
       {clientState && (
@@ -219,7 +228,39 @@ export function CartItems() {
                               {el.quantity}
                             </span>
                           </div>
+                          {Array.isArray(el.almacenes_disponibles) && el.almacenes_disponibles.length > 0 && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-gray-500 dark:text-gray-400">Almacén:</span>
+                              {el.almacen_seleccionado ? (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300">
+                                  {el.almacen_seleccionado.nombre_almacen} ({el.almacen_seleccionado.provincia})
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300">
+                                  Por definir
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
+                        {/* Selector de almacén si hay múltiples opciones */}
+                        {Array.isArray(el.almacenes_disponibles) && el.almacenes_disponibles.length > 0 && (
+                          <div className="mt-3">
+                            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Cambiar almacén</label>
+                            <select
+                              value={el.almacen_seleccionado?.codigo_almacen || ''}
+                              onChange={(e) => handleSelectAlmacen(el, e.target.value)}
+                              className="w-full max-w-xs border rounded-md px-2 py-1 text-xs bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700"
+                            >
+                              <option value="">{el.almacenes_disponibles.length > 1 ? 'Elige un almacén' : 'Único almacén'}</option>
+                              {el.almacenes_disponibles.map((o) => (
+                                <option key={o.codigo_almacen} value={o.codigo_almacen}>
+                                  {o.nombre_almacen} ({o.provincia}) · Stock: {o.stock_disponible}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
                       </div>
 
                       {/* Botón eliminar */}

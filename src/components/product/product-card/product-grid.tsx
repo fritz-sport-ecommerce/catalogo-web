@@ -59,7 +59,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           {/* {verStart != 0 && ( */}
           {/* {loading && <Loading />} */}
           {/* )} */}
-          <div className="grid grid-cols-1 gap-x-6 gap-y-10 xl:gap-x-2 xl: 2xl:w-full xl:mx-auto sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 lg:gap-x-8">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 xl:gap-x-2 xl: 2xl:w-full xl:mx-auto sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 lg:gap-x-8">
             {products.map((product, index) => (
               <Product
                 key={index}

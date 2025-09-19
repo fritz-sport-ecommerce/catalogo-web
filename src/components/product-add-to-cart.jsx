@@ -32,6 +32,7 @@ export default function ProductAddToCart({ product }) {
   const [cliente, setCliente] = useState(false);
   const [productoConStock, setProductoConStock] = useState(product);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAlmacen, setSelectedAlmacen] = useState(null);
 
   // Efecto para manejar la clase CSS cuando el modal está abierto
   useEffect(() => {
@@ -154,6 +155,7 @@ export default function ProductAddToCart({ product }) {
   const selectTalla = (talla, _id, stock) => {
     setSelectSize({ talla, _id, stock });
     setActiveAddProduct(false);
+    setSelectedAlmacen(null);
   };
 
   // add to cart con validación final (consulta la API solo aquí)
@@ -245,6 +247,20 @@ export default function ProductAddToCart({ product }) {
         almacenesDisponibles = Array.from(almacenesAgrupados.values());
       }
 
+      // Si hay múltiples almacenes, requerir selección; si hay uno, asignarlo por defecto
+      let almacenSeleccionadoObj = selectedAlmacen;
+      if (almacenesDisponibles.length === 1) {
+        almacenSeleccionadoObj = almacenesDisponibles[0];
+      }
+      if (almacenesDisponibles.length > 1 && !almacenSeleccionadoObj) {
+        setLoadingAdd(false);
+        toast({
+          title: "Selecciona un almacén",
+          description: "Elige el almacén de donde deseas despachar esta talla.",
+        });
+        return;
+      }
+
       // Agrega al carrito con id único por talla
       addItem({
         id: `${product.sku}-${selectSize._id}`,
@@ -265,6 +281,7 @@ export default function ProductAddToCart({ product }) {
         slug: product.slug,
         // Información de almacenes disponibles
         almacenes_disponibles: almacenesDisponibles,
+        almacen_seleccionado: almacenSeleccionadoObj || null,
       });
       // document.body.style.overflow = "hidden";
       // Mostrar el modal de éxito en lugar del toast
@@ -369,6 +386,55 @@ export default function ProductAddToCart({ product }) {
             className="w-full"
           />
         </div>
+      )}
+
+      {/* Selección de almacén para la talla elegida */}
+      {selectSize.talla && Array.isArray(stockTotalApi) && (
+        (() => {
+          const tallaSel = stockTotalApi.find((t) => t.talla === selectSize.talla);
+          const almacenes = (tallaSel?.almacenes || []).filter((a) => a.stock > 0);
+          // Agrupar como en la lógica de addToCart
+          const agrupados = new Map();
+          almacenes.forEach((alm) => {
+            if (agrupados.has(alm.codigoAlmacen)) {
+              const existent = agrupados.get(alm.codigoAlmacen);
+              existent.stock_disponible += alm.stock;
+            } else {
+              agrupados.set(alm.codigoAlmacen, {
+                codigo_almacen: alm.codigoAlmacen,
+                nombre_almacen: alm.nombreAlmacen,
+                almacen_tabla: alm.almacen,
+                provincia: alm.provincia,
+                stock_disponible: alm.stock,
+              });
+            }
+          });
+          const opciones = Array.from(agrupados.values());
+          if (opciones.length === 0) return null;
+          return (
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                Selecciona almacén
+              </label>
+              <select
+                value={selectedAlmacen?.codigo_almacen || ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const obj = opciones.find((o) => String(o.codigo_almacen) === String(val));
+                  setSelectedAlmacen(obj || null);
+                }}
+                className="w-full border rounded-md px-3 py-2 bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-sm"
+              >
+                <option value="">{opciones.length > 1 ? 'Elige un almacén' : 'Único almacén disponible'}</option>
+                {opciones.map((o) => (
+                  <option key={o.codigo_almacen} value={o.codigo_almacen}>
+                    {o.nombre_almacen} ({o.provincia}) · Stock: {o.stock_disponible}
+                  </option>
+                ))}
+              </select>
+            </div>
+          );
+        })()
       )}
       
       {stockDisponibleTalla > 0 && stockDisponibleTalla <= 10 && (
