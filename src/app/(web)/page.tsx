@@ -108,7 +108,7 @@ export default async function Page({ searchParams }: Props) {
           </div>
           <CarouselProduct products={ProductosLinea} />
           <div className="flex justify-center w-full">
-            <Link href={"/catalogo?razonsocial=fritzsport"}>
+            <Link href={"/tienda?razonsocial=fritzsport"}>
               <Button className="rounded-none">VER MAS</Button>
             </Link>
           </div>
@@ -119,7 +119,7 @@ export default async function Page({ searchParams }: Props) {
           </div>
           <CarouselProduct products={ProductosLiquidacion} />
           <div className="flex justify-center w-full">
-            <Link href={"/catalogo?razonsocial=fritzduran&marca=adidas"}>
+            <Link href={"/tienda?razonsocial=fritzduran&marca=adidas"}>
               <Button className="rounded-none">VER MAS</Button>
             </Link>
           </div>

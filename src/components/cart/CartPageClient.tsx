@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CartItems } from "@/components/cart-items";
 import { CartSummary } from "@/components/cart-summary";
 import AccesoriosCarrito from "@/components/carrito/accesorios-carrito";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { QuoteDocument } from "@/components/quote-pdf";
+
 import { useCart } from "react-use-cart";
 
 export default function CartPageClient() {
