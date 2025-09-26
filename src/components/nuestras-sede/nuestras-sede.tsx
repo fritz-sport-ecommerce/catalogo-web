@@ -292,7 +292,7 @@ const TiendasComponent: React.FC<Props> = ({
               Horarios de Atención
             </h4>
             {selectedSedeName && (
-              <p className="text-black/70 dark:text-white/70 mb-4">
+              <p className="text-black/70 text-white mb-4">
                 {selectedSedeName}
               </p>
             )}
