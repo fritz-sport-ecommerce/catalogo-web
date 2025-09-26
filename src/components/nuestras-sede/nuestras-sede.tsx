@@ -288,7 +288,7 @@ const TiendasComponent: React.FC<Props> = ({
             <div className="w-16 h-16 bg-black dark:bg-white rounded-full flex items-center justify-center mx-auto mb-6">
               <Clock className="h-8 w-8 text-white dark:text-black" />
             </div>
-            <h4 className="text-2xl font-bold text-black dark:text-white mb-2">
+            <h4 className="text-2xl font-bold text-black text-white mb-2">
               Horarios de Atención
             </h4>
             {selectedSedeName && (
