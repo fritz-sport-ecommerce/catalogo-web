@@ -80,7 +80,7 @@ export default function VerifyForm() {
       </form>
 
       <div className="mb-4 text-xs text-gray-500 dark:text-zinc-400">
-        Formato válido: 8 caracteres A-Z y 0-9. El código es de un solo uso y expira en 1 minuto.
+        Formato válido: 8 caracteres A-Z y 0-9. El código es de un solo uso y expira en 5 minutos.
       </div>
 
       {error && (

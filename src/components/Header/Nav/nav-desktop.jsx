@@ -231,340 +231,340 @@ const dataHeader = {
         },
       ],
     },
-    {
-      id: "tienda",
-      titulo: "Tienda",
-      url: "/tienda",
-      infoNav: [
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Fritz Sport",
-              url: "/tienda?marca=fritzsport",
-            },
-            // {
-            //   id: "35",
-            //   title: "Fritz Gato",
-            //   url: "/tienda?search=zapatillas%20fritz",
-            // },
+    // {
+    //   id: "tienda",
+    //   titulo: "Tienda",
+    //   url: "/tienda",
+    //   infoNav: [
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Fritz Sport",
+    //           url: "/tienda?marca=fritzsport",
+    //         },
+    //         // {
+    //         //   id: "35",
+    //         //   title: "Fritz Gato",
+    //         //   url: "/tienda?search=zapatillas%20fritz",
+    //         // },
 
 
-            // {
-            //   id: "35",
-            //   title: "Fritz Peloteras",
-            //   url: "/tienda?search=peloteras%20fritz",
-            // },
-          ],
+    //         // {
+    //         //   id: "35",
+    //         //   title: "Fritz Peloteras",
+    //         //   url: "/tienda?search=peloteras%20fritz",
+    //         // },
+    //       ],
       
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Adidas linea",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas",
-            },
-            {
-              id: "35",
-              title: "Adidas linea Mujer",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=mujer",
-            },
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea Mujer",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Adidas linea Hombre",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Adidas linea Niños",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=niños",
-            },
-          ],
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea Hombre",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea Niños",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=niños",
+    //         },
+    //       ],
       
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Adidas liquidación",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas",
-            },
-            {
-              id: "35",
-              title: "Adidas liquidación Mujer",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=mujer",
-            },
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación Mujer",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Adidas liquidación Hombre",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Adidas liquidación Niños",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=niños",
-            },
-          ],
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación Hombre",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación Niños",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=niños",
+    //         },
+    //       ],
       
-        },
+    //     },
 
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Nike linea",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike",
-            },
-            {
-              id: "35",
-              title: "Nike linea Mujer",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=mujer",
-            },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Nike linea",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Nike linea Mujer",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Nike linea Hombre",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Nike linea Niños",
-              url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=niños",
-            },
-          ],
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Reebok linea",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok",
-            },
-            {
-              id: "35",
-              title: "Reebok linea Mujer",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=mujer",
-            },
+    //         {
+    //           id: "35",
+    //           title: "Nike linea Hombre",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Nike linea Niños",
+    //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=niños",
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea Mujer",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Reebok linea Hombre",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Reebok linea Niños",
-              url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=niños",
-            },
-          ],
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Accesorios",
-              url: "/tienda?tipoproducto=catalogo&tipo=accesorios",
-            },
-            {
-              id: "35",
-              title: "Ropa",
-              url: "/tienda?tipoproducto=catalogo&tipo=ropa",
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea Hombre",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea Niños",
+    //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=niños",
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Accesorios",
+    //           url: "/tienda?tipoproducto=catalogo&tipo=accesorios",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Ropa",
+    //           url: "/tienda?tipoproducto=catalogo&tipo=ropa",
 
-            },
+    //         },
 
-            {
-              id: "35",
-              title: "Ropa Hombre",
-              url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=hombre",
+    //         {
+    //           id: "35",
+    //           title: "Ropa Hombre",
+    //           url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=hombre",
 
-            },
-            {
-              id: "35",
-              title: "Ropa Mujer",
-              url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=mujer",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Ropa Mujer",
+    //           url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=mujer",
 
-            },
-            {
-              id: "35",
-              title: "Ropa Niños",
-              url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=niños",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Ropa Niños",
+    //           url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=niños",
 
-            },
+    //         },
             
-          ],
-        },
-      ],
-    },
-    {
-      id: "tienda-Mayorista",
-      titulo: "Tienda Mayorista",
-      url: "/tienda-mayorista",
-      infoNav: [
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Fritz Sport",
-              url: "/tienda-mayorista?tipoproducto=catalogo&marca=fritzsport",
-            },
-            // {
-            //   id: "35",
-            //   title: "Fritz Gato",
-            //   url: "/tienda-mayorista?search=zapatillas%20fritz",
-            // },
+    //       ],
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: "tienda-Mayorista",
+    //   titulo: "Tienda Mayorista",
+    //   url: "/tienda-mayorista",
+    //   infoNav: [
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Fritz Sport",
+    //           url: "/tienda-mayorista?tipoproducto=catalogo&marca=fritzsport",
+    //         },
+    //         // {
+    //         //   id: "35",
+    //         //   title: "Fritz Gato",
+    //         //   url: "/tienda-mayorista?search=zapatillas%20fritz",
+    //         // },
 
 
-            // {
-            //   id: "35",
-            //   title: "Fritz Peloteras",
-            //   url: "/tienda-mayorista?search=peloteras%20fritz",
-            // },
-          ],
+    //         // {
+    //         //   id: "35",
+    //         //   title: "Fritz Peloteras",
+    //         //   url: "/tienda-mayorista?search=peloteras%20fritz",
+    //         // },
+    //       ],
       
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Adidas linea",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas",
-            },
-            {
-              id: "35",
-              title: "Adidas linea Mujer",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=mujer",
-            },
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea Mujer",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Adidas linea Hombre",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Adidas linea Niños",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=niños",
-            },
-          ],
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea Hombre",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas linea Niños",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=niños",
+    //         },
+    //       ],
       
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Adidas liquidación",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas",
-            },
-            {
-              id: "35",
-              title: "Adidas liquidación Mujer",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=mujer",
-            },
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación Mujer",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Adidas liquidación Hombre",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Adidas liquidación Niños",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=niños",
-            },
-          ],
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación Hombre",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Adidas liquidación Niños",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=niños",
+    //         },
+    //       ],
       
-        },
+    //     },
 
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Nike linea",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike",
-            },
-            {
-              id: "35",
-              title: "Nike linea Mujer",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=mujer",
-            },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Nike linea",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Nike linea Mujer",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Nike linea Hombre",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Nike linea Niños",
-              url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=niños",
-            },
-          ],
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Reebok linea",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok",
-            },
-            {
-              id: "35",
-              title: "Reebok linea Mujer",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=mujer",
-            },
+    //         {
+    //           id: "35",
+    //           title: "Nike linea Hombre",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Nike linea Niños",
+    //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=nike&genero=niños",
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea Mujer",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=mujer",
+    //         },
 
-            {
-              id: "35",
-              title: "Reebok linea Hombre",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=hombre",
-            },
-            {
-              id: "35",
-              title: "Reebok linea Niños",
-              url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=niños",
-            },
-          ],
-        },
-        {
-          categoria: [
-            {
-              id: "35",
-              title: "Accesorios",
-              url: "/tienda-mayorista?tipoproducto=catalogo&tipo=accesorios",
-            },
-            {
-              id: "35",
-              title: "Ropa",
-              url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa",
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea Hombre",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=hombre",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Reebok linea Niños",
+    //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=reebok&genero=niños",
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       categoria: [
+    //         {
+    //           id: "35",
+    //           title: "Accesorios",
+    //           url: "/tienda-mayorista?tipoproducto=catalogo&tipo=accesorios",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Ropa",
+    //           url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa",
 
-            },
+    //         },
 
-            {
-              id: "35",
-              title: "Ropa Hombre",
-              url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=hombre",
+    //         {
+    //           id: "35",
+    //           title: "Ropa Hombre",
+    //           url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=hombre",
 
-            },
-            {
-              id: "35",
-              title: "Ropa Mujer",
-              url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=mujer",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Ropa Mujer",
+    //           url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=mujer",
 
-            },
-            {
-              id: "35",
-              title: "Ropa Niños",
-              url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=niños",
+    //         },
+    //         {
+    //           id: "35",
+    //           title: "Ropa Niños",
+    //           url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=niños",
 
-            },
+    //         },
             
-          ],
-        },
-      ],
-    },
+    //       ],
+    //     },
+    //   ],
+    // },
   
     // {
     //   id: "colections",

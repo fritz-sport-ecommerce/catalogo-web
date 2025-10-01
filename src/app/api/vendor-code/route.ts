@@ -26,7 +26,8 @@ export async function POST() {
   }
 
   const code = generateCode(8);
-  const expiresAt = new Date(Date.now() + 1 * 60 * 1000).toISOString();
+  // Set expiry to 5 minutes
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
   try {
     // 1) Leer códigos actuales para limpiar expirados
