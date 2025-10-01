@@ -18,6 +18,9 @@ const SidebarContent = (props) => {
     onToggle,
   } = props;
   const { data: session } = useSession();
+  const role = session?.user?.role;
+  const canGenerate = ["admin", "callcenter", "mayorista", "emprendedor"].includes(role || "");
+  const isUserOnly = role === 'user';
   return (
     <div {...sidebarProps}>
       <div className="sidebar-main-content sidebar-parent  bg-white text-lg font-semibold dark:bg-black">
@@ -93,6 +96,25 @@ const SidebarContent = (props) => {
                 </button>
               </li>
             </a> */}
+          </ul>
+          {/* Enlaces adicionales */}
+          <ul className="mt-3 border-t pt-3">
+            <Link href="/verificar-vendedor">
+              <li onClick={() => onToggle(false)}>
+                <button className="flex-align-start h-full">
+                  <span>Verificar vendedor</span>
+                </button>
+              </li>
+            </Link>
+            {canGenerate && (
+              <Link href="/generar-codigo-vendedor">
+                <li onClick={() => onToggle(false)}>
+                  <button className="flex-align-start h-full">
+                    <span>Generar código</span>
+                  </button>
+                </li>
+              </Link>
+            )}
           </ul>
         </div>
         {/* session */}

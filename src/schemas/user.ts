@@ -2,9 +2,10 @@ import { defineField } from "sanity";
 
 const user = {
   name: "user",
-  title: "user",
+  title: "User",
   type: "document",
   fields: [
+    // Rol obligatorio
     defineField({
       name: "role",
       title: "Rol",
@@ -12,16 +13,19 @@ const user = {
       description: "Rol del usuario",
       options: {
         list: [
-          { title: "Mayorista", value: "mayorista" },
+          { title: "Vendedor Mayorista", value: "mayorista" },
           { title: "Call Center", value: "callcenter" },
+          { title: "Vendedor Emprendedor", value: "emprendedor" },
           { title: "Admin", value: "admin" },
-          { title: "Usuario", value: "user" }, // opción por defecto
+          { title: "Usuario", value: "user" }, // default
         ],
-        layout: "radio", // también puedes usar "dropdown"
+        layout: "radio",
       },
-      initialValue: "user", // 👈 por defecto será "user"
+      initialValue: "user",
       validation: (Rule) => Rule.required(),
     }),
+
+    // Flags
     defineField({
       name: "isAdmin",
       title: "Is Admin",
@@ -29,77 +33,107 @@ const user = {
       description: "Check if the user is admin",
       initialValue: false,
       validation: (Rule) => Rule.required(),
-      //   readOnly: true,
-      //   hidden: true,
     }),
     defineField({
       name: "newuser",
-       type: 'boolean',
-      title: "nuevo usuario",
-      // initialValue:true,
+      type: "boolean",
+      title: "Nuevo usuario",
+      initialValue: true,
     }),
-    
+
+    // Datos personales básicos
     defineField({
       name: "name",
-      title: "Name",
+      title: "Nombres y Apellidos",
       type: "string",
-      description: "Name of the user",
-      readOnly: true,
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "image",
-      title: "Image",
-      type: "url",
-    }),
-    defineField({
-      name: "password",
+      name: "apellidos",
       type: "string",
-      hidden: true,
+      title: "Apellidos",
     }),
     defineField({
-      title: "Intereses Sku",
-      name: "intereses",
-      type: "array",
-      of: [{ type: "string" }],
+      name: "documento",
+      type: "string",
+      title: "N° DNI",
     }),
-
+    defineField({
+      name: "fechaNacimiento",
+      type: "date",
+      title: "Fecha de Nacimiento",
+    }),
+    defineField({
+      name: "telefono",
+      type: "string",
+      title: "N° Celular",
+    }),
     defineField({
       name: "email",
       type: "string",
       title: "Email",
     }),
 
+    // Imagen de perfil
     defineField({
-      name: "apellidos",
+      name: "image",
+      title: "Imagen del Usuario",
+      type: "url",
+    }),
+
+    // 🔽 Razón social como select
+    defineField({
+      name: "razonSocial",
+      title: "Razón Social (Vendedor)",
       type: "string",
-      title: "Apellido",
+      options: {
+        list: [
+          { title: "Fritz Sport", value: "fritz_sport" },
+          { title: "Fritz Durand", value: "fritz_durand" },
+          { title: "Alexander Skate", value: "alexander" },
+        ],
+        layout: "dropdown",
+      },
+    }),
+
+    // 🔽 Sede con lista predefinida
+    defineField({
+      name: "sede",
+      title: "Sede",
+      type: "string",
+      options: {
+        list: [
+          { title: "Huánuco", value: "huanuco" },
+          { title: "Iquitos", value: "iquitos" },
+          { title: "Grau", value: "grau" },
+          { title: "Los Olivos", value: "losolivos" },
+          { title: "Tumbes", value: "tumbes" },
+        ],
+        layout: "dropdown",
+      },
     }),
 
     defineField({
-      name: "telefono",
-      type: "string",
-      title: "Telefono",
+      name: "fechaIngreso",
+      type: "date",
+      title: "Fecha de Ingreso",
     }),
     defineField({
-      name: "documento",
+      name: "area",
       type: "string",
-      title: "Documento",
+      title: "Área",
     }),
+    defineField({
+      name: "cargo",
+      type: "string",
+      title: "Cargo",
+    }),
+
+    // Datos de ubicación
     defineField({
       name: "direccion",
       type: "string",
-      title: "direccion",
-    }),
-    defineField({
-      name: "infadi",
-      type: "string",
-      title: "Información Addicional",
-    }),
-    defineField({
-      name: "factura",
-      type: "string",
-      title: "Factura",
+      title: "Dirección",
     }),
     defineField({
       name: "departamento",
@@ -116,6 +150,31 @@ const user = {
       type: "string",
       title: "Distrito",
     }),
+
+    // Información extra
+    defineField({
+      name: "infadi",
+      type: "string",
+      title: "Información Adicional",
+    }),
+    defineField({
+      name: "factura",
+      type: "string",
+      title: "Factura",
+    }),
+    defineField({
+      title: "Intereses Sku",
+      name: "intereses",
+      type: "array",
+      of: [{ type: "string" }],
+    }),
+
+    // Metadata interna
+    defineField({
+      name: "password",
+      type: "string",
+      hidden: true,
+    }),
     defineField({
       name: "emailVerified",
       type: "datetime",
@@ -125,12 +184,30 @@ const user = {
       name: "about",
       title: "About",
       type: "text",
-      description: "A brief dsecription about the user",
+      description: "Breve descripción del usuario",
+    }),
+    // Códigos de verificación temporales simultáneos (cada uno vence en 15 min)
+    defineField({
+      name: "verificationCodes",
+      title: "Códigos de verificación",
+      type: "array",
+      hidden: true,
+      of: [
+        {
+          type: "object",
+          name: "vendorVerification",
+          fields: [
+            { name: "code", title: "Código", type: "string" },
+            { name: "expiresAt", title: "Expira el", type: "datetime" },
+          ],
+        },
+      ],
     }),
   ],
   initialValue: {
-    newuser: true
-  }
+    newuser: true,
+    role: "user",
+  },
 };
 
 export default user;

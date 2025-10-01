@@ -26,6 +26,8 @@ export default function NavMenuDesktop({
   const { data: session } = useSession();
   const role = (session as any)?.user?.role as string | undefined;
   const hasAccess = role === "admin" || role === "callcenter";
+  const canGenerate = ["admin", "callcenter", "mayorista", "emprendedor"].includes(role || "");
+  const isUserOnly = role === "user"; // ocultar enlaces si es rol 'user'
 
   const isProtectedPath = (url: string) => {
     try {
@@ -42,11 +44,39 @@ export default function NavMenuDesktop({
     );
   };
 
-  const items = (dataHeader?.menuSubmenu || []).filter((el) => {
+  const baseItems = (dataHeader?.menuSubmenu || []).filter((el) => {
     // Si es una ruta protegida, solo mostrarla si tiene rol válido
     if (isProtectedPath(el.url)) {
       return hasAccess;
     }
+    // Ocultar explícitamente 'generar-codigo-vendedor' si no tiene rol
+    const url = el.url || '';
+    const isGenerate = url === '/generar-codigo-vendedor' || url.startsWith('/generar-codigo-vendedor');
+    const isVerify = url === '/verificar-vendedor' || url.startsWith('/verificar-vendedor');
+    // Ocultar 'generar' si es rol 'user' o no tiene rol permitido
+    if (isUserOnly && isGenerate) return false;
+    // Ocultar 'generar' si no tiene rol permitido
+    if (isGenerate && !canGenerate) return false;
+    // 'verificar' visible para todos (incluye rol 'user' y no autenticados)
+    if (isVerify) return true;
+    return true;
+  });
+
+  // Items adicionales controlados por rol
+  const extraItems: { id: string; titulo: string; url: string }[] = [];
+  // Público: Verificar vendedor (visible para todos, incluso rol 'user' y no autenticados)
+  extraItems.push({ id: 'verificar-vendedor', titulo: 'VERIFICAR VENDEDOR', url: '/verificar-vendedor' });
+  // Protegido por rol: Generar código
+  if (canGenerate) {
+    extraItems.push({ id: 'generar-codigo', titulo: 'GENERAR CÓDIGO', url: '/generar-codigo-vendedor' });
+  }
+
+  // Evitar duplicados por si ya viene en dataHeader
+  const seen = new Set<string>();
+  const items = [...baseItems, ...extraItems].filter((it) => {
+    const key = `${it.url}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
     return true;
   });
 

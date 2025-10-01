@@ -32,7 +32,9 @@ export async function middleware(req: NextRequest) {
       !url.includes("/tyc") &&
       !url.includes("/pyp") && 
       !url.includes("/libro-reclamaciones-virtual") && 
-      !url.includes("/politica-de-cambios") 
+      !url.includes("/politica-de-cambios") &&
+      // No bloquear rutas de API (por ejemplo, /api/vendor-code) en modo mantenimiento
+      !url.includes("/api")
     ) {
       const redirectUrl = new URL("/mantenimiento", req.url);
       return NextResponse.redirect(redirectUrl);
@@ -93,20 +95,28 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/mantenimiento") ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/api/auth") || 
-    
+    // Tratar cualquier ruta de API como pública a efectos de middleware,
+    // para no interferir con las respuestas JSON/redirects propios de las APIs
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/verificar-vendedor") ||
       pathname.startsWith("/users");
 
   const hasValidRole = effectiveRole === "callcenter" || effectiveRole === "admin";
-  if (isAuthenticated && !hasValidRole && !isPublicPath) {
-    return NextResponse.redirect(new URL("/pdf", req.url));
+  if (isAuthenticated && !isPublicPath) {
+    // No bloquear aquí '/generar-codigo-vendedor'; se validará más abajo con su propia whitelist
+    if (pathname.startsWith("/generar-codigo-vendedor")) {
+      // pasar al siguiente bloque
+    } else if (!hasValidRole) {
+      return NextResponse.redirect(new URL("/pdf", req.url));
+    }
   }
 
   const needsProtection =
     pathname.startsWith("/tienda") ||
     pathname.startsWith("/tienda-mayorista") ||
     pathname.startsWith("/pagar") ||
-    pathname.startsWith("/carrito") 
-    // pathname.startsWith("/users");
+    pathname.startsWith("/carrito") ||
+    pathname.startsWith("/generar-codigo-vendedor");
 
   if (needsProtection) {
     if (!isAuthenticated) {
@@ -114,9 +124,18 @@ export async function middleware(req: NextRequest) {
     }
     // El rol ya fue refrescado más arriba cuando isAuthenticated
 
-    const hasAccess = effectiveRole === "callcenter" || effectiveRole === "admin";
-    if (!hasAccess) {
-      return NextResponse.redirect(new URL("/pdf", req.url));
+    // Rutas protegidas: validar rol por ruta
+    if (pathname.startsWith("/generar-codigo-vendedor")) {
+      const allowed = ["admin", "callcenter", "mayorista", "emprendedor"];
+      const hasAccess = allowed.includes(effectiveRole || "");
+      if (!hasAccess) {
+        return NextResponse.redirect(new URL("/pdf", req.url));
+      }
+    } else {
+      const hasAccess = effectiveRole === "callcenter" || effectiveRole === "admin";
+      if (!hasAccess) {
+        return NextResponse.redirect(new URL("/pdf", req.url));
+      }
     }
   }
 
