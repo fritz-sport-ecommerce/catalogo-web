@@ -57,7 +57,7 @@ export default function GenerarCodigoVendedorPage() {
     setSeenCurrentCodeActive(false);
     setGeneratedAt(null);
     try {
-      const res = await fetch('http://localhost:3000/api/vendor-code', { method: 'POST' });
+      const res = await fetch('https://www.fritzsportcatalogo.pe/api/vendor-code', { method: 'POST' });
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || 'Error al generar código');
@@ -133,7 +133,7 @@ export default function GenerarCodigoVendedorPage() {
     if (!code || !expiresAt || verifiedNotice) return;
     let es: EventSource | null = null;
     try {
-      es = new EventSource('http://localhost:3000/api/vendor-code/events');
+      es = new EventSource('https://www.fritzsportcatalogo.pe/api/vendor-code/events');
       es.addEventListener('ready', () => {
         try { console.log('[SSE] connected'); } catch {}
       });
