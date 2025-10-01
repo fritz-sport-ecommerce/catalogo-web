@@ -126,14 +126,14 @@ export default function VerifyForm() {
             colSpan
           />
           {/* <InfoItem label="N° DNI" value={vendor.documento} /> */}
-          <InfoItem
+          {/* <InfoItem
             label="FECHA DE NACIMIENTO"
             value={
               vendor.fechaNacimiento
                 ? new Date(vendor.fechaNacimiento).toLocaleDateString()
                 : "-"
             }
-          />
+          /> */}
           {/* <InfoItem label="N° CELULAR" value={vendor.telefono} /> */}
           <InfoItem
             label="FECHA DE INGRESO"
