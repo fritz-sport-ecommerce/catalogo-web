@@ -19,6 +19,8 @@ export default function GenerarCodigoVendedorPage() {
   const [tick, setTick] = React.useState(0); // mantiene actualizados los contadores de la lista
   const [tab, setTab] = React.useState<'activos' | 'expirados'>('activos');
   const [verifiedNotice, setVerifiedNotice] = React.useState(false);
+  const [lastStatus, setLastStatus] = React.useState<string | null>(null);
+  const [lastStatusError, setLastStatusError] = React.useState<string | null>(null);
   // Flag para evitar alerta prematura: asegurar que el código generado haya aparecido al menos una vez en activos
   const [seenCurrentCodeActive, setSeenCurrentCodeActive] = React.useState(false);
   // Mantener una sola instancia del intervalo del contador principal
@@ -26,6 +28,27 @@ export default function GenerarCodigoVendedorPage() {
   // Marca de tiempo de generación para permitir alerta tras pequeña gracia aunque no se haya visto activo
   const [generatedAt, setGeneratedAt] = React.useState<number | null>(null);
   const { toast } = useToast();
+
+  // Aviso sonoro cuando se verifica (beep corto)
+  React.useEffect(() => {
+    if (!verifiedNotice) return;
+    try {
+      const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = 880; // A5
+      o.connect(g);
+      g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      o.start();
+      o.stop(ctx.currentTime + 0.32);
+    } catch {}
+  }, [verifiedNotice]);
 
   const startTimer = React.useCallback((iso: string) => {
     const end = Date.parse(iso);
@@ -57,7 +80,7 @@ export default function GenerarCodigoVendedorPage() {
     setSeenCurrentCodeActive(false);
     setGeneratedAt(null);
     try {
-      const res = await fetch('https://www.fritzsportcatalogo.pe/api/vendor-code', { method: 'POST' });
+      const res = await fetch('/api/vendor-code', { method: 'POST' });
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || 'Error al generar código');
@@ -128,34 +151,34 @@ export default function GenerarCodigoVendedorPage() {
     return () => clearInterval(id);
   }, [code, expiresAt, verifiedNotice, fetchCodes]);
 
-  // SSE en tiempo real desde /api/vendor-code/events para reflejar cambios inmediatos
+  // Polling directo al estado del código actual para mayor confiabilidad
   React.useEffect(() => {
     if (!code || !expiresAt || verifiedNotice) return;
-    let es: EventSource | null = null;
-    try {
-      es = new EventSource('https://www.fritzsportcatalogo.pe/api/vendor-code/events');
-      es.addEventListener('ready', () => {
-        try { console.log('[SSE] connected'); } catch {}
-      });
-      es.addEventListener('codes', (e: MessageEvent) => {
-        try {
-          const payload = JSON.parse(e.data || '{}');
-          if (Array.isArray(payload.active)) {
-            setActiveCodesAll(payload.active as any);
-          }
-        } catch {}
-      });
-      es.addEventListener('error', (e: MessageEvent) => {
-        try { console.error('[SSE] error event', e); } catch {}
-      });
-      es.onerror = (err) => {
-        try { console.error('[SSE] onerror', err); } catch {}
-      };
-    } catch {}
-    return () => {
-      try { es?.close(); } catch {}
+    let cancelled = false;
+    const endMs = Date.parse(expiresAt);
+    const tick = async () => {
+      if (cancelled) return;
+      const now = Date.now();
+      if (now >= endMs) return;
+      try {
+        const res = await fetch(`/api/vendor-code/status?code=${encodeURIComponent(code)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        setLastStatus(typeof data?.status === 'string' ? data.status : null);
+        if (data?.status === 'verified') {
+          if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+          setVerifiedNotice(true);
+        }
+      } catch (e: any) {
+        setLastStatusError(e?.message || 'error');
+      }
     };
+    const id = setInterval(tick, 1000);
+    tick();
+    return () => { cancelled = true; clearInterval(id); };
   }, [code, expiresAt, verifiedNotice]);
+
+  // Nota: SSE eliminado para evitar errores 'Failed to fetch' por endpoint inexistente.
 
   // Rerender every second para actualizar contadores de la lista (no afecta el timer principal)
   React.useEffect(() => {
@@ -190,9 +213,9 @@ export default function GenerarCodigoVendedorPage() {
       <button
         onClick={handleGenerate}
         disabled={loading}
-        className="bg-black text-white px-4 py-2 rounded disabled:opacity-50 dark:border-white border-[1px]"
+        className={`${verifiedNotice ? 'bg-green-600' : 'bg-black'} text-white px-4 py-2 rounded disabled:opacity-50 dark:border-white border-[1px]`}
       >
-        {loading ? 'Generando...' : 'Generar código'}
+        {loading ? 'Generando...' : verifiedNotice ? 'Código verificado' : 'Generar código'}
       </button>
 
       {error && (
@@ -209,6 +232,11 @@ export default function GenerarCodigoVendedorPage() {
             </div>
           )}
           <div className="mt-2 text-sm">Tiempo restante: {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</div>
+          {/* Debug de estado */}
+          <div className="mt-2 text-xs text-gray-500">Estado actual: {lastStatus || '-'}</div>
+          {lastStatusError && (
+            <div className="mt-1 text-xs text-red-500">Error estado: {lastStatusError}</div>
+          )}
           <p className="mt-2 text-sm text-gray-600">Comparte este código con quien necesite verificar tu información.</p>
         </div>
       )}

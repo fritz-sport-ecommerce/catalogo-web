@@ -8,6 +8,7 @@ export default function VerifyForm() {
   const [code, setCode] = React.useState('');
   const [expiresAt, setExpiresAt] = React.useState<string | null>(null);
   const [vendor, setVendor] = React.useState<any | null>(null);
+  const [verificationSuccess, setVerificationSuccess] = React.useState(false);
   const [remaining, setRemaining] = React.useState(0);
   const [error, setError] = React.useState<string | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
@@ -40,6 +41,9 @@ export default function VerifyForm() {
       if (result.ok) {
         setVendor(result.vendor);
         setExpiresAt(result.expiresAt);
+        setVerificationSuccess(true);
+        // Clear success message after 5 seconds
+        setTimeout(() => setVerificationSuccess(false), 5000);
       } else {
         setError(result.error);
       }
@@ -85,6 +89,12 @@ export default function VerifyForm() {
 
       {error && (
         <div className="text-red-600 text-sm mb-4">{error}</div>
+      )}
+      
+      {verificationSuccess && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <p>¡Código verificado correctamente!</p>
+        </div>
       )}
 
 {vendor && (

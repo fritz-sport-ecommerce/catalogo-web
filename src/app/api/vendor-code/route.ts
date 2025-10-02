@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { authOptions } from '@/libs/auth';
 import sanityClient from '@/libs/sanity';
+import { lastVerifiedCodes } from '@/libs/runtimeState';
 
 function generateCode(length = 8) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -124,6 +125,7 @@ export async function GET(req: Request) {
 
     // Uso único: eliminar el código del arreglo tras validarlo
     if (user?.verificationKey) {
+      // 1) Intentar eliminar el código usado
       try {
         const unsetMutation = {
           mutations: [
@@ -144,7 +146,38 @@ export async function GET(req: Request) {
         // No bloquear la respuesta al cliente si el unset falla
         console.error('Failed to unset used code', e);
       }
+
+      // 2) Registrar evento de verificación SIEMPRE (aunque falle el unset)
+      try {
+        const verifiedAt = new Date().toISOString();
+        const setEventMutation = {
+          mutations: [
+            {
+              patch: {
+                id: user._id,
+                set: {
+                  lastVerificationEvent: {
+                    _type: 'vendorVerificationEvent',
+                    code,
+                    verifiedAt,
+                  },
+                },
+              },
+            },
+          ],
+        } as const;
+        await axios.post(
+          `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`,
+          setEventMutation,
+          { headers: { Authorization: `Bearer ${process.env.SANITY_STUDIO_TOKEN}` } }
+        );
+      } catch (e) {
+        console.error('Failed to set lastVerificationEvent', e);
+      }
     }
+
+    // Marcar en memoria este código como verificado (respaldo local)
+    try { lastVerifiedCodes.set(code, Date.now()); } catch {}
 
     return NextResponse.json({
       vendor: {

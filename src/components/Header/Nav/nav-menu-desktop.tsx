@@ -64,7 +64,7 @@ export default function NavMenuDesktop({
 
   // Items adicionales controlados por rol
   const extraItems: { id: string; titulo: string; url: string }[] = [];
-  // Público: Verificar vendedor (visible para todos, incluso rol 'user' y no autenticados)
+  // Público: Verificar vendedor (visible para todos, inclusive rol 'user' y no autenticados)
   extraItems.push({ id: 'verificar-vendedor', titulo: 'VERIFICAR VENDEDOR', url: '/verificar-vendedor' });
   // Protegido por rol: Generar código
   if (canGenerate) {
