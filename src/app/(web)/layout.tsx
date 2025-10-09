@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
 // import Header from "@/components/Header/Header";
 import "./globals.css";
@@ -125,6 +126,15 @@ export default async function RootLayout({
         </NextAuthProvider>
         <IconTiendas />
         <IconWhatapp urlWhatsApp={urlWhatsApp[0]}></IconWhatapp>
+      
+          <Script
+            id="widget-securitec"
+            src="https://webchat.securitec.pe/widget-loader.js"
+            strategy="afterInteractive"
+            data-id="widget-securitec"
+            data-token="afeeb662-db8d-466d-ae8c-1d7cc75d78e7"
+          />
+      
       </body>
     </html>
   );
