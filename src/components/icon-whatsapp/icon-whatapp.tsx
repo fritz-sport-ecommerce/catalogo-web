@@ -168,7 +168,7 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
       <Link
         href={`https://api.whatsapp.com/send/?phone=51983478551&text&type=phone_number&app_absent=0`}
         target="_blank"
-        className="z-header sticky-0 fixed bottom-0 right-5 z-[999] xl:right-16"
+        className="z-header sticky-0 fixed bottom-52 right-5 z-[999] xl:right-16"
         rel="noreferrer"
       >
         <div className=" relative mb-[6vh] mr-1  flex h-[50px]  cursor-pointer  items-center  justify-end  rounded-r-full pl-1 md:w-28">
