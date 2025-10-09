@@ -126,7 +126,7 @@ export default async function RootLayout({
           </ThemeProvider>
         </NextAuthProvider>
         <IconTiendas />
-        <IconWhatapp urlWhatsApp={urlWhatsApp[0]}></IconWhatapp>
+        {/* <IconWhatapp urlWhatsApp={urlWhatsApp[0]}></IconWhatapp> */}
         <SecuritecWidget />
       </body>
     </html>

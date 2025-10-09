@@ -45,9 +45,9 @@ export default function SecuritecWidget() {
         }`}
       >
         <MessageCircle className="w-5 h-5" />
-        <span className="text-sm font-medium">
+        {/* <span className="text-sm font-medium">
           {ready ? "Chat listo" : "Cargando..."}
-        </span>
+        </span> */}
       </div>
     </div>
   );
