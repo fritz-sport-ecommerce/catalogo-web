@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 
 import { Analytics } from "@vercel/analytics/next";
-import Script from "next/script";
+
 
 // import Header from "@/components/Header/Header";
 import "./globals.css";
@@ -32,6 +32,7 @@ import StructuredData from "@/components/StructuredData";
 import HeaderMain from "@/components/Header/HeaderMain";
 import IconTiendas from "@/components/icon-tiendas/icon-tiendas";
 import { getMaintenanceMode } from "@/utils/maintence-mode-cache";
+import SecuritecWidget from "@/components/securitecWidget/securitec-widget";
 
 const raleway = Raleway({
   weight: ["800"],
@@ -126,15 +127,7 @@ export default async function RootLayout({
         </NextAuthProvider>
         <IconTiendas />
         <IconWhatapp urlWhatsApp={urlWhatsApp[0]}></IconWhatapp>
-      
-          <Script
-            id="widget-securitec"
-            src="https://webchat.securitec.pe/widget-loader.js"
-            strategy="afterInteractive"
-            data-id="widget-securitec"
-            data-token="afeeb662-db8d-466d-ae8c-1d7cc75d78e7"
-          />
-      
+        <SecuritecWidget />
       </body>
     </html>
   );
