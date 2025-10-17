@@ -1,53 +1,99 @@
-export default function convertUSSizeToEuropean(
-  sizes: Array<{ _id: string; talla: string; [key: string]: any }>,
+// Función auxiliar para convertir array de objetos de tallas
+function convertTallasArray(
+  sizes: any[],
   gender: string,
   brand: string = "ADIDAS",
   ageGroup?: string,
   tipo?: string
-): Array<{ _id: string; talla: string; [key: string]: any }> {
-  // Si no hay tallas, devolvemos array vacío
-  if (!sizes || sizes.length === 0) return [];
+): any[] {
+  if (tipo !== "calzado") {
+    return sizes; // Si no es calzado, devolver sin cambios
+  }
 
-  return sizes.map(sizeObj => {
-    // Copiamos todas las propiedades del objeto original
-    const convertedSize = { ...sizeObj };
+  const converterMap: Record<
+    string,
+    (size: string, gender: string, ageGroup?: string) => string | null
+  > = {
+    ADIDAS: convertAdidasUSSizeToEuropean,
+    NIKE: convertNikeUSSizeToEuropean,
+    PUMA: convertPumaUSSizeToEuropean,
+    REEBOK: convertReebokUSSizeToEuro,
+    FRITZSPORT: convertFritzSportUSSizeToEuropean,
+  };
 
-    // Solo convertimos si es calzado
-    if (tipo === "calzado") {
-      let convertedTalla: string | null = null;
+  const converter =
+    converterMap[brand?.toUpperCase()] || convertAdidasUSSizeToEuropean;
 
-      // Seleccionamos la función de conversión según la marca
-      switch (brand?.toUpperCase()) {
-        case "ADIDAS":
-          convertedTalla = convertAdidasUSSizeToEuropean(sizeObj.talla, gender, ageGroup);
-          break;
-        case "NIKE":
-          convertedTalla = convertNikeUSSizeToEuropean(sizeObj.talla, gender, ageGroup);
-          break;
-        case "PUMA":
-          convertedTalla = convertPumaUSSizeToEuropean(sizeObj.talla, gender, ageGroup);
-          break;
-          case "FRITZSPORT":
-            convertedTalla = convertFritzSportSizeUSSizeToEuropean(sizeObj.talla, gender);
-            break;
-            case "REEBOK":
-              convertedTalla = convertFritzSportSizeUSSizeToEuropean(sizeObj.talla, gender);
-              break;
-          
-        default:
-          convertedTalla = convertAdidasUSSizeToEuropean(sizeObj.talla, gender, ageGroup);
-      }
-
-      // Actualizamos la talla solo si encontramos conversión
-      if (convertedTalla !== null) {
-        convertedSize.talla = convertedTalla;
-      }
-    }
-
-    return convertedSize;
+  return sizes.map((sizeObj) => {
+    const sizeStr = typeof sizeObj.talla === 'string' ? sizeObj.talla : String(sizeObj.talla ?? "");
+    const cleanSize = sizeStr.replace(/"/g, "").trim();
+    
+    const normalizedSize = /^\d+-$/.test(cleanSize)
+      ? `${parseInt(cleanSize.slice(0, -1), 10)}.5`
+      : cleanSize;
+    
+    const convertedTalla = converter(normalizedSize, gender, ageGroup);
+    
+    return {
+      ...sizeObj,
+      talla: convertedTalla || sizeObj.talla, // Si no se puede convertir, mantener original
+    };
   });
 }
 
+export default function convertUSSizeToEuropean(
+  sizes: string[] | any[],
+  gender: string,
+  brand: string = "ADIDAS",
+  ageGroup?: string,
+  tipo?: string
+): string | any[] {
+  // Si sizes es un array de objetos (con _id, talla, stock), devolver array de objetos
+  if (sizes?.length > 0 && typeof sizes[0] === 'object' && sizes[0]?.talla !== undefined) {
+    return convertTallasArray(sizes, gender, brand, ageGroup, tipo);
+  }
+  
+  // Si es un array de strings, devolver string
+  if (tipo === "calzado" && sizes?.length > 0) {
+    const converterMap: Record<
+      string,
+      (size: string, gender: string, ageGroup?: string) => string | null
+    > = {
+      ADIDAS: convertAdidasUSSizeToEuropean,
+      NIKE: convertNikeUSSizeToEuropean,
+      PUMA: convertPumaUSSizeToEuropean,
+      REEBOK: convertReebokUSSizeToEuro,
+      FRITZSPORT: convertFritzSportUSSizeToEuropean,
+    };
+
+    const converter =
+      converterMap[brand?.toUpperCase()] || convertAdidasUSSizeToEuropean;
+
+    const convertedSizes = sizes?.map((size) => {
+      // Convertir a string si no lo es
+      const sizeStr = typeof size === 'string' ? size : String(size ?? "");
+      const cleanSize = sizeStr.replace(/"/g, "").trim();
+      
+      // Normaliza solo tokens numéricos que terminan en '-' (p.ej., '7-' -> '7.5')
+      // No altera tokens alfanuméricos como '11K', '1Y', etc.
+      const normalizedSize = /^\d+-$/.test(cleanSize)
+        ? `${parseInt(cleanSize.slice(0, -1), 10)}.5`
+        : cleanSize;
+      return converter(normalizedSize, gender, ageGroup);
+    });
+
+    return convertedSizes.filter((size) => !!size).join("/ ");
+  } else {
+    // Si no es calzado, igual limpiamos comillas y retornamos las tallas originales
+    return sizes
+      ?.map((size) => {
+        const sizeStr = typeof size === 'string' ? size : String(size ?? "");
+        return sizeStr.replace(/"/g, "");
+      })
+      .filter((size) => !!size)
+      .join("/ ");
+  }
+}
 
 // Conversión para Adidas (por defecto)
 function convertAdidasUSSizeToEuropean(
@@ -115,6 +161,7 @@ function convertAdidasAdultUSSizeToEuropean(
           return "44";
         case "10.5":
           return "44.5";
+  
         case "11":
           return "45.5";
         case "11.5":

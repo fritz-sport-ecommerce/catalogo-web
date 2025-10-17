@@ -75,13 +75,8 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Home "/": acceso solo para admin o callcenter; si no está autenticado o no tiene rol válido -> "/pdf"
-  if (pathname === "/") {
-    const hasAccessHome = effectiveRole === "callcenter" || effectiveRole === "admin";
-    if (!isAuthenticated || !hasAccessHome) {
-      return NextResponse.redirect(new URL("/pdf", req.url));
-    }
-  }
+  // Home "/": ahora es público (Busca tu Taba), accesible para todos
+  // Ya no se requiere autenticación ni rol específico para acceder a la página principal
 
   // Si está autenticado pero NO tiene rol válido, bloquear acceso a rutas no públicas
   const isPublicPath =

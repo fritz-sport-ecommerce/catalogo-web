@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 
 type Product = {
@@ -11,10 +10,16 @@ type Product = {
   images?: any[];
   imgcatalogomain?: any;
   priceecommerce?: number;
+  precio_retail?: number;
   mayorista_cd?: number;
+  precio_mayorista?: number;
   priceemprendedor?: number;
+  precio_emprendedor?: number;
   preciomanual?: number;
   stock?: number;
+  stockDisponible?: number;
+  tallas?: any[];
+  tallascatalogo?: string;
 };
 
 function formatPrice(n?: number) {
@@ -30,15 +35,42 @@ export default function IndependentProductCard({ product, index }: { product: Pr
     : "#";
   const mainImage = product?.imgcatalogomain?.asset?.url || product?.images?.[0]?.asset?.url;
 
-  return (
-    <Link href={url} target="_blank" rel="noopener noreferrer" className="group block border border-gray-200 dark:border-zinc-800 rounded-lg overflow-hidden hover:shadow-md transition">
-      <div className="relative">
-    
+  // Priorizar precios del fetch (sistema) sobre Sanity
+  const precioRetail = product?.precio_retail ?? product?.priceecommerce ?? product?.preciomanual;
+  const precioEmprendedor = product?.precio_emprendedor ?? product?.priceemprendedor;
+  const precioMayorista = product?.precio_mayorista ?? product?.mayorista_cd;
+  const stockTotal = product?.stockDisponible ?? product?.stock;
 
+  // Obtener tallas disponibles
+  const tallasDisponibles = product?.tallascatalogo 
+    ? product.tallascatalogo.split(',').map(t => t.trim()).filter(Boolean).slice(0, 8)
+    : product?.tallas?.map((t: any) => t.talla || t).slice(0, 8) || [];
+
+  return (
+    <div className="group block border border-gray-200 dark:border-zinc-800 rounded-lg overflow-hidden hover:shadow-lg transition-all">
+      {/* Botón superior de contacto */}
+      <a 
+        href={url} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="block bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 transition-all"
+      >
+        <div className="flex items-center justify-center gap-2 px-3 py-2.5 text-white">
+          <MessageCircle className="w-4 h-4" />
+          <span className="text-sm font-semibold">Contactar Asesor</span>
+        </div>
+      </a>
+
+      <div className="relative">
         {/* Stock badge */}
-        {product?.stock !== undefined && product.stock <= 0 && (
+        {stockTotal !== undefined && stockTotal <= 0 && (
           <div className="absolute right-2 top-2 z-10 bg-red-600 text-white text-xs font-semibold rounded px-2 py-1">
             Sin stock
+          </div>
+        )}
+        {stockTotal !== undefined && stockTotal > 0 && (
+          <div className="absolute right-2 top-2 z-10 bg-green-600 text-white text-xs font-semibold rounded px-2 py-1">
+            Stock: {stockTotal}
           </div>
         )}
 
@@ -54,31 +86,46 @@ export default function IndependentProductCard({ product, index }: { product: Pr
       </div>
 
       <div className="p-3">
-        <div className="line-clamp-2 text-sm font-medium mb-2">{product?.name || "Producto"}</div>
+        <div className="line-clamp-2 text-sm font-medium mb-3 min-h-[2.5rem]">{product?.name || "Producto"}</div>
 
-        {/* Prices from Sanity */}
-        <div className="flex flex-col items-end gap-1">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">Retail</span>
-            <span className="text-sm font-semibold">{formatPrice(product?.priceecommerce ?? product?.preciomanual)}</span>
+        {/* Tallas disponibles */}
+        {tallasDisponibles.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-1.5 font-medium">Tallas disponibles:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {tallasDisponibles.map((talla: string, idx: number) => (
+                <span 
+                  key={idx} 
+                  className="inline-block px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-xs font-medium rounded border border-gray-200 dark:border-gray-700"
+                >
+                  {talla}
+                </span>
+              ))}
+              {(product?.tallascatalogo?.split(',').length || product?.tallas?.length || 0) > 8 && (
+                <span className="inline-block px-2 py-0.5 text-xs font-medium text-gray-500">
+                  +{(product?.tallascatalogo?.split(',').length || product?.tallas?.length || 0) - 8}
+                </span>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-            <span className="text-xs text-gray-500">Emprendedor</span>
-            <span className="text-xs">{formatPrice(product?.priceemprendedor)}</span>
+        )}
+
+        {/* Prices */}
+        <div className="flex flex-col gap-1.5 bg-gray-50 dark:bg-gray-800/50 rounded-lg p-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Retail</span>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">{formatPrice(precioRetail)}</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-            <span className="text-xs text-gray-500">Mayorista</span>
-            <span className="text-xs">{formatPrice(product?.mayorista_cd)}</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Emprendedor</span>
+            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">{formatPrice(precioEmprendedor)}</span>
           </div>
-        </div>
-        {/* CTA WhatsApp visual al final del contenido */}
-        <div className="mt-3">
-          <div className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm group-hover:bg-emerald-700">
-            <MessageCircle className="w-4 h-4" />
-            <span>Contactar a un asesor</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Mayorista</span>
+            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">{formatPrice(precioMayorista)}</span>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

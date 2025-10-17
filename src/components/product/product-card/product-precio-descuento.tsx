@@ -4,88 +4,66 @@ export default function ProductPrecioDescuento({
   dataProduct,
   carrito = false,
 }: any) {
+  // Obtener precios con fallbacks correctos
+  const retail = Number(dataProduct?.priceecommerce || dataProduct?.precio_retail || 0);
+  const emprendedor = Number(dataProduct?.priceemprendedor || dataProduct?.precio_emprendedor || 0);
+  const mayorista = Number(
+    dataProduct?.pricemayorista || 
+    dataProduct?.mayorista_cd || 
+    dataProduct?.precio_mayorista || 
+    0
+  );
+
   // Calcular el porcentaje de descuento
   const calcularPorcentajeDescuento = () => {
-    if (!dataProduct?.pricemayorista || !dataProduct?.precio_original) return 0;
+    if (!mayorista || !dataProduct?.precio_original) return 0;
 
     const descuento =
-      ((dataProduct.precio_original - dataProduct.pricemayorista) /
+      ((dataProduct.precio_original - mayorista) /
         dataProduct.precio_original) *
       100;
-    return Math.round(descuento); // Redondeamos al entero más cercano
+    return Math.round(descuento);
   };
 
   const porcentajeDescuento = calcularPorcentajeDescuento();
 
   return (
-    <div className="flex flex-col items-end justify-center">
-      {/* Desktop - Mostrar los tres precios */}
-      <div className="w-full xl:flex flex-col mb-2 hidden">
-        {/* Precio Mayorista - RESALTADO */}
-        <div className="flex items-center justify-end mb-1">
-          <span className="text-xs text-gray-600 dark:text-gray-400 mr-1">Mayorista:</span>
-          <div className="bg-blue-600 text-white px-2 py-1 rounded font-bold text-sm">
-            S/{dataProduct?.pricemayorista ? dataProduct.pricemayorista.toFixed(2) : "----"}
+    <div className="w-full">
+      {/* Precios en formato horizontal compacto */}
+      <div className="grid grid-cols-3 gap-2 text-[10px] xl:text-xs">
+        {/* Precio Mayorista */}
+        <div className="flex flex-col items-center">
+          <span className="text-gray-500 dark:text-gray-400 mb-0.5">Mayorista</span>
+          <div className="bg-blue-600 text-white px-2 py-1 rounded font-bold text-xs xl:text-sm w-full text-center">
+            S/{mayorista > 0 ? mayorista.toFixed(2) : "0.00"}
           </div>
         </div>
-        
         
         {/* Precio Emprendedor */}
-        <div className="flex items-center justify-end">
-          <span className="text-xs text-gray-600 dark:text-gray-400 mr-1">Emprendedor:</span>
-          <div className="text-gray-700 dark:text-gray-300 font-semibold text-sm">
-            S/{dataProduct?.priceemprendedor ? dataProduct.priceemprendedor.toFixed(2) : "----"}
-          </div>
-        </div>
-        {/* Precio Retail */}
-        <div className="flex items-center justify-end mb-1 mt-1">
-          <span className="text-xs text-gray-600 dark:text-gray-400 mr-1">Retail:</span>
-          <div className="text-gray-700 dark:text-gray-300 font-semibold text-sm">
-            S/{dataProduct?.priceecommerce ? dataProduct.priceecommerce.toFixed(2) : "----"}
+        <div className="flex flex-col items-center">
+          <span className="text-gray-500 dark:text-gray-400 mb-0.5">Emprendedor</span>
+          <div className="text-gray-700 dark:text-gray-300 font-semibold text-xs xl:text-sm border border-gray-300 dark:border-gray-600 px-2 py-1 rounded w-full text-center">
+            S/{emprendedor > 0 ? emprendedor.toFixed(2) : "0.00"}
           </div>
         </div>
         
-        {/* Descuento si existe */}
-        {porcentajeDescuento > 0 && (
-          <div className="text-gray-500 font-normal text-xs mr-2 mt-1 h-4">
-            <span className="text-red-300">-{porcentajeDescuento}%</span>
+        {/* Precio Retail */}
+        <div className="flex flex-col items-center">
+          <span className="text-gray-500 dark:text-gray-400 mb-0.5">Retail</span>
+          <div className="text-gray-700 dark:text-gray-300 font-semibold text-xs xl:text-sm border border-gray-300 dark:border-gray-600 px-2 py-1 rounded w-full text-center">
+            S/{retail > 0 ? retail.toFixed(2) : "0.00"}
           </div>
-        )}
+        </div>
       </div>
       
-      {/* Mobile - Mostrar los tres precios */}
-      <div className="w-full flex xl:hidden flex-col items-end ml-2">
-        {/* Precio Mayorista - RESALTADO */}
-        <div className="flex items-center justify-end mb-1">
-          <span className="text-xs text-gray-600 dark:text-gray-400 mr-1">Mayorista:</span>
-          <div className="bg-blue-600 text-white px-2 py-1 rounded font-bold text-xs">
-            S/{dataProduct?.pricemayorista ? dataProduct.pricemayorista.toFixed(2) : "----"}
-          </div>
+      {/* Descuento si existe */}
+      {porcentajeDescuento > 0 && (
+        <div className="text-center mt-2">
+          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded font-semibold">
+            -{porcentajeDescuento}% OFF
+          </span>
         </div>
-        
-        {/* Precio Retail */}
-        <div className="flex items-center justify-end mb-1">
-          <span className="text-xs text-gray-600 dark:text-gray-400 mr-1">Retail:</span>
-          <div className="text-gray-700 dark:text-gray-300 font-semibold text-xs">
-            S/{dataProduct?.priceecommerce ? dataProduct.priceecommerce.toFixed(2) : "----"}
-          </div>
-        </div>
-        
-        {/* Precio Emprendedor */}
-        <div className="flex items-center justify-end">
-          <span className="text-xs text-gray-600 dark:text-gray-400 mr-1">Emprendedor:</span>
-          <div className="text-gray-700 dark:text-gray-300 font-semibold text-xs">
-            S/{dataProduct?.priceemprendedor ? dataProduct.priceemprendedor.toFixed(2) : "----"}
-          </div>
-        </div>
-        
-        {/* Descuento si existe */}
-        {porcentajeDescuento > 0 && (
-          <div className="text-red-300 text-xs mt-1">
-            -{porcentajeDescuento}%
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
