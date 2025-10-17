@@ -10,12 +10,12 @@ interface ProductsLoaderProps {
 }
 
 export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsLoaderProps) {
-  const [loading, setLoading] = useState(true);
+  const [loadingInitial, setLoadingInitial] = useState(true);
   const [data, setData] = useState<{ products: any[]; total: number } | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
+      setLoadingInitial(true);
       try {
         const params = new URLSearchParams();
         Object.entries(searchParams).forEach(([key, value]) => {
@@ -24,28 +24,33 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         params.set("page", "1");
         params.set("limit", String(itemsPerPage));
 
-        const response = await fetch(`/api/busca-tu-taba?${params.toString()}`, {
+        // FASE 1: Cargar datos rápidos de Sanity (sin precios del sistema)
+        const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
         });
-        const result = await response.json();
+        const quickResult = await quickResponse.json();
 
-        if (result.ok) {
+        if (quickResult.ok) {
+          // Mostrar productos inmediatamente con datos de Sanity
           setData({
-            products: result.products,
-            total: result.total,
+            products: quickResult.products,
+            total: quickResult.total,
           });
+          setLoadingInitial(false);
+
+          // FASE 2: Cargar precios completos en segundo plano (opcional, para scroll infinito)
+          // Los precios individuales se cargarán por producto con ProductCardWithLazyPrices
         }
       } catch (error) {
         console.error("Error loading products:", error);
-      } finally {
-        setLoading(false);
+        setLoadingInitial(false);
       }
     };
 
     fetchProducts();
   }, [searchParams, itemsPerPage]);
 
-  if (loading || !data) {
+  if (loadingInitial || !data) {
     return <FetchingSkeleton />;
   }
 
@@ -54,6 +59,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
       initial={data.products}
       total={data.total}
       pageSize={itemsPerPage}
+      useQuickEndpoint={true}
     />
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Product from "@/components/product/product-card/product";
+import ProductCardWithLazyPrices from "./ProductCardWithLazyPrices";
 import ProductGridSkeleton from "./ProductGridSkeleton";
 
 type Product = any;
@@ -9,10 +10,12 @@ export default function InfiniteProductGrid({
   initial,
   total,
   pageSize,
+  useQuickEndpoint = false,
 }: {
   initial: Product[];
   total: number;
   pageSize: number;
+  useQuickEndpoint?: boolean;
 }) {
   const [items, setItems] = React.useState<Product[]>(initial);
   const [page, setPage] = React.useState(1);
@@ -27,7 +30,10 @@ export default function InfiniteProductGrid({
       const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
       params.set("page", String(page + 1));
       params.set("limit", String(pageSize));
-      const res = await fetch(`/api/busca-tu-taba?${params.toString()}`, { cache: "no-store" });
+      
+      // Usar endpoint rápido si está habilitado
+      const endpoint = useQuickEndpoint ? "/api/busca-tu-taba/quick" : "/api/busca-tu-taba";
+      const res = await fetch(`${endpoint}?${params.toString()}`, { cache: "no-store" });
       const data = await res.json();
       if (data?.ok) {
         const next = data.products as Product[];
@@ -39,7 +45,7 @@ export default function InfiniteProductGrid({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, page, pageSize]);
+  }, [loading, hasMore, page, pageSize, useQuickEndpoint]);
 
   React.useEffect(() => {
     const el = sentinelRef.current;
@@ -83,7 +89,11 @@ export default function InfiniteProductGrid({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
             {items.map((product, i) => (
               <div key={`${product._id}-${i}`} className="relative">
-                <Product products={product} />
+                {useQuickEndpoint ? (
+                  <ProductCardWithLazyPrices product={product} />
+                ) : (
+                  <Product products={product} />
+                )}
               </div>
             ))}
           </div>
