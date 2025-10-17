@@ -1,18 +1,10 @@
-import { client } from "@/sanity/lib/client";
-import { groq } from "next-sanity";
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import InfiniteProductGrid from "@/components/busca-tu-taba/InfiniteProductGrid";
-import ProductGridSkeleton from "@/components/busca-tu-taba/ProductGridSkeleton";
+import ProductsLoader from "@/components/busca-tu-taba/ProductsLoader";
 import OnboardingSkeleton from "@/components/busca-tu-taba/OnboardingSkeleton";
-import { FiltroGlobal } from "@/utils/filtro-products-slider-home";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import LoadingSpinner from "./loading";
-import Descuentos from "@/config/descuentos";
 import QuickFilters from "@/components/busca-tu-taba/quick-filters";
-import { fetchProductosPrecios } from "@/lib/fetchProductosPrecios";
-import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-tu-taba";
 
 interface Props {
   searchParams: {
@@ -99,7 +91,7 @@ export default async function Page({ searchParams }: Props) {
                     </p>
                   </div>
                   
-                  <div className="mb-8 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 shadow-xl">
+                  <div className="mb-8 p-6 sm:p-8 rounded-2xl    from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 shadow-xl">
                     <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 dark:text-white">¿Cómo funciona?</h2>
                     <ol className="space-y-4 text-base sm:text-lg">
                       <li className="flex items-start gap-4">
@@ -137,185 +129,7 @@ export default async function Page({ searchParams }: Props) {
     );
   }
 
-  const priceSort = price || precio;
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
-  const itemsPerPage = 12;
-  const start = (page - 1) * itemsPerPage;
-
-  const priceOrder = priceSort ? `mayorista_cd ${priceSort}` : "";
-  const dateOrder = date ? `_createAt ${date}` : "";
-
-  const orderCriteria = [
-    'select(marca == "fritzsport" => 1, 0) desc',
-    "select(popularidad > 1 => 1, 0) desc",
-    priceOrder,
-    dateOrder,
-  ]
-    .filter(Boolean)
-    .join(", ");
-  const order = `| order(${orderCriteria})`;
-
-  const productFilter = FiltroGlobal();
-  const colorFilter = color
-    ? `&& (${color
-        .split(".")
-        .map((c) => `color match "${c}"`)
-        .join(" || ")})`
-    : "";
-  const tipoFilter = tipo
-    ? `&& (${tipo
-        .split(".")
-        .map((t) => `tipo match "${t}"`)
-        .join(" || ")})`
-    : "";
-  const marcaFilter = marca
-    ? `&& (${marca
-        .split(".")
-        .map((m) => `marca match "${m}"`)
-        .join(" || ")})`
-    : "";
-  const categoryFilter = category
-    ? `&& (${category
-        .split(".")
-        .map((c) => `"${c}" match categories`)
-        .join(" || ")})`
-    : "";
-  const generoFilter = genero
-    ? `&& (${genero
-        .split(".")
-        .map((g) => `genero == "${g}"`)
-        .join(" || ")} || genero == "unisex")`
-    : "";
-  const coleccionFilter = coleccion
-    ? `&& (${coleccion
-        .split(".")
-        .map((c) => `coleccion match "${c}"`)
-        .join(" || ")})`
-    : "";
-  const searchFilter = search
-    ? `&& (name match "${search}" || sku match "${search}" || genero match "${search}" || marca match "${search}" || tipo match "${search}" || category match "${search}" || color match "${search}" || coleccion match "${search}")`
-    : "";
-  const razonSocialFilter = razonSocial ? `&& razonsocial == "${razonSocial}"` : "";
-  const tipoProductoFilter = tipoproducto ? `&& tipoproducto == "${tipoproducto}"` : "";
-  const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
-
-  const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${razonSocialFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"] `;
-
-  // 1. Obtener productos de Sanity (información básica: nombre, imágenes, marca, etc.)
-  const productsRaw = await client.fetch(
-    groq`${filter} ${order} {
-      _id,
-      _createdAt,
-      name,
-      empresa,
-      sku,
-      images,
-      description,
-      genero,
-      tipo,
-      marca,
-      linea_liquidacion,
-      color,
-      imgcatalogomain,
-      imagescatalogo,
-      categories,
-      razonsocial,
-      popularidad,
-      fechaIngreso,
-      activo,
-      ninos_talla_grande,
-      fecha_cuando_aparece,
-      "slug": slug.current
-    }`
-  );
-
-  // 2. Obtener precios, tallas y stock del sistema (API)
-  let productosSistema: any[] = [];
-  try {
-    const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
-    productosSistema = productosTraidosSistemaFritzSport(
-      productosConPrecios,
-      undefined, // tipoproducto
-      "LIMA", // provincia
-      undefined, // razonsocial
-      undefined // ninos_talla_grande
-    );
-  } catch (error) {
-    console.error("Error fetching productos from sistema:", error);
-  }
-
-  // 3. Combinar: Información de Sanity + Precios/Tallas/Stock del Sistema
-  const productosCombinados = productosSistema.map((productoSistema: any) => {
-    const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
-    
-    return {
-      // Información básica de Sanity
-      ...productoSanity,
-      
-      // Precios, tallas y stock del Sistema (sobrescribir)
-      priceecommerce: productoSistema.priceecommerce,
-      precio_retail: productoSistema.precio_retail,
-      priceemprendedor: productoSistema.priceemprendedor,
-      precio_emprendedor: productoSistema.precio_emprendedor,
-      mayorista_cd: productoSistema.mayorista_cd,
-      precio_mayorista: productoSistema.precio_mayorista,
-      stock: productoSistema.stock,
-      stockDisponible: productoSistema.stockDisponible,
-      tallas: productoSistema.tallas,
-      tallascatalogo: productoSistema.tallascatalogo,
-      talla_sistema: productoSistema.talla_sistema,
-      provincias: productoSistema.provincias,
-      
-      // Mantener campos procesados del sistema
-      razonsocial: productoSistema.razonsocial,
-      tipoproducto: productoSistema.tipoproducto,
-      subgenero_ninos: productoSistema.subgenero_ninos,
-    };
-  });
-
-  let filteredProducts = productosCombinados as any[];
-  // Mantener solo productos con precios mayorista, retail y emprendedor
-  filteredProducts = filteredProducts.filter((p: any) => {
-    const retail = Number(p.priceecommerce || 0);
-    const mayorista = Number(p.mayorista_cd || 0);
-    const emprendedor = Number(p.priceemprendedor || 0);
-    return retail > 0 && mayorista > 0 && emprendedor > 0;
-  });
-  if (talla) {
-    filteredProducts = filteredProducts.filter((producto: any) => {
-      return producto.tallas && producto.tallas.some((t: any) => String(t.talla) === talla);
-    });
-  }
-  if (priceRange) {
-    const [minPrice, maxPrice] = priceRange.split("-").map(Number);
-    filteredProducts = filteredProducts.filter((producto: any) => {
-      const precio = producto.priceecommerce || 0;
-      return precio >= minPrice && precio <= maxPrice;
-    });
-  }
-
-  const priceSortDir = priceSort as "asc" | "desc" | undefined;
-  const sortedProducts = filteredProducts.sort((a: any, b: any) => {
-    if (a.stock > 0 && b.stock === 0) return -1;
-    if (a.stock === 0 && b.stock > 0) return 1;
-    if (priceSortDir === "asc") return (a.priceecommerce || 0) - (b.priceecommerce || 0);
-    if (priceSortDir === "desc") return (b.priceecommerce || 0) - (a.priceecommerce || 0);
-    return 0;
-  });
-
-  const totalProducts = sortedProducts.length;
-  const products = sortedProducts.slice(start, start + itemsPerPage);
-
-  const totalPages = Math.ceil(totalProducts / itemsPerPage);
-  if (page > totalPages && totalProducts > 0) {
-    const params = new URLSearchParams();
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (key !== "page" && value) params.set(key, value);
-    });
-    const redirectUrl = `/?${params.toString()}`;
-    redirect(redirectUrl);
-  }
-
+  const itemsPerPage = 10; // Mostrar 10 productos inicialmente
   const searchKey = JSON.stringify(searchParams);
 
   return (
@@ -329,7 +143,7 @@ export default async function Page({ searchParams }: Props) {
                 <div
                   className={cn(
                     "grid grid-cols-1 gap-x-6 lg:gap-x-8 gap-y-8 items-start",
-                    products.length > 0 ? "lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr]" : "lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr]"
+                    "lg:grid-cols-[340px_1fr] xl:grid-cols-[380px_1fr]"
                   )}
                 >
                   {/* Sidebar Desktop con Filtros */}
@@ -345,9 +159,7 @@ export default async function Page({ searchParams }: Props) {
                   </div>
                   
                   <div id="productos">
-                    <Suspense fallback={<ProductGridSkeleton count={12} />}>
-                      <InfiniteProductGrid initial={products} total={totalProducts} pageSize={itemsPerPage} />
-                    </Suspense>
+                    <ProductsLoader searchParams={searchParams} itemsPerPage={itemsPerPage} />
                   </div>
                 </div>
                 

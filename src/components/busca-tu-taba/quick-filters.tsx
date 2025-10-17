@@ -192,7 +192,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
   const FiltersContent = () => (
     <>
       {/* Stepper superior */}
-      <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div className=" border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2 md:gap-3">
           {[1,2,3,4,5].map((step) => {
             const enabled = step <= maxStepAvailable;
@@ -229,7 +229,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Filtros activos (cuando 5 pasos completos) - Mejorado */}
       {currentStep >= 6 && (
-        <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-lg">
+        <div className="   from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
@@ -428,7 +428,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
       {activeStep === 5 && hasTipo && hasGenero && hasStyleSelected && hasMarca && (
       <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-xl">💰</div>
+          <div className="w-10 h-10 rounded-full    from-yellow-400 to-yellow-500 flex items-center justify-center text-xl">💰</div>
           <div>
             <h3 className="text-base md:text-xl font-bold text-gray-900 dark:text-white">Define tu presupuesto</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">Selecciona un rango o personaliza tu búsqueda</p>
@@ -460,7 +460,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   }}
                   className={`group relative rounded-xl border-2 px-4 py-4 text-sm md:text-base font-semibold transition-all hover:scale-105 ${
                     isActive 
-                      ? 'border-yellow-500 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/20 shadow-lg scale-105' 
+                      ? 'border-yellow-500    from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/20 shadow-lg scale-105' 
                       : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-yellow-300 hover:shadow-md'
                   }`}
                 >

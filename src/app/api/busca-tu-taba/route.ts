@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
+import { fetchProductosPrecios } from "@/lib/fetchProductosPrecios";
+import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-tu-taba";
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") || "1");
-    const itemsPerPage = Number(searchParams.get("limit") || "12");
+    const itemsPerPage = Number(searchParams.get("limit") || "10");
 
     const date = searchParams.get("fecha") || undefined;
     const precio = searchParams.get("precio") || undefined;
@@ -87,7 +89,7 @@ export async function GET(req: NextRequest) {
 
     const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${razonSocialFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"  ] `;
 
-    // Fetch all (we slice after processing to keep parity with page)
+    // 1. Fetch products from Sanity (basic info)
     const productsRaw = await client.fetch(
       groq`${filter} ${order} {
         _id,
@@ -103,28 +105,67 @@ export async function GET(req: NextRequest) {
         linea_liquidacion,
         color,
         imgcatalogomain,
-        linea_liquidacion,
         imagescatalogo,
         categories,
-        tallas,
-        preciomanual,
+        razonsocial,
         popularidad,
         fechaIngreso,
-        priceecommerce,
-        mayorista_cd,
-        "pricemayorista": mayorista_cd,
-        priceemprendedor,
-        stock,
-        razonsocial,
+        activo,
+        ninos_talla_grande,
+        fecha_cuando_aparece,
         "slug": slug.current
       }`
     );
-    // Only Sanity-driven processing
-    let filteredProducts = productsRaw as any[];
+
+    // 2. Fetch prices, sizes and stock from system API
+    let productosSistema: any[] = [];
+    try {
+      const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
+      productosSistema = productosTraidosSistemaFritzSport(
+        productosConPrecios,
+        undefined, // tipoproducto
+        "LIMA", // provincia
+        undefined, // razonsocial
+        undefined // ninos_talla_grande
+      );
+    } catch (error) {
+      console.error("Error fetching productos from sistema:", error);
+    }
+
+    // 3. Combine: Sanity info + System prices/sizes/stock
+    const productosCombinados = productosSistema.map((productoSistema: any) => {
+      const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
+      
+      return {
+        // Basic info from Sanity
+        ...productoSanity,
+        
+        // Prices, sizes and stock from System (override)
+        priceecommerce: productoSistema.priceecommerce,
+        precio_retail: productoSistema.precio_retail,
+        priceemprendedor: productoSistema.priceemprendedor,
+        precio_emprendedor: productoSistema.precio_emprendedor,
+        mayorista_cd: productoSistema.mayorista_cd,
+        precio_mayorista: productoSistema.precio_mayorista,
+        stock: productoSistema.stock,
+        stockDisponible: productoSistema.stockDisponible,
+        tallas: productoSistema.tallas,
+        tallascatalogo: productoSistema.tallascatalogo,
+        talla_sistema: productoSistema.talla_sistema,
+        provincias: productoSistema.provincias,
+        
+        // Keep processed fields from system
+        razonsocial: productoSistema.razonsocial,
+        tipoproducto: productoSistema.tipoproducto,
+        subgenero_ninos: productoSistema.subgenero_ninos,
+      };
+    });
+
+    let filteredProducts = productosCombinados as any[];
     // Keep only products that have all three prices > 0
     filteredProducts = filteredProducts.filter((p: any) => {
       const retail = Number(p.priceecommerce || 0);
-      const mayorista = Number(p.mayorista || 0);
+      const mayorista = Number(p.mayorista_cd || 0);
       const emprendedor = Number(p.priceemprendedor || 0);
       return retail > 0 && mayorista > 0 && emprendedor > 0;
     });

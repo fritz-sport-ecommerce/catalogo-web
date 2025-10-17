@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Product from "@/components/product/product-card/product";
+import ProductGridSkeleton from "./ProductGridSkeleton";
 
 type Product = any;
 
@@ -49,7 +50,7 @@ export default function InfiniteProductGrid({
           fetchMore();
         }
       });
-    }, { rootMargin: "600px" });
+    }, { rootMargin: "400px" }); // Cargar cuando esté a 400px del final
     io.observe(el);
     return () => io.disconnect();
   }, [fetchMore]);
@@ -88,11 +89,8 @@ export default function InfiniteProductGrid({
           </div>
           <div ref={sentinelRef} className="h-20" />
           {loading && (
-            <div className="py-8 text-center">
-              <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-gray-800 rounded-full shadow-lg">
-                <div className="animate-spin h-5 w-5 border-2 border-yellow-500 border-t-transparent rounded-full"></div>
-                <span className="text-base font-medium text-gray-700 dark:text-gray-300">Cargando más productos...</span>
-              </div>
+            <div className="mt-8">
+              <ProductGridSkeleton count={6} />
             </div>
           )}
           {!hasMore && items.length > 0 && (

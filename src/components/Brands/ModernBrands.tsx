@@ -64,7 +64,7 @@ export function ModernBrands() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
             >
-              <div className="relative w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-all duration-300">
+              <div className="relative w-24 h-24 mx-auto mb-4    from-gray-100 to-gray-200 rounded-lg flex items-center justify-center overflow-hidden group-hover:shadow-lg transition-all duration-300">
                 <div 
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 group-hover:opacity-30 transition-opacity duration-300"
                   style={{ backgroundImage: `url(${brand.logo})` }}

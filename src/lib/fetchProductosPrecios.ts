@@ -28,7 +28,7 @@ async function buscarPorSKU(
 
     // DEBUG: Mostrar qué estamos enviando
     console.log("🔍 DEBUG - Solicitud a API:", {
-      url: "http://100.96.134.74:8081/api/productos/precio-stock-por-almacenes",
+      url: "https://fritz.ngrok.app/api/productos/precio-stock-por-almacenes",
       totalSKUs: solicitud.codigos.length,
       primerosSkus: solicitud.codigos.slice(0, 5),
       almacenes: solicitud.codAlmacenes,
@@ -36,7 +36,7 @@ async function buscarPorSKU(
     });
 
     const url =
-      "http://100.96.134.74:8081/api/productos/precio-stock-por-almacenes";
+      "https://fritz.ngrok.app/api/productos/precio-stock-por-almacenes";
 
     const resp = await fetch(url, {
       method: "POST",
@@ -93,8 +93,8 @@ export async function fetchProductosPrecios(
       totalProductos: productos.length,
     });
 
-    // Procesar en lotes de 20 SKUs para evitar sobrecarga
-    const BATCH_SIZE = 20;
+    // Procesar en lotes de 200 SKUs para evitar sobrecarga
+    const BATCH_SIZE = 200;
     const totalBatches = Math.ceil(productos.length / BATCH_SIZE);
     const todosLosResultados: any[] = [];
 
