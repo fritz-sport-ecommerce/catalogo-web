@@ -72,7 +72,7 @@ export default async function Page({ searchParams }: Props) {
                 <div className="sticky xl:top-2 top-10 z-20">
                   <a
                     href="/pdf"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 text-white px-6 py-3 text-base font-semibold shadow-lg hover:bg-blue-700 transition-all hover:shadow-xl"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-black text-white px-6 py-3 text-base font-semibold shadow-lg hover:bg-blue-700 transition-all hover:shadow-xl"
                   >
                     Ver catálogo completo
                     <ExternalLink className="w-5 h-5" />
@@ -150,7 +150,7 @@ export default async function Page({ searchParams }: Props) {
                   <div className="hidden lg:block sticky top-20 space-y-6 max-h-[calc(100vh-6rem)] overflow-y-auto">
                     <a
                       href="/pdf"
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 text-white px-5 py-3 text-base font-semibold shadow-lg hover:bg-blue-700 transition-all hover:shadow-xl"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-black text-white px-5 py-3 text-base font-semibold shadow-lg hover:bg-blue-700 transition-all hover:shadow-xl"
                     >
                       Ver catálogo completo
                       <ExternalLink className="w-5 h-5" />

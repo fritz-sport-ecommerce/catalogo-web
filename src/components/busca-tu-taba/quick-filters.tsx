@@ -298,7 +298,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                       {value.split(".").map((val, idx) => (
                         <span
                           key={`${key}-${val}-${idx}`}
-                          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full bg-black dark:bg-white text-white dark:text-black shadow-sm"
+                          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full bg-gray-800 dark:bg-white text-white dark:text-black shadow-sm"
                         >
                           <span className="capitalize">{val}</span>
                           <button
@@ -309,7 +309,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                               const filteredValues = valuesArray.filter((v) => v !== val);
                               setParams({ [key]: filteredValues.length ? filteredValues.join(".") : null });
                             }}
-                            className="ml-2 font-bold text-gray-900 hover:text-red-600 transition-colors"
+                            className="ml-2 font-bold text-white hover:text-red-600 transition-colors"
                             aria-label={`Quitar ${key} ${val}`}
                           >
                             ×
@@ -428,7 +428,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
       <div ref={step4Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <h3 className="text-base md:text-xl font-bold mb-5 text-gray-900 dark:text-white">Elige tu marca favorita</h3>
         <div className="grid grid-cols-2 gap-4 md:gap-5">
-          {[{value:'adidas',label:'Adidas',emoji:'⚽'},{value:'nike',label:'Nike',emoji:'🏃'},{value:'reebok',label:'Reebok',emoji:'👟'},{value:'fritzsport',label:'Fritz Sport',emoji:'⭐'}].map(opt => {
+          {[
+            { value: 'adidas', label: 'Adidas', imageUrl: 'https://cdn.sanity.io/images/ibvmpbc1/production/ee995528aa127d0552dd5316aa8847ffe79adc8b-196x196.png' },
+            { value: 'nike', label: 'Nike', imageUrl: 'https://cdn.sanity.io/images/ibvmpbc1/production/c4f4c571a1e591fa12e147037f7b4fcf33dea577-196x196.png  ' },
+            { value: 'frizsport', label: 'Friz Sport', imageUrl: 'https://cdn.sanity.io/images/ibvmpbc1/production/4a5cdee84967d0d4fa665fcde4263e8128a52909-196x196.png' },
+
+            { value: 'reebok', label: 'Reebok', imageUrl: 'https://cdn.sanity.io/images/ibvmpbc1/production/9bc79d5239ce2e4b60d2da9936fafd69e38242c5-1089x296.png' },
+          ].map((opt) => {
             const isActiveMarca = activeMarca.split('.')?.includes(opt.value);
             return (
               <button
@@ -439,12 +445,23 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   setParams({ marca: next || null });
                   if (next) setActiveStep(5);
                 }}
-                className={`rounded-xl border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
+                className={`rounded-xl bg-black border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
                   isActiveMarca ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                 }`}
               >
-                <span className="text-3xl md:text-4xl">{opt.emoji}</span>
-                <span>{opt.label}</span>
+                {opt.imageUrl ? (
+                  <img
+                    src={opt.imageUrl}
+                    alt={opt.label}
+                    className="w-16 h-16 object-contain"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-16 h-16 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md text-sm font-bold text-white">
+                    {opt.label}
+                  </div>
+                )}
+                <span className="text-sm text-white">{opt.label}</span>
               </button>
             );
           })}
