@@ -138,7 +138,7 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
           </div>
         </>
       </ModalPreguntasFrecuentes>
-      <Link
+      {/* <Link
         href="/emprende"
         className="z-header  sticky-0 fixed bottom-20 left-4 z-[999] flex items-center justify-center xl:bottom-[80px] xl:left-16 "
         rel="noreferrer"
@@ -200,7 +200,7 @@ export default function IconWhatapp({ urlWhatsApp }: Props) {
             </defs>
           </svg>
         </div>
-      </Link>
+      </Link> */}
     </>
   );
 }

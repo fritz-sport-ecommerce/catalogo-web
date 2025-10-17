@@ -51,17 +51,19 @@ const CATEGORY_OPTIONS: Record<string, RowItem[]> = {
     { key: "pantalon", label: "Pantalones", emoji: "👖" },
     { key: "buzos", label: "Buzos", emoji: "🧥" },
     { key: "leggins", label: "Leggins", emoji: "👗" },
-    { key: "tops", label: "Tops", emoji: "👚" },
+    { key: "poleras", label: "Poleras", emoji: "👚" },
+    { key: "medias", label: "Medias", emoji: "🧦" },
   ],
   accesorios: [
     { key: "mochilas", label: "Mochilas", emoji: "🎒" },
     { key: "gorras", label: "Gorras", emoji: "🧢" },
     { key: "bolsos", label: "Bolsos", emoji: "👜" },
+    { key: "morral", label: "Morral", emoji: "🎒" },
     { key: "pelotas", label: "Pelotas", emoji: "⚽" },
     { key: "guantes", label: "Guantes", emoji: "🧤" },
     { key: "canillera", label: "Canilleras", emoji: "🦵" },
     { key: "tomatodos", label: "Toma Todo", emoji: "🍶" },
-    { key: "morral", label: "Morral", emoji: "🎒" },
+    { key: "maletin", label: "Maletín", emoji: "👜" },
   ],
 };
 
@@ -107,6 +109,25 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
   useEffect(() => {
     setActiveStep((prev) => Math.min(prev, maxStepAvailable));
   }, [maxStepAvailable]);
+
+  // Scroll automático al paso activo (excepto paso 1)
+  useEffect(() => {
+    // No hacer scroll en el paso 1
+    if (activeStep === 1) return;
+    
+    const refs = [step1Ref, step2Ref, step3Ref, step4Ref, step5Ref];
+    const currentRef = refs[activeStep - 1];
+    
+    if (currentRef?.current) {
+      setTimeout(() => {
+        currentRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest'
+        });
+      }, 100);
+    }
+  }, [activeStep]);
   const stepLabel = currentStep === 1
     ? "Paso 1 de 5: Selecciona el tipo de producto"
     : currentStep === 2
@@ -121,6 +142,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
   const [localMin, setLocalMin] = useState<string>(String(minPrice));
   const [localMax, setLocalMax] = useState<string>(String(maxPrice));
+  
+  // Refs para cada paso
+  const step1Ref = useRef<HTMLDivElement>(null);
+  const step2Ref = useRef<HTMLDivElement>(null);
+  const step3Ref = useRef<HTMLDivElement>(null);
+  const step4Ref = useRef<HTMLDivElement>(null);
+  const step5Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setLocalMin(String(minPrice));
@@ -192,7 +220,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
   const FiltersContent = () => (
     <>
       {/* Stepper superior */}
-      <div className=" border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div className=" border-2 border-gray-200 dark:border-gray-700 rounded-2xl  p-1 shadow-lg">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2 md:gap-3">
           {[1,2,3,4,5].map((step) => {
             const enabled = step <= maxStepAvailable;
@@ -298,7 +326,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 1: Tipo de producto */}
       {activeStep === 1 && (
-        <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
+        <div ref={step1Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
           <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b-2 border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
             <h3 className="text-base md:text-xl font-bold text-gray-900 dark:text-white">Tipo de producto</h3>
             <button onClick={resetAll} className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:underline">Limpiar</button>
@@ -329,7 +357,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 2: Género */}
       {activeStep === 2 && hasTipo && (
-      <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div ref={step2Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <h3 className="text-base md:text-xl font-bold mb-5 text-gray-900 dark:text-white">Selecciona el género</h3>
         <div className="grid grid-cols-2 gap-4 md:gap-5">
           {[{value:'hombre',label:'Hombre',emoji:'👨'},{value:'mujer',label:'Mujer',emoji:'👩'},{value:'unisex',label:'Unisex',emoji:'👥'},{value:'niños',label:'Niños',emoji:'🧒'}].map(opt => {
@@ -359,7 +387,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
         const todasLasCategorias = [...categorias, ...ROWS_NUEVOS];
         
         return (
-          <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
+          <div ref={step3Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
             <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b-2 border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
               <h3 className="text-base md:text-xl font-bold text-gray-900 dark:text-white">
                 Explora por estilo {tipoSeleccionado && `(${tipoSeleccionado})`}
@@ -397,7 +425,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 4: Marca (solo cuando hay género y estilo) */}
       {activeStep === 4 && hasTipo && hasGenero && hasStyleSelected && (
-      <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div ref={step4Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <h3 className="text-base md:text-xl font-bold mb-5 text-gray-900 dark:text-white">Elige tu marca favorita</h3>
         <div className="grid grid-cols-2 gap-4 md:gap-5">
           {[{value:'adidas',label:'Adidas',emoji:'⚽'},{value:'nike',label:'Nike',emoji:'🏃'},{value:'reebok',label:'Reebok',emoji:'👟'},{value:'fritzsport',label:'Fritz Sport',emoji:'⭐'}].map(opt => {
@@ -426,7 +454,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 5: Precio (solo cuando hay género, estilo y marca) - Mejorado */}
       {activeStep === 5 && hasTipo && hasGenero && hasStyleSelected && hasMarca && (
-      <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div ref={step5Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-full bg-black dark:bg-white flex items-center justify-center text-xl">💰</div>
           <div>
@@ -478,56 +506,6 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
           </div>
         </div>
 
-        {/* Inputs personalizados - Mejorado */}
-        <div className="border-t-2 border-gray-100 dark:border-gray-800 pt-6">
-          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-            <span className="text-lg">✏️</span> Personaliza tu rango
-          </p>
-          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                  <span>💵</span> Precio Mínimo
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold text-lg">S/</span>
-                  <input
-                    inputMode="numeric"
-                    type="text"
-                    value={localMin}
-                    onChange={(e) => setLocalMin(e.target.value.replace(/[^0-9.]/g, ''))}
-                    className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white text-lg font-bold pl-12 pr-4 py-3.5 focus:border-orange-600 focus:ring-4 focus:ring-orange-200 dark:focus:ring-orange-900/50 transition-all shadow-sm hover:shadow-md"
-                    min={0}
-                    placeholder="0"
-                  />
-                </div>
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
-                  <span>💰</span> Precio Máximo
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold text-lg">S/</span>
-                  <input
-                    inputMode="numeric"
-                    type="text"
-                    value={localMax}
-                    onChange={(e) => setLocalMax(e.target.value.replace(/[^0-9.]/g, ''))}
-                    className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white text-lg font-bold pl-12 pr-4 py-3.5 focus:border-black dark:focus:border-white focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 transition-all shadow-sm hover:shadow-md"
-                    min={0}
-                    placeholder="1000"
-                  />
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={applyPrice}
-              className="mt-4 w-full bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black text-base md:text-lg font-bold rounded-xl px-5 py-4 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-            >
-              <span>🔍</span> Ver productos
-            </button>
-          </div>
-        </div>
       </div>
       )}
 
@@ -582,17 +560,17 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                 <div className="w-screen max-w-md">
                   <div className="h-full flex flex-col bg-white dark:bg-gray-900 shadow-2xl">
                     {/* Header - Mejorado */}
-                    <div className="sticky top-0 z-10 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 px-5 py-5 shadow-lg">
+                    <div className="sticky top-0 z-10 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-gray-100 dark:via-white dark:to-gray-100 px-5 py-5 shadow-lg">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                            <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                             </svg>
                           </div>
                           <div>
-                            <h2 className="text-xl font-bold text-black">Filtros</h2>
-                            <p className="text-xs text-black/70">Personaliza tu búsqueda</p>
+                            <h2 className="text-xl font-bold text-white dark:text-black">Filtros</h2>
+                            <p className="text-xs text-white/70 dark:text-black/70">Personaliza tu búsqueda</p>
                           </div>
                         </div>
                         <button
@@ -600,7 +578,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                           className="bg-black/10 hover:bg-black/20 backdrop-blur-sm rounded-full p-2.5 transition-all active:scale-95"
                           aria-label="Cerrar filtros"
                         >
-                          <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
@@ -616,7 +594,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                     <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t-2 border-gray-200 dark:border-gray-700 px-5 py-4 shadow-2xl">
                       <button
                         onClick={() => setIsMobileOpen(false)}
-                        className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-black text-lg font-bold rounded-2xl px-6 py-4 shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3"
+                        className="w-full bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black text-lg font-bold rounded-2xl px-6 py-4 shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />

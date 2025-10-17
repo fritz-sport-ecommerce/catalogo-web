@@ -72,16 +72,19 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
 
         {/* Precios */}
         <div className="space-y-1 mb-2.5">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Precios:</p>
-          <div className="flex flex-wrap gap-1.5 text-xs">
-            <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 px-2 py-1 rounded font-medium">
-              R: {formatPrice(product.priceecommerce)}
+ 
+          <div className="flex flex-wrap flex-col gap-y-2 gap-1.5 text-xs">
+            {/* Mayorista primero - rojo amigable y destacado */}
+            <div className="text-red-600  px-3 py-1.5 rounded-lg font-bold ">
+              Mayorista: {formatPrice(product.mayorista_cd)}
             </div>
-            <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-1 rounded font-medium">
-              E: {formatPrice(product.priceemprendedor)}
+            {/* Emprendedor segundo - verde amigable */}
+            <div className="text-green-700 dark:text-green-400 px-2 py-1 rounded font-medium">
+              Emprendedor: {formatPrice(product.priceemprendedor)}
             </div>
-            <div className="bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 px-2 py-1 rounded font-medium">
-              M: {formatPrice(product.mayorista_cd)}
+            {/* Retail al último - azul suave */}
+            <div className=" text-blue-700 dark:text-blue-400 px-2 py-1 rounded font-medium">
+              Retail: {formatPrice(product.priceecommerce)}
             </div>
           </div>
         </div>
@@ -99,12 +102,12 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
                     (product?.marca || "").toString(),
                     undefined,
                     product?.tipo || ""
-                  );
+                  ) as any[];
                   
                   // Ordenar tallas numéricamente
                   const tallasOrdenadas = converted
-                    .filter((t) => (t?.stock ?? 0) > 0)
-                    .sort((a, b) => {
+                    .filter((t: any) => (t?.stock ?? 0) > 0)
+                    .sort((a: any, b: any) => {
                       const numA = parseFloat(a.talla);
                       const numB = parseFloat(b.talla);
                       return numA - numB;
@@ -112,7 +115,7 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
                   
                   return (
                     <div className="flex flex-wrap gap-1">
-                      {tallasOrdenadas.map((t, idx) => (
+                      {tallasOrdenadas.map((t: any, idx: number) => (
                         <span 
                           key={`${t._id || idx}-${t.talla}`} 
                           className="px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded border border-gray-300 dark:border-gray-600"

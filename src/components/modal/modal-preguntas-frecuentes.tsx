@@ -11,7 +11,7 @@ export default function ModalPreguntasFrecuentes({ children }: AuxProps) {
 
   return (
     <div>
-      <Button
+      {/* <Button
         onClick={() => setActiveModal(!activeModal)}
         className="z-header bg-transparent hover:bg-transparent sticky-0 fixed bottom-6 left-0 z-10 flex items-center justify-center xl:bottom-[0px] xl:left-14 "
         rel="noreferrer"
@@ -25,8 +25,8 @@ export default function ModalPreguntasFrecuentes({ children }: AuxProps) {
             Preguntas <br /> Frecuentes
           </span>
         </div>
-      </Button>
-      <div
+      </Button> */}
+      {/* <div
         // onClick={() => setActiveModal(!activeModal)}
         className={` ${
           activeModal ? "fixed" : "hidden"
@@ -41,7 +41,7 @@ export default function ModalPreguntasFrecuentes({ children }: AuxProps) {
           </Button>
           {children}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
