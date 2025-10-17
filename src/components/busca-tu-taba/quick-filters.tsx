@@ -95,9 +95,8 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
   const hasTipo = Boolean(activeTipo);
   const hasGenero = Boolean(activeGenero);
-  const hasStyleSelected = Boolean(
-    activeCategory || searchParams?.get("fecha") === "desc"
-  );
+  // Solo cuenta categoría para completar el paso 3 (no "fecha")
+  const hasStyleSelected = Boolean(activeCategory);
   const hasMarca = Boolean(activeMarca);
   const hasRango = Boolean(activeRango);
 
@@ -165,7 +164,6 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
   }, [searchParams]);
 
   const isRowActive = (key: string) => {
-    if (key === "nuevos") return activeFecha === "desc";
     return activeCategory.split(".").includes(key);
   };
 
@@ -228,7 +226,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
       {activeStep >= 2 && (() => {
         const isNextEnabled = (
           (activeStep === 2 && !!activeGenero) ||
-          (activeStep === 3 && !!(activeCategory || searchParams?.get("fecha") === "desc")) ||
+          (activeStep === 3 && !!activeCategory) ||
           (activeStep === 4 && !!activeMarca) ||
           (activeStep === 1 && !!activeTipo)
         );
@@ -397,7 +395,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
         // Obtener las categorías según el tipo seleccionado
         const tipoSeleccionado = activeTipo.split('.')[0]; // Tomar solo el primer tipo si hay múltiples
         const categorias = CATEGORY_OPTIONS[tipoSeleccionado] || [];
-        const todasLasCategorias = [...categorias, ...ROWS_NUEVOS];
+        const todasLasCategorias = categorias; // no incluir 'nuevos' como categoría visual
         
         return (
           <div ref={step3Ref} className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
