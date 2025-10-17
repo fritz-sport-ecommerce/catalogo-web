@@ -16,7 +16,7 @@ export default function OnboardingSkeleton() {
             </div>
             
             {/* Cómo funciona skeleton */}
-            <div className="mb-8 p-6 sm:p-8 rounded-2xl bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 shadow-xl">
+            <div className="mb-8 p-6 sm:p-8 rounded-2xl   border-2 border-gray-200 dark:border-gray-700 shadow-xl">
               <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-48 mb-6 "></div>
               <div className="space-y-4">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -51,7 +51,7 @@ export default function OnboardingSkeleton() {
                 </div>
 
                 {/* Paso 1 skeleton */}
-                <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
+                <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
                   <div className="px-5 md:px-6 py-4 md:py-5 border-b-2 border-gray-100 dark:border-gray-800">
                     <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48 "></div>
                   </div>

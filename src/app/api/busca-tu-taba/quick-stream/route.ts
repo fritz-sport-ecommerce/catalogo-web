@@ -1,0 +1,301 @@
+import { NextRequest } from "next/server";
+import { client } from "@/sanity/lib/client";
+import { groq } from "next-sanity";
+import { fetchProductosPrecios, BatchProgress } from "@/lib/fetchProductosPrecios";
+import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-tu-taba";
+
+// Endpoint con streaming de progreso
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const page = Number(searchParams.get("page") || "1");
+  const itemsPerPage = Number(searchParams.get("limit") || "10");
+
+  const date = searchParams.get("fecha") || undefined;
+  const precio = searchParams.get("precio") || undefined;
+  const price = searchParams.get("price") || undefined;
+  const color = searchParams.get("color") || undefined;
+  const category = searchParams.get("category") || undefined;
+  const search = searchParams.get("search") || undefined;
+  const genero = searchParams.get("genero") || undefined;
+  const coleccion = searchParams.get("coleccion") || undefined;
+  const marca = searchParams.get("marca") || undefined;
+  const tipo = searchParams.get("tipo") || undefined;
+  const talla = searchParams.get("talla") || undefined;
+  const priceRange = searchParams.get("rangoPrecio") || undefined;
+  const tipoproducto = searchParams.get("tipoproducto") || undefined;
+  const populares = searchParams.get("populares") || undefined;
+
+  // Crear un stream de texto
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        // Order criteria
+        const priceSort = price || precio || undefined;
+        const priceOrder = priceSort ? `priceecommerce ${priceSort}` : "";
+        const dateOrder = date ? `_createAt ${date}` : "";
+        const orderCriteria = [
+          'select(marca == "fritzsport" => 1, 0) desc',
+          "select(popularidad > 1 => 1, 0) desc",
+          priceOrder,
+          dateOrder,
+        ]
+          .filter(Boolean)
+          .join(", ");
+        const order = `| order(${orderCriteria})`;
+
+        // Filters
+        const productFilter = "_type == 'product'";
+        const colorFilter = color
+          ? `&& (${color
+              .split(".")
+              .map((c) => `color match "${c}"`)
+              .join(" || ")})`
+          : "";
+        const tipoFilter = tipo
+          ? `&& (${tipo
+              .split(".")
+              .map((t) => `tipo match "${t}"`)
+              .join(" || ")})`
+          : "";
+        const marcaFilter = marca
+          ? `&& (${marca
+              .split(".")
+              .map((m) => `marca match "${m}"`)
+              .join(" || ")})`
+          : "";
+        const categoryFilter = category
+          ? `&& (${category
+              .split(".")
+              .map((c) => `"${c}" match categories`)
+              .join(" || ")})`
+          : "";
+        const generoFilter = genero
+          ? `&& (${genero
+              .split(".")
+              .map((g) => `genero == "${g}"`)
+              .join(" || ")} || genero == "unisex")`
+          : "";
+        const coleccionFilter = coleccion
+          ? `&& (${coleccion
+              .split(".")
+              .map((c) => `coleccion match "${c}"`)
+              .join(" || ")})`
+          : "";
+        const searchFilter = search
+          ? `&& (name match "${search}" || sku match "${search}" || genero match "${search}" || marca match "${search}" || tipo match "${search}" || category match "${search}" || color match "${search}" || coleccion match "${search}")`
+          : "";
+        const tipoProductoFilter = tipoproducto ? `&& tipoproducto == "${tipoproducto}"` : "";
+        const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
+
+        const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"] `;
+
+        // Enviar evento de inicio
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ type: "start", message: "Iniciando búsqueda..." })}\n\n`)
+        );
+
+        // 1. Fetch datos de Sanity
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ type: "progress", message: "Obteniendo productos de Sanity..." })}\n\n`)
+        );
+
+        const productsRaw = await client.fetch(
+          groq`${filter} ${order} {
+            _id,
+            _createdAt,
+            name,
+            empresa,
+            sku,
+            images[] {
+              asset-> {
+                _id,
+                url
+              }
+            },
+            description,
+            genero,
+            tipo,
+            marca,
+            linea_liquidacion,
+            color,
+            imgcatalogomain {
+              asset-> {
+                _id,
+                url
+              }
+            },
+            imagescatalogo[] {
+              asset-> {
+                _id,
+                url
+              }
+            },
+            categories,
+            popularidad,
+            razonsocial,
+            activo,
+            ninos_talla_grande,
+            "slug": slug.current
+          }`
+        );
+
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ 
+            type: "progress", 
+            message: `Encontrados ${productsRaw.length} productos en Sanity` 
+          })}\n\n`)
+        );
+
+        // 2. Obtener precios y stock del sistema con callback de progreso
+        let productosSistema: any[] = [];
+        try {
+          const productosConPrecios = await fetchProductosPrecios(
+            productsRaw,
+            "01",
+            undefined,
+            (progress: BatchProgress) => {
+              // Enviar progreso de lotes
+              controller.enqueue(
+                encoder.encode(`data: ${JSON.stringify({ 
+                  type: "batch",
+                  currentBatch: progress.currentBatch,
+                  totalBatches: progress.totalBatches,
+                  batchSize: progress.batchSize,
+                  processedProducts: progress.processedProducts,
+                  totalProducts: progress.totalProducts,
+                  message: `Procesando lote ${progress.currentBatch}/${progress.totalBatches} (${progress.batchSize} SKUs)`
+                })}\n\n`)
+              );
+            }
+          );
+
+          productosSistema = productosTraidosSistemaFritzSport(
+            productosConPrecios,
+            undefined,
+            "LIMA",
+            undefined,
+            undefined
+          );
+        } catch (error) {
+          console.error("Error fetching productos from sistema:", error);
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify({ 
+              type: "error", 
+              message: "Error obteniendo precios del sistema" 
+            })}\n\n`)
+          );
+        }
+
+        // 3. Combinar y procesar datos
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ 
+            type: "progress", 
+            message: "Combinando datos y filtrando productos..." 
+          })}\n\n`)
+        );
+
+        const skusVistos = new Set<string>();
+        const productosCombinados = productosSistema
+          .map((productoSistema: any) => {
+            const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
+            
+            return {
+              ...productoSanity,
+              priceecommerce: productoSistema.priceecommerce,
+              precio_retail: productoSistema.precio_retail,
+              priceemprendedor: productoSistema.priceemprendedor,
+              precio_emprendedor: productoSistema.precio_emprendedor,
+              mayorista_cd: productoSistema.mayorista_cd,
+              precio_mayorista: productoSistema.precio_mayorista,
+              stock: productoSistema.stock,
+              stockDisponible: productoSistema.stockDisponible,
+              tallas: productoSistema.tallas,
+              tallascatalogo: productoSistema.tallascatalogo,
+              talla_sistema: productoSistema.talla_sistema,
+              provincias: productoSistema.provincias,
+            };
+          })
+          .filter((producto: any) => {
+            if (!producto.sku || skusVistos.has(producto.sku)) {
+              return false;
+            }
+            skusVistos.add(producto.sku);
+            return true;
+          });
+
+        // 4. FILTRAR por stock > 0 y precios válidos
+        let productosConStock = productosCombinados.filter((p: any) => {
+          const hasStock = (p.stock || 0) > 0;
+          const hasValidPrices = 
+            (p.priceecommerce || 0) > 0 &&
+            (p.mayorista_cd || 0) > 0 &&
+            (p.priceemprendedor || 0) > 0;
+          return hasStock && hasValidPrices;
+        });
+
+        // 5. Filtrar por talla si se especifica
+        if (talla) {
+          productosConStock = productosConStock.filter((producto: any) => {
+            return producto.tallas && producto.tallas.some((t: any) => String(t.talla) === talla);
+          });
+        }
+
+        // 6. Filtrar por rango de precio si se especifica
+        if (priceRange) {
+          const [minPrice, maxPrice] = priceRange.split("-").map(Number);
+          productosConStock = productosConStock.filter((producto: any) => {
+            const precio = producto.priceecommerce || 0;
+            return precio >= minPrice && precio <= maxPrice;
+          });
+        }
+
+        // 7. Ordenar productos
+        const priceSortDir = priceSort as "asc" | "desc" | undefined;
+        const sortedProducts = productosConStock.sort((a: any, b: any) => {
+          if (a.stock > 0 && b.stock === 0) return -1;
+          if (a.stock === 0 && b.stock > 0) return 1;
+          if (priceSortDir === "asc") return (a.priceecommerce || 0) - (b.priceecommerce || 0);
+          if (priceSortDir === "desc") return (b.priceecommerce || 0) - (a.priceecommerce || 0);
+          return 0;
+        });
+
+        // 8. Paginación
+        const totalProducts = sortedProducts.length;
+        const start = (page - 1) * itemsPerPage;
+        const pageItems = sortedProducts.slice(start, start + itemsPerPage);
+
+        // Enviar resultado final
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({
+            type: "complete",
+            ok: true,
+            total: totalProducts,
+            page,
+            pageSize: itemsPerPage,
+            products: pageItems,
+          })}\n\n`)
+        );
+
+        controller.close();
+      } catch (error: any) {
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ 
+            type: "error", 
+            ok: false, 
+            error: error?.message || "Unexpected error" 
+          })}\n\n`)
+        );
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive",
+    },
+  });
+}

@@ -43,9 +43,9 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
 
   // Los productos ya vienen filtrados con stock > 0 desde el endpoint
   return (
-    <div className="h-full flex flex-col border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow">
+    <div className="h-full flex flex-col border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden   hover:shadow-lg transition-shadow">
       {/* Imagen del producto */}
-      <a href={productUrl} className="relative overflow-hidden bg-gray-100 dark:bg-gray-800 aspect-square">
+      <a href={productUrl} className="relative overflow-hidden bg-gray-100  aspect-square">
         <Image
           src={imageUrl}
           alt={product.name || "Producto"}
@@ -65,7 +65,7 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
 
         {/* Nombre del producto */}
         <a href={productUrl} className="block mb-2.5">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 hover:text-yellow-600 dark:hover:text-yellow-500 transition-colors min-h-[2.5rem]">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors min-h-[2.5rem]">
             {product.name || "Sin nombre"}
           </h3>
         </a>

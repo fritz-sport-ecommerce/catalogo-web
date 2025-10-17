@@ -12,10 +12,23 @@ interface ProductsLoaderProps {
 export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsLoaderProps) {
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [data, setData] = useState<{ products: any[]; total: number } | null>(null);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoadingInitial(true);
+      setProgress(0);
+      
+      // Simular progreso mientras carga
+      const progressInterval = setInterval(() => {
+        setProgress(prev => {
+          if (prev < 90) {
+            return prev + Math.random() * 15 + 5;
+          }
+          return prev;
+        });
+      }, 300);
+      
       try {
         const params = new URLSearchParams();
         Object.entries(searchParams).forEach(([key, value]) => {
@@ -24,25 +37,31 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         params.set("page", "1");
         params.set("limit", String(itemsPerPage));
 
-        // FASE 1: Cargar datos rápidos de Sanity (sin precios del sistema)
+        // Usar el endpoint quick optimizado
         const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
         });
         const quickResult = await quickResponse.json();
 
+        clearInterval(progressInterval);
+        setProgress(100);
+
         if (quickResult.ok) {
-          // Mostrar productos inmediatamente con datos de Sanity
           setData({
             products: quickResult.products,
             total: quickResult.total,
           });
+          
+          // Pequeña pausa para mostrar 100%
+          setTimeout(() => {
+            setLoadingInitial(false);
+          }, 300);
+        } else {
           setLoadingInitial(false);
-
-          // FASE 2: Cargar precios completos en segundo plano (opcional, para scroll infinito)
-          // Los precios individuales se cargarán por producto con ProductCardWithLazyPrices
         }
       } catch (error) {
         console.error("Error loading products:", error);
+        clearInterval(progressInterval);
         setLoadingInitial(false);
       }
     };
@@ -51,7 +70,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   }, [searchParams, itemsPerPage]);
 
   if (loadingInitial || !data) {
-    return <FetchingSkeleton />;
+    return <FetchingSkeleton progress={progress} />;
   }
 
   return (

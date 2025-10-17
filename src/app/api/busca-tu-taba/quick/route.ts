@@ -142,26 +142,36 @@ export async function GET(req: NextRequest) {
       console.error("Error fetching productos from sistema:", error);
     }
 
-    // 3. Combinar Sanity + Sistema
-    const productosCombinados = productosSistema.map((productoSistema: any) => {
-      const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
-      
-      return {
-        ...productoSanity,
-        priceecommerce: productoSistema.priceecommerce,
-        precio_retail: productoSistema.precio_retail,
-        priceemprendedor: productoSistema.priceemprendedor,
-        precio_emprendedor: productoSistema.precio_emprendedor,
-        mayorista_cd: productoSistema.mayorista_cd,
-        precio_mayorista: productoSistema.precio_mayorista,
-        stock: productoSistema.stock,
-        stockDisponible: productoSistema.stockDisponible,
-        tallas: productoSistema.tallas,
-        tallascatalogo: productoSistema.tallascatalogo,
-        talla_sistema: productoSistema.talla_sistema,
-        provincias: productoSistema.provincias,
-      };
-    });
+    // 3. Combinar Sanity + Sistema y eliminar duplicados por SKU
+    const skusVistos = new Set<string>();
+    const productosCombinados = productosSistema
+      .map((productoSistema: any) => {
+        const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
+        
+        return {
+          ...productoSanity,
+          priceecommerce: productoSistema.priceecommerce,
+          precio_retail: productoSistema.precio_retail,
+          priceemprendedor: productoSistema.priceemprendedor,
+          precio_emprendedor: productoSistema.precio_emprendedor,
+          mayorista_cd: productoSistema.mayorista_cd,
+          precio_mayorista: productoSistema.precio_mayorista,
+          stock: productoSistema.stock,
+          stockDisponible: productoSistema.stockDisponible,
+          tallas: productoSistema.tallas,
+          tallascatalogo: productoSistema.tallascatalogo,
+          talla_sistema: productoSistema.talla_sistema,
+          provincias: productoSistema.provincias,
+        };
+      })
+      .filter((producto: any) => {
+        // Eliminar duplicados por SKU
+        if (!producto.sku || skusVistos.has(producto.sku)) {
+          return false;
+        }
+        skusVistos.add(producto.sku);
+        return true;
+      });
 
     // 4. FILTRAR por stock > 0 y precios válidos
     let productosConStock = productosCombinados.filter((p: any) => {

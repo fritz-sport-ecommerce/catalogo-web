@@ -11,7 +11,7 @@ const LoadingSpinner = () => (
             <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
             
             {/* Filtros skeleton */}
-            <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+            <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
               <div className="space-y-4">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className="space-y-2">

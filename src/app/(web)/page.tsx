@@ -83,7 +83,7 @@ export default async function Page({ searchParams }: Props) {
               <section className="min-h-[70vh] flex items-start justify-center py-8 lg:py-12">
                 <div className="max-w-5xl w-full">
                   <div className="mb-8 lg:mb-12">
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-4 text-gray-900 dark:text-white">
                       Busca tu Producto
                     </h1>
                     <p className="text-center text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-8">
@@ -95,23 +95,23 @@ export default async function Page({ searchParams }: Props) {
                     <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 dark:text-white">¿Cómo funciona?</h2>
                     <ol className="space-y-4 text-base sm:text-lg">
                       <li className="flex items-start gap-4">
-                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-500 text-black font-bold flex items-center justify-center text-lg">1</span>
+                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold flex items-center justify-center text-lg">1</span>
                         <span className="pt-1"><strong className="text-gray-900 dark:text-white">Selecciona el tipo:</strong> <span className="text-gray-700 dark:text-gray-300">Calzado, Ropa o Accesorios</span></span>
                       </li>
                       <li className="flex items-start gap-4">
-                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-500 text-black font-bold flex items-center justify-center text-lg">2</span>
+                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold flex items-center justify-center text-lg">2</span>
                         <span className="pt-1"><strong className="text-gray-900 dark:text-white">Selecciona el género:</strong> <span className="text-gray-700 dark:text-gray-300">Hombre, Mujer, Unisex o Niños</span></span>
                       </li>
                       <li className="flex items-start gap-4">
-                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-500 text-black font-bold flex items-center justify-center text-lg">3</span>
+                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold flex items-center justify-center text-lg">3</span>
                         <span className="pt-1"><strong className="text-gray-900 dark:text-white">Elige un estilo:</strong> <span className="text-gray-700 dark:text-gray-300">Urbano, Running o Chimpunes</span></span>
                       </li>
                       <li className="flex items-start gap-4">
-                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-500 text-black font-bold flex items-center justify-center text-lg">4</span>
+                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold flex items-center justify-center text-lg">4</span>
                         <span className="pt-1"><strong className="text-gray-900 dark:text-white">Elige la marca:</strong> <span className="text-gray-700 dark:text-gray-300">Adidas, Nike, Reebok o Fritz Sport</span></span>
                       </li>
                       <li className="flex items-start gap-4">
-                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yellow-500 text-black font-bold flex items-center justify-center text-lg">5</span>
+                        <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black dark:bg-white text-white dark:text-black font-bold flex items-center justify-center text-lg">5</span>
                         <span className="pt-1"><strong className="text-gray-900 dark:text-white">Define tu presupuesto:</strong> <span className="text-gray-700 dark:text-gray-300">Establece el rango de precios</span></span>
                       </li>
                     </ol>

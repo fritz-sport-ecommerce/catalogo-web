@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 function useURLState() {
   const router = useRouter();
@@ -206,13 +206,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                 onClick={() => enabled && setActiveStep(step)}
                 disabled={!enabled}
                 className={`flex flex-col items-center gap-2 md:gap-3 w-full text-center rounded-xl px-3 py-4 md:py-5 border-2 transition-all ${
-                  isActive ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-md scale-105" : "border-gray-200 dark:border-gray-700"
+                  isActive ? "border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105" : "border-gray-200 dark:border-gray-700"
                 } ${
-                  !enabled ? "opacity-50 cursor-not-allowed" : "hover:border-yellow-300 hover:shadow-md"
+                  !enabled ? "opacity-50 cursor-not-allowed" : "hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md"
                 }`}
               >
                 <span className={`flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full text-base md:text-lg font-bold transition-all ${
-                  completed ? "bg-green-500 text-white" : isActive ? "bg-yellow-500 text-black" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                  completed ? "bg-green-500 text-white" : isActive ? "bg-black dark:bg-white text-white dark:text-black" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                 }`}>
                   {completed ? "✓" : step}
                 </span>
@@ -264,13 +264,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   rangoPrecio: '💰 Precio'
                 };
                 return (
-                  <div key={key} className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+                  <div key={key} className="  rounded-lg p-3 border border-gray-200 dark:border-gray-700">
                     <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">{labels[key] || key}</div>
                     <div className="flex flex-wrap gap-2">
                       {value.split(".").map((val, idx) => (
                         <span
                           key={`${key}-${val}-${idx}`}
-                          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 shadow-sm"
+                          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-full bg-black dark:bg-white text-white dark:text-black shadow-sm"
                         >
                           <span className="capitalize">{val}</span>
                           <button
@@ -298,10 +298,10 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 1: Tipo de producto */}
       {activeStep === 1 && (
-        <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
+        <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
           <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b-2 border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
             <h3 className="text-base md:text-xl font-bold text-gray-900 dark:text-white">Tipo de producto</h3>
-            <button onClick={resetAll} className="text-sm font-semibold text-yellow-600 hover:text-yellow-700 hover:underline">Limpiar</button>
+            <button onClick={resetAll} className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:underline">Limpiar</button>
           </div>
           <div className="p-5 md:p-6 grid grid-cols-3 gap-3 md:gap-4">
             {[
@@ -315,7 +315,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   key={tipo.value}
                   onClick={() => onTipoClick(tipo.value)}
                   className={`flex flex-col items-center gap-2 rounded-xl border-2 px-4 py-5 md:px-5 md:py-6 transition-all hover:shadow-lg ${
-                    active ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-md scale-105" : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-yellow-300"
+                    active ? "border-orange-600 bg-orange-50 dark:bg-orange-900/20 shadow-md scale-105" : "border-gray-200 dark:border-gray-700   hover:border-orange-400"
                   }`}
                 >
                   <div className="text-3xl md:text-4xl" aria-hidden>{tipo.emoji}</div>
@@ -329,7 +329,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 2: Género */}
       {activeStep === 2 && hasTipo && (
-      <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <h3 className="text-base md:text-xl font-bold mb-5 text-gray-900 dark:text-white">Selecciona el género</h3>
         <div className="grid grid-cols-2 gap-4 md:gap-5">
           {[{value:'hombre',label:'Hombre',emoji:'👨'},{value:'mujer',label:'Mujer',emoji:'👩'},{value:'unisex',label:'Unisex',emoji:'👥'},{value:'niños',label:'Niños',emoji:'🧒'}].map(opt => {
@@ -339,7 +339,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                 key={opt.value}
                 onClick={() => onGeneroChange({ target: { value: opt.value } } as any)}
                 className={`rounded-xl border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
-                  active ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-yellow-300'
+                  active ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                 }`}
               >
                 <span className="text-3xl md:text-4xl">{opt.emoji}</span>
@@ -359,12 +359,12 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
         const todasLasCategorias = [...categorias, ...ROWS_NUEVOS];
         
         return (
-          <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
+          <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg">
             <div className="flex items-center justify-between px-5 md:px-6 py-4 md:py-5 border-b-2 border-gray-100 dark:border-gray-800 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
               <h3 className="text-base md:text-xl font-bold text-gray-900 dark:text-white">
                 Explora por estilo {tipoSeleccionado && `(${tipoSeleccionado})`}
               </h3>
-              <button onClick={resetAll} className="text-sm font-semibold text-yellow-600 hover:text-yellow-700 hover:underline">Limpiar</button>
+              <button onClick={resetAll} className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white hover:underline">Limpiar</button>
             </div>
             <div className="p-5 md:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
               {todasLasCategorias.map((row) => {
@@ -374,7 +374,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                     key={row.key}
                     onClick={() => onRowClick(row.key)}
                     className={`flex items-center justify-between rounded-xl border-2 px-4 py-4 md:px-5 md:py-5 transition-all hover:shadow-lg ${
-                      active ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-md scale-105" : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 hover:border-yellow-300"
+                      active ? "border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105" : "border-gray-200 dark:border-gray-700   hover:border-gray-400 dark:hover:border-gray-500"
                     }`}
                   >
                     <div className="flex items-center gap-3 md:gap-4">
@@ -382,7 +382,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                       <span className={`text-sm md:text-base ${active ? "font-bold" : "font-semibold"}`}>{row.label}</span>
                     </div>
                     {active && (
-                      <svg className="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-black dark:text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                       </svg>
                     )}
@@ -397,7 +397,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 4: Marca (solo cuando hay género y estilo) */}
       {activeStep === 4 && hasTipo && hasGenero && hasStyleSelected && (
-      <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <h3 className="text-base md:text-xl font-bold mb-5 text-gray-900 dark:text-white">Elige tu marca favorita</h3>
         <div className="grid grid-cols-2 gap-4 md:gap-5">
           {[{value:'adidas',label:'Adidas',emoji:'⚽'},{value:'nike',label:'Nike',emoji:'🏃'},{value:'reebok',label:'Reebok',emoji:'👟'},{value:'fritzsport',label:'Fritz Sport',emoji:'⭐'}].map(opt => {
@@ -412,7 +412,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   if (next) setActiveStep(5);
                 }}
                 className={`rounded-xl border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
-                  isActiveMarca ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-yellow-300'
+                  isActiveMarca ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                 }`}
               >
                 <span className="text-3xl md:text-4xl">{opt.emoji}</span>
@@ -426,9 +426,9 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
       {/* Paso 5: Precio (solo cuando hay género, estilo y marca) - Mejorado */}
       {activeStep === 5 && hasTipo && hasGenero && hasStyleSelected && hasMarca && (
-      <div className="bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
+      <div className="  border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-5 md:p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-full    from-yellow-400 to-yellow-500 flex items-center justify-center text-xl">💰</div>
+          <div className="w-10 h-10 rounded-full bg-black dark:bg-white flex items-center justify-center text-xl">💰</div>
           <div>
             <h3 className="text-base md:text-xl font-bold text-gray-900 dark:text-white">Define tu presupuesto</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">Selecciona un rango o personaliza tu búsqueda</p>
@@ -442,6 +442,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
+              { label: 'S/ 0 - 100', min: 0, max: 100, emoji: '💵' },
               { label: 'S/ 0 - 200', min: 0, max: 200, emoji: '💵' },
               { label: 'S/ 200 - 400', min: 200, max: 400, emoji: '💵' },
               { label: 'S/ 400 - 600', min: 400, max: 600, emoji: '💶' },
@@ -460,13 +461,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   }}
                   className={`group relative rounded-xl border-2 px-4 py-4 text-sm md:text-base font-semibold transition-all hover:scale-105 ${
                     isActive 
-                      ? 'border-yellow-500    from-yellow-50 to-yellow-100 dark:from-yellow-900/30 dark:to-yellow-800/20 shadow-lg scale-105' 
-                      : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-yellow-300 hover:shadow-md'
+                      ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-lg scale-105' 
+                      : 'border-gray-200 dark:border-gray-700  hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md'
                   }`}
                 >
                   <div className="flex flex-col items-center gap-1">
                     <span className="text-2xl">{rango.emoji}</span>
-                    <span className={isActive ? 'text-yellow-700 dark:text-yellow-300' : ''}>{rango.label}</span>
+                    <span className={isActive ? 'font-bold text-black dark:text-white' : ''}>{rango.label}</span>
                   </div>
                   {isActive && (
                     <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">✓</div>
@@ -495,7 +496,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                     type="text"
                     value={localMin}
                     onChange={(e) => setLocalMin(e.target.value.replace(/[^0-9.]/g, ''))}
-                    className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-lg font-bold pl-12 pr-4 py-3.5 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-200 dark:focus:ring-yellow-900/50 transition-all shadow-sm hover:shadow-md"
+                    className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white text-lg font-bold pl-12 pr-4 py-3.5 focus:border-orange-600 focus:ring-4 focus:ring-orange-200 dark:focus:ring-orange-900/50 transition-all shadow-sm hover:shadow-md"
                     min={0}
                     placeholder="0"
                   />
@@ -512,7 +513,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                     type="text"
                     value={localMax}
                     onChange={(e) => setLocalMax(e.target.value.replace(/[^0-9.]/g, ''))}
-                    className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-lg font-bold pl-12 pr-4 py-3.5 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-200 dark:focus:ring-yellow-900/50 transition-all shadow-sm hover:shadow-md"
+                    className="w-full rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white text-lg font-bold pl-12 pr-4 py-3.5 focus:border-black dark:focus:border-white focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 transition-all shadow-sm hover:shadow-md"
                     min={0}
                     placeholder="1000"
                   />
@@ -521,7 +522,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
             </div>
             <button
               onClick={applyPrice}
-              className="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black text-base md:text-lg font-bold rounded-xl px-5 py-4 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+              className="mt-4 w-full bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black text-base md:text-lg font-bold rounded-xl px-5 py-4 shadow-lg hover:shadow-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2"
             >
               <span>🔍</span> Ver productos
             </button>
@@ -569,43 +570,58 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
           {/* Drawer Mobile */}
           {isMobileOpen && (
-            <div className="fixed inset-0 z-50 overflow-hidden">
+            <div className="fixed inset-0 z-50 overflow-hidden lg:hidden">
               {/* Overlay */}
               <div 
-                className="absolute inset-0 bg-black bg-opacity-50 transition-opacity"
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
                 onClick={() => setIsMobileOpen(false)}
               />
               
               {/* Drawer Panel */}
-              <div className="absolute inset-y-0 right-0 max-w-full flex">
+              <div className="absolute inset-y-0 right-0 max-w-full flex animate-in slide-in-from-right duration-300">
                 <div className="w-screen max-w-md">
-                  <div className="h-full flex flex-col bg-white dark:bg-gray-900 shadow-xl overflow-y-auto">
-                    {/* Header */}
-                    <div className="sticky top-0 z-10 bg-gradient-to-r from-yellow-500 to-yellow-600 px-6 py-4 flex items-center justify-between">
-                      <h2 className="text-xl font-bold text-black">Filtros</h2>
-                      <button
-                        onClick={() => setIsMobileOpen(false)}
-                        className="bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full p-2 transition-all"
-                        aria-label="Cerrar filtros"
-                      >
-                        <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
+                  <div className="h-full flex flex-col bg-white dark:bg-gray-900 shadow-2xl">
+                    {/* Header - Mejorado */}
+                    <div className="sticky top-0 z-10 bg-gradient-to-r from-orange-500 via-yellow-500 to-orange-500 px-5 py-5 shadow-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                            <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h2 className="text-xl font-bold text-black">Filtros</h2>
+                            <p className="text-xs text-black/70">Personaliza tu búsqueda</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => setIsMobileOpen(false)}
+                          className="bg-black/10 hover:bg-black/20 backdrop-blur-sm rounded-full p-2.5 transition-all active:scale-95"
+                          aria-label="Cerrar filtros"
+                        >
+                          <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Content */}
-                    <div className="flex-1 px-4 py-6 space-y-6">
+                    {/* Content - Mejorado */}
+                    <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5 space-y-5 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
                       <FiltersContent />
                     </div>
 
-                    {/* Footer con botón de aplicar */}
-                    <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t-2 border-gray-200 dark:border-gray-700 px-6 py-4">
+                    {/* Footer con botón de aplicar - Mejorado */}
+                    <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t-2 border-gray-200 dark:border-gray-700 px-5 py-4 shadow-2xl">
                       <button
                         onClick={() => setIsMobileOpen(false)}
-                        className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black text-base font-bold rounded-xl px-5 py-4 shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                        className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-black text-lg font-bold rounded-2xl px-6 py-4 shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3"
                       >
-                        <span>✓</span> Aplicar filtros
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Aplicar filtros</span>
                       </button>
                     </div>
                   </div>

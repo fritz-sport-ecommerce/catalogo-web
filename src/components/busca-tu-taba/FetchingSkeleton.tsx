@@ -1,4 +1,44 @@
-export default function FetchingSkeleton() {
+'use client';
+
+import { useEffect, useState } from 'react';
+
+interface FetchingSkeletonProps {
+  progress?: number;
+}
+
+export default function FetchingSkeleton({ 
+  progress = 0
+}: FetchingSkeletonProps) {
+  const [displayProgress, setDisplayProgress] = useState(0);
+
+  // Animar el progreso visual suavemente
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDisplayProgress((prev) => {
+        const diff = progress - prev;
+        if (Math.abs(diff) < 0.5) return progress;
+        return prev + diff * 0.15;
+      });
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [progress]);
+
+  // Mensajes amigables según el progreso
+  const getMessage = () => {
+    if (displayProgress < 30) {
+      return '🔍 Buscando los mejores productos para ti...';
+    } else if (displayProgress < 60) {
+      return '💰 Obteniendo precios y disponibilidad...';
+    } else if (displayProgress < 90) {
+      return '✨ Preparando tus productos favoritos...';
+    } else if (displayProgress < 100) {
+      return '🎉 ¡Ya casi está todo listo!';
+    } else {
+      return '✅ ¡Listo! Mostrando productos...';
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <div className="max-w-md w-full space-y-6">
@@ -6,38 +46,49 @@ export default function FetchingSkeleton() {
         <div className="relative">
           <div className="mx-auto w-24 h-24 relative">
             {/* Outer spinning ring */}
-            <div className="absolute inset-0 border-4 border-yellow-200 dark:border-yellow-900 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-transparent border-t-yellow-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-transparent border-t-black dark:border-t-white rounded-full animate-spin"></div>
             
-            {/* Inner pulsing circle */}
-            <div className="absolute inset-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-full animate-pulse flex items-center justify-center">
-              <svg className="w-10 h-10 text-yellow-600 dark:text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
+            {/* Inner pulsing circle con porcentaje */}
+            <div className="absolute inset-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+              <span className="text-lg font-bold text-black dark:text-white">
+                {Math.round(displayProgress)}%
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Loading text */}
+        {/* Loading text - Mensajes amigables */}
         <div className="text-center space-y-3">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-            Cargando productos...
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-relaxed">
+            {getMessage()}
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Estamos obteniendo los precios y stock actualizados desde el sistema
+            {displayProgress < 100 ? 'Esto solo tomará un momento...' : '¡Completado!'}
           </p>
         </div>
 
-        {/* Progress indicator */}
-        <div className="space-y-2">
+        {/* Progress bar - Con porcentaje real */}
+        <div className="space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-            <span>Procesando información</span>
-            <span className="animate-pulse">●●●</span>
+            <span className="font-medium">
+              {displayProgress < 100 ? 'Cargando...' : '¡Completado!'}
+            </span>
+            <span className="font-bold">{Math.round(displayProgress)}%</span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 rounded-full animate-pulse w-full">
+          
+          {/* Barra de progreso con ancho dinámico */}
+          <div className="relative w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden shadow-inner">
+            <div 
+              className="absolute inset-y-0 left-0 bg-gradient-to-r from-black via-gray-700 to-black dark:from-white dark:via-gray-300 dark:to-white rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${displayProgress}%` }}
+            >
             </div>
           </div>
+          
+          <p className="text-center text-xs text-gray-500 dark:text-gray-400 italic">
+            {displayProgress < 100 ? 'Gracias por tu paciencia 💙' : '¡Todo listo! 🎉'}
+          </p>
         </div>
 
         {/* Info cards */}

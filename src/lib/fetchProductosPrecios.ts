@@ -4,6 +4,16 @@ interface Producto {
   sku: string;
 }
 
+export interface BatchProgress {
+  currentBatch: number;
+  totalBatches: number;
+  batchSize: number;
+  processedProducts: number;
+  totalProducts: number;
+}
+
+export type ProgressCallback = (progress: BatchProgress) => void;
+
 // Nueva búsqueda por SKUs usando la nueva API
 async function buscarPorSKU(
   productos: Producto[],
@@ -83,7 +93,8 @@ async function buscarPorSKU(
 export async function fetchProductosPrecios(
   productos: Producto[],
   provincia?: string,
-  almacenesOverride?: string[]
+  almacenesOverride?: string[],
+  onProgress?: ProgressCallback
 ): Promise<any[]> {
   try {
     // 1) Buscar productos por SKUs con la nueva API
@@ -95,27 +106,58 @@ export async function fetchProductosPrecios(
 
     // Procesar en lotes de 200 SKUs para evitar sobrecarga
     const BATCH_SIZE = 200;
+    const PARALLEL_BATCHES = 3; // Procesar 3 lotes en paralelo
     const totalBatches = Math.ceil(productos.length / BATCH_SIZE);
     const todosLosResultados: any[] = [];
 
-    for (let i = 0; i < totalBatches; i++) {
-      const start = i * BATCH_SIZE;
-      const end = Math.min(start + BATCH_SIZE, productos.length);
-      const lote = productos.slice(start, end);
+    // Procesar lotes en paralelo
+    for (let i = 0; i < totalBatches; i += PARALLEL_BATCHES) {
+      const batchPromises = [];
+      
+      // Crear promesas para procesar múltiples lotes en paralelo
+      for (let j = 0; j < PARALLEL_BATCHES && (i + j) < totalBatches; j++) {
+        const batchIndex = i + j;
+        const start = batchIndex * BATCH_SIZE;
+        const end = Math.min(start + BATCH_SIZE, productos.length);
+        const lote = productos.slice(start, end);
 
-      console.log(
-        `🔄 Procesando lote ${i + 1}/${totalBatches} (${lote.length} SKUs)`
-      );
+        console.log(
+          `🔄 Procesando lote ${batchIndex + 1}/${totalBatches} (${lote.length} SKUs)`
+        );
 
-      const resultadoLote = await buscarPorSKU(lote, codAlmacenes);
-
-      if (Array.isArray(resultadoLote)) {
-        todosLosResultados.push(...resultadoLote);
+        batchPromises.push(
+          buscarPorSKU(lote, codAlmacenes).then(resultado => ({
+            batchIndex,
+            resultado,
+            end
+          }))
+        );
       }
 
-      // Pequeña pausa entre lotes para no sobrecargar la API
-      if (i < totalBatches - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+      // Esperar a que todos los lotes paralelos terminen
+      const resultados = await Promise.all(batchPromises);
+
+      // Procesar resultados y reportar progreso
+      for (const { batchIndex, resultado, end } of resultados) {
+        if (Array.isArray(resultado)) {
+          todosLosResultados.push(...resultado);
+        }
+
+        // Reportar progreso si hay callback
+        if (onProgress) {
+          onProgress({
+            currentBatch: batchIndex + 1,
+            totalBatches,
+            batchSize: resultado?.length || 0,
+            processedProducts: end,
+            totalProducts: productos.length,
+          });
+        }
+      }
+
+      // Pequeña pausa entre grupos de lotes paralelos
+      if (i + PARALLEL_BATCHES < totalBatches) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
       }
     }
 
