@@ -17,7 +17,8 @@ export default function Pagination({
   totalItems,
 }: PaginationProps) {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
+
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<number | null>(null);
@@ -32,7 +33,7 @@ export default function Pagination({
   }, []);
 
   const buildPageUrl = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
     params.set("page", page.toString());
     return `${pathname}?${params.toString()}`;
   };

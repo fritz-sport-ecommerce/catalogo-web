@@ -3,10 +3,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
 export default function NavSearch() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const router = useRouter();
   const searchParams = useSearchParams();
-  const defaultSearch = searchParams.get("search") ?? "";
+  const defaultSearch = (searchParams?.get("search") ?? "");
   if (pathname.startsWith("/studio")) return null;
 
   function onSubmit(event: React.SyntheticEvent<HTMLFormElement>) {

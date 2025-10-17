@@ -36,7 +36,7 @@ function ProductSort() {
   const handleSortChange = (sortValue: string) => {
     setIsLoading(true);
     
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
     
     // Remover parámetros de ordenamiento existentes
     params.delete('precio');
@@ -61,9 +61,9 @@ function ProductSort() {
 
   // Determinar el valor actual del select basado en los parámetros
   const getCurrentSortValue = () => {
-    if (searchParams.get('precio') === 'asc') return 'price=asc';
-    if (searchParams.get('precio') === 'desc') return 'price=desc';
-    if (searchParams.get('fecha') === 'desc') return 'fecha=desc';
+    if (searchParams?.get('precio') === 'asc') return 'price=asc';
+    if (searchParams?.get('precio') === 'desc') return 'price=desc';
+    if (searchParams?.get('fecha') === 'desc') return 'fecha=desc';
     return undefined;
   };
 

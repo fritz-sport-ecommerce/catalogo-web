@@ -41,21 +41,22 @@ export function ProductFiltersOutlet() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const currentDiscount = searchParams.get("discount");
-  const currentMarca = searchParams.get("marca");
-  const currentTipo = searchParams.get("tipo");
-  const currentGenero = searchParams.get("genero");
+  const currentDiscount = searchParams?.get("discount") ?? "";
+  const currentMarca = searchParams?.get("marca") ?? "";
+  const currentTipo = searchParams?.get("tipo") ?? "";
+  const currentGenero = searchParams?.get("genero") ?? "";
 
   const filterCount = [currentDiscount, currentMarca, currentTipo, currentGenero].filter(Boolean).length;
 
   const updateFilter = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
+
     if (params.get(key) === value) {
       params.delete(key);
     } else {
       params.set(key, value);
     }
+
     
     // Reset page when filtering
     params.delete("page");

@@ -91,7 +91,7 @@ export default async function Page({ searchParams }: Props) {
                     </p>
                   </div>
                   
-                  <div className="mb-8 p-6 sm:p-8 rounded-2xl    from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 shadow-xl">
+                  {/* <div className="mb-8 p-6 sm:p-8 rounded-2xl    from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-700 shadow-xl">
                     <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-900 dark:text-white">¿Cómo funciona?</h2>
                     <ol className="space-y-4 text-base sm:text-lg">
                       <li className="flex items-start gap-4">
@@ -115,7 +115,7 @@ export default async function Page({ searchParams }: Props) {
                         <span className="pt-1"><strong className="text-gray-900 dark:text-white">Define tu presupuesto:</strong> <span className="text-gray-700 dark:text-gray-300">Establece el rango de precios</span></span>
                       </li>
                     </ol>
-                  </div>
+                  </div> */}
                
                   <div className="flex items-center justify-center">
                     <QuickFilters variant="onboarding" />

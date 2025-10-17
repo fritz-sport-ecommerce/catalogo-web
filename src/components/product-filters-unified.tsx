@@ -208,18 +208,19 @@ const subFiltersNiños = [
 
 export const FilterActions = (): any => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const filterCount = useMemo(() => {
-    return Array.from(searchParams.entries()).filter(([key]) => key !== "page")
+    const entries = searchParams ? Array.from(searchParams.entries()) : [];
+    return entries.filter(([key]) => key !== "page")
       .length;
   }, [searchParams]);
 
   const clearFilters = (e: any) => {
     e.preventDefault();
-    const currentPage = searchParams.get("page");
+    const currentPage = searchParams?.get("page");
     const newParams = new URLSearchParams();
 
     if (currentPage) {
@@ -274,7 +275,7 @@ export const FilterActions = (): any => {
 
 export function ProductFiltersUnified() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const [isNiñosSelected, setIsNiñosSelected] = useState(false);
   const [isCalzadoSelected, setIsCalzadoSelected] = useState(false);
   const [isRopaSelected, setIsRopaSelected] = useState(false);
@@ -282,7 +283,7 @@ export function ProductFiltersUnified() {
   const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
   const searchValues = useMemo(
-    () => Array.from(searchParams.entries()),
+    () => Array.from(searchParams ? searchParams.entries() : []),
     [searchParams]
   );
 
@@ -298,17 +299,17 @@ export function ProductFiltersUnified() {
 
   // Detectar tipo de producto seleccionado
   useEffect(() => {
-    const tipo = searchParams.get("tipo");
+    const tipo = searchParams?.get("tipo");
     setIsCalzadoSelected(tipo === "calzado");
     setIsRopaSelected(tipo === "ropa");
     
-    const genero = searchParams.get("genero");
+    const genero = searchParams?.get("genero");
     setIsNiñosSelected(genero === "niños");
   }, [searchParams]);
 
   const handleFilterChange = useCallback(
     (sectionId: string, optionValue: string, checked: boolean) => {
-      const newParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams(searchParams?.toString() ?? "");
       checked
         ? newParams.delete(sectionId)
         : newParams.set(sectionId, optionValue);
@@ -322,7 +323,7 @@ export function ProductFiltersUnified() {
 
   const handleSubFilterChange = useCallback(
     (optionValue: string, checked: boolean) => {
-      const newParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams(searchParams?.toString() ?? "");
       checked
         ? newParams.delete("subgenero")
         : newParams.set("subgenero", optionValue);
@@ -393,8 +394,8 @@ export function ProductFiltersUnified() {
                   <span className={section.id === "discount" ? "text-red-600 font-bold" : ""}>
                     {section.name}
                     <span className="ml-1 text-xs font-extrabold uppercase text-gray-400">
-                      {searchParams.get(section.id)
-                        ? `(${searchParams.get(section.id)})`
+                      {searchParams?.get(section.id)
+                        ? `(${searchParams?.get(section.id)})`
                         : ""}
                     </span>
                   </span>

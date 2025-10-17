@@ -13,6 +13,8 @@ type Product = {
   marca?: string;
   slug?: string;
   tipo?: string;
+  _createdAt?: string | Date;
+  fecha_cuando_aparece?: string | null;
   // Estos se cargarán después
   priceecommerce?: number;
   precio_retail?: number;
@@ -32,6 +34,12 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
   const imageUrl = product.imgcatalogomain?.asset?.url || product.images?.[0]?.asset?.url || "/placeholder.png";
   const productUrl = `/product/${product.slug || product.sku}`;
 
+  // Detectar si es producto nuevo (<= 21 días)
+  const now = new Date();
+  const refDateStr = (product?.fecha_cuando_aparece as string) || (product?._createdAt as string) || "";
+  const refDate = refDateStr ? new Date(refDateStr) : null;
+  const isNew = refDate ? (now.getTime() - refDate.getTime()) / (1000 * 60 * 60 * 24) <= 21 : false;
+
   // Obtener tallas disponibles (igual que IndependentProductCard)
   const tallasDisponibles = product?.tallascatalogo 
     ? product.tallascatalogo.split(',').map(t => t.trim()).filter(Boolean).slice(0, 8)
@@ -45,7 +53,13 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
   return (
     <div className="h-full flex flex-col border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden   hover:shadow-lg transition-shadow">
       {/* Imagen del producto */}
-      <a href={productUrl} className="relative overflow-hidden bg-gray-100  aspect-square">
+      <a           href={`https://wa.me/51982827352?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`}
+ className="relative overflow-hidden bg-gray-100  aspect-square">
+        {isNew && (
+          <div className="absolute top-2 left-2 z-10">
+            <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded bg-red-600 text-white shadow">Nuevo</span>
+          </div>
+        )}
         <Image
           src={imageUrl}
           alt={product.name || "Producto"}
@@ -56,15 +70,16 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
       </a>
 
       {/* Contenido del producto */}
-      <div className="flex-1 flex flex-col p-3">
+      <div className="flex-1 flex flex-col xl:p-3 p-2">
         {/* Género y SKU */}
         <div className="flex items-center justify-between text-xs mb-2.5">
-          <span className="text-gray-500 dark:text-gray-400 uppercase">{product.genero || "---"}</span>
-          <span className="text-gray-400 dark:text-gray-500">{product.sku}</span>
+          <span className="text-gray-500 dark:text-gray-400 uppercase text-[9px] text-base">{product.genero || "---"}</span>
+         
+          <span className="text-gray-400 dark:text-gray-500 text-[9px] text-base">{product.sku}</span>
         </div>
 
         {/* Nombre del producto */}
-        <a href={productUrl} className="block mb-2.5">
+        <a  href={`https://wa.me/51982827352?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`} className="block mb-2.5">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors min-h-[2.5rem]">
             {product.name || "Sin nombre"}
           </h3>
@@ -75,7 +90,7 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
  
           <div className="flex flex-wrap flex-col gap-y-2 gap-1.5 text-xs">
             {/* Mayorista primero - rojo amigable y destacado */}
-            <div className="text-red-600  px-3 py-1.5 rounded-lg font-bold ">
+            <div className="text-red-600  pl-2 py-1.5 rounded-lg font-bold text-sm">
               Mayorista: {formatPrice(product.mayorista_cd)}
             </div>
             {/* Emprendedor segundo - verde amigable */}

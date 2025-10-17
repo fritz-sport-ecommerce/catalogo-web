@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 
 function useURLState() {
   const router = useRouter();
@@ -155,6 +156,14 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
     setLocalMax(String(maxPrice));
   }, [minPrice, maxPrice]);
 
+  // Asegurar que por defecto se ordene por nuevos primero si no hay 'fecha'
+  useEffect(() => {
+    if (!searchParams?.get('fecha')) {
+      setParams({ fecha: 'desc' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   const isRowActive = (key: string) => {
     if (key === "nuevos") return activeFecha === "desc";
     return activeCategory.split(".").includes(key);
@@ -163,8 +172,6 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
   const onRowClick = (key: string) => {
     if (key === "nuevos") {
       setParams({ fecha: activeFecha === "desc" ? null : "desc" });
-      // Si selecciona nuevos, considera paso 3 cumplido
-      setActiveStep(4);
       return;
     }
     // Para cualquier categoría
@@ -176,8 +183,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
       next = [...current, key];
     }
     setParams({ category: next.length ? next.join(".") : null });
-    // Avanzar a paso 4 si hay al menos un estilo
-    if (next.length > 0) setActiveStep(4);
+    // No avanzar automáticamente de paso
   };
 
   const onTipoClick = (tipo: string) => {
@@ -189,13 +195,12 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
       next = [...current, tipo];
     }
     setParams({ tipo: next.length ? next.join(".") : null });
-    if (next.length > 0) setActiveStep(2);
+    // No avanzar automáticamente de paso
   };
 
   const onGeneroChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setParams({ genero: value || null });
-    if (value) setActiveStep(3);
   };
 
   const applyPrice = () => {
@@ -219,41 +224,43 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
   const FiltersContent = () => (
     <>
-      {/* Stepper superior */}
-      <div className=" border-2 border-gray-200 dark:border-gray-700 rounded-2xl  p-1 shadow-lg">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2 md:gap-3">
-          {[1,2,3,4,5].map((step) => {
-            const enabled = step <= maxStepAvailable;
-            const completed = step < currentStep;
-            const isActive = activeStep === step;
-            const label = `Paso ${step}`;
-            const sub = step === 1 ? "Tipo" : step === 2 ? "Género" : step === 3 ? "Estilo" : step === 4 ? "Marca" : "Precio";
-            return (
+      {/* Back arrow only when step >= 2 */}
+      {activeStep >= 2 && (() => {
+        const isNextEnabled = (
+          (activeStep === 2 && !!activeGenero) ||
+          (activeStep === 3 && !!(activeCategory || searchParams?.get("fecha") === "desc")) ||
+          (activeStep === 4 && !!activeMarca) ||
+          (activeStep === 1 && !!activeTipo)
+        );
+        const canShowNext = activeStep >= 1 && activeStep <= 4;
+        return (
+          <div className="mb-3 flex items-center justify-between">
+            <button
+              onClick={() => setActiveStep(Math.max(1, activeStep - 1))}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
+              aria-label="Volver"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Volver</span>
+            </button>
+            {canShowNext && (
               <button
-                key={step}
-                onClick={() => enabled && setActiveStep(step)}
-                disabled={!enabled}
-                className={`flex flex-col items-center gap-2 md:gap-3 w-full text-center rounded-xl px-3 py-4 md:py-5 border-2 transition-all ${
-                  isActive ? "border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105" : "border-gray-200 dark:border-gray-700"
-                } ${
-                  !enabled ? "opacity-50 cursor-not-allowed" : "hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md"
+                onClick={() => isNextEnabled && setActiveStep(Math.min(5, activeStep + 1))}
+                disabled={!isNextEnabled}
+                className={`inline-flex items-center gap-2 text-sm font-bold rounded-md px-3 py-2 transition-colors ${
+                  isNextEnabled
+                    ? "bg-green-600 text-white hover:bg-green-700"
+                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
                 }`}
+                aria-label="Siguiente"
               >
-                <span className={`flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full text-base md:text-lg font-bold transition-all ${
-                  completed ? "bg-green-500 text-white" : isActive ? "bg-black dark:bg-white text-white dark:text-black" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
-                }`}>
-                  {completed ? "✓" : step}
-                </span>
-                <span className="flex flex-col">
-                  <span className="text-xs md:text-sm font-semibold">{label}</span>
-                  <span className="text-[10px] md:text-xs text-gray-600 dark:text-gray-400">{sub}</span>
-                </span>
+                <span>Siguiente</span>
+                <ChevronRight className="w-4 h-4" />
               </button>
-            );
-          })}
-        </div>
-        <div className="mt-4 text-center text-sm md:text-base font-medium text-gray-700 dark:text-gray-300">{stepLabel}</div>
-      </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Filtros activos (cuando 5 pasos completos) - Mejorado */}
       {currentStep >= 6 && (
@@ -361,13 +368,19 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
         <h3 className="text-base md:text-xl font-bold mb-5 text-gray-900 dark:text-white">Selecciona el género</h3>
         <div className="grid grid-cols-2 gap-4 md:gap-5">
           {[{value:'hombre',label:'Hombre',emoji:'👨'},{value:'mujer',label:'Mujer',emoji:'👩'},{value:'unisex',label:'Unisex',emoji:'👥'},{value:'niños',label:'Niños',emoji:'🧒'}].map(opt => {
-            const active = activeGenero === opt.value;
+            const active = activeGenero.split('.').includes(opt.value);
             return (
               <button
                 key={opt.value}
-                onClick={() => onGeneroChange({ target: { value: opt.value } } as any)}
+                onClick={() => {
+                  const current = activeGenero ? activeGenero.split('.') : [];
+                  const next = current.includes(opt.value)
+                    ? current.filter(v => v !== opt.value)
+                    : [...current, opt.value];
+                  setParams({ genero: next.length ? next.join('.') : null });
+                }}
                 className={`rounded-xl border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
-                  active ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
+                  active ? 'border-black dark:border-white bg-black dark:bg-black shadow-md scale-105' : 'border-gray-800 dark:border-black hover:border-black dark:hover:border-black'
                 }`}
               >
                 <span className="text-3xl md:text-4xl">{opt.emoji}</span>
@@ -402,7 +415,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                     key={row.key}
                     onClick={() => onRowClick(row.key)}
                     className={`flex items-center justify-between rounded-xl border-2 px-4 py-4 md:px-5 md:py-5 transition-all hover:shadow-lg ${
-                      active ? "border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105" : "border-gray-200 dark:border-gray-700   hover:border-gray-400 dark:hover:border-gray-500"
+                      active ? "border-black dark:border-white bg-gray-800 dark:bg-gray-800 shadow-md scale-105" : "border-gray-700 dark:border-gray-700   hover:border-gray-400 dark:hover:border-gray-700"
                     }`}
                   >
                     <div className="flex items-center gap-3 md:gap-4">
@@ -440,13 +453,14 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
               <button
                 key={opt.value}
                 onClick={() => {
-                  // simple toggle single-select
-                  const next = isActiveMarca ? '' : opt.value;
-                  setParams({ marca: next || null });
-                  if (next) setActiveStep(5);
+                  const current = activeMarca ? activeMarca.split('.') : [];
+                  const next = current.includes(opt.value)
+                    ? current.filter(v => v !== opt.value)
+                    : [...current, opt.value];
+                  setParams({ marca: next.length ? next.join('.') : null });
                 }}
                 className={`rounded-xl bg-black border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
-                  isActiveMarca ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
+                  isActiveMarca ? 'border-black dark:border-white bg-gray-600 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                 }`}
               >
                 {opt.imageUrl ? (
@@ -493,7 +507,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
               { label: 'S/ 400 - 600', min: 400, max: 600, emoji: '💶' },
               { label: 'S/ 600 - 800', min: 600, max: 800, emoji: '💶' },
               { label: 'S/ 800 - 1000', min: 800, max: 1000, emoji: '💷' },
-              { label: 'S/ 1000+', min: 1000, max: 10000, emoji: '💎' }
+              { label: 'S/ 1000+', min: 0, max: 1000, emoji: '💎' }
             ].map((rango, idx) => {
               const isActive = rango.min !== null && activeRango === `${rango.min}-${rango.max}`;
               return (

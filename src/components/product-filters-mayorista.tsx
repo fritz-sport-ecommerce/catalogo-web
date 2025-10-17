@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 export function ProductFiltersMayorista({ mayorista }: { mayorista: boolean }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const [loaded, setLoaded] = useState(false);
 
   const [selectedLinea, setSelectedLinea] = useState<string | null>(() => {
-    const razonsocial = searchParams.get("razonsocial");
-    const tipoproducto = searchParams.get("tipoproducto");
+    const razonsocial = searchParams?.get("razonsocial") ?? "";
+    const tipoproducto = searchParams?.get("tipoproducto") ?? "";
 
     if (razonsocial === "fritzsport" && tipoproducto === "catalogo") {
       return "catalogo";
@@ -31,7 +31,7 @@ export function ProductFiltersMayorista({ mayorista }: { mayorista: boolean }) {
     setLoaded(true);
     setSelectedLinea(linea);
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
 
     if (linea === "catalogo") {
       params.set("razonsocial", "fritzsport");

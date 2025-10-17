@@ -252,18 +252,18 @@ const subFiltersNiños = [
 
 export const FilterActions = (): any => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const filterCount = useMemo(() => {
-    return Array.from(searchParams.entries()).filter(([key]) => key !== "page")
-      .length;
+    const entries = searchParams ? Array.from(searchParams.entries()) : [];
+    return entries.filter(([key]) => key !== "page").length;
   }, [searchParams]);
 
   const clearFilters = (e: any) => {
     e.preventDefault();
-    const currentPage = searchParams.get("page");
+    const currentPage = searchParams?.get("page");
     const newParams = new URLSearchParams();
 
     if (currentPage) {
@@ -320,7 +320,7 @@ export const FilterActions = (): any => {
 
 export function ProductFilters() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const [isNiñosSelected, setIsNiñosSelected] = useState(false);
   const [isCalzadoSelected, setIsCalzadoSelected] = useState(false);
   const [isRopaSelected, setIsRopaSelected] = useState(false);
@@ -328,7 +328,7 @@ export function ProductFilters() {
   const [isRemovingFilter, setIsRemovingFilter] = useState(false);
   const searchParams = useSearchParams();
   const searchValues = useMemo(
-    () => Array.from(searchParams.entries()),
+    () => Array.from(searchParams ? searchParams.entries() : []),
     [searchParams]
   );
 
@@ -336,12 +336,12 @@ export function ProductFilters() {
 
   // Detectar tipo de producto seleccionado
   useEffect(() => {
-    const tipo = searchParams.get("tipo");
+    const tipo = searchParams?.get("tipo");
     const tipoValues = tipo ? tipo.split(".") : [];
     setIsCalzadoSelected(tipoValues.includes("calzado"));
     setIsRopaSelected(tipoValues.includes("ropa"));
 
-    const genero = searchParams.get("genero");
+    const genero = searchParams?.get("genero");
     const generoValues = genero ? genero.split(".") : [];
     setIsNiñosSelected(generoValues.includes("niños"));
   }, [searchParams]);
@@ -349,7 +349,7 @@ export function ProductFilters() {
 
   const handleFilterChange = useCallback(
     (sectionId: string, optionValue: string, checked: boolean) => {
-      const newParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams(searchParams?.toString() ?? "");
 
       if (checked) {
         // Si está marcado, remover este valor
@@ -390,7 +390,7 @@ export function ProductFilters() {
 
   const handleSubFilterChange = useCallback(
     (optionValue: string, checked: boolean) => {
-      const newParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams(searchParams?.toString() ?? "");
 
       if (checked) {
         // Si está marcado, remover este valor
@@ -474,7 +474,7 @@ export function ProductFilters() {
         <FilterActions />
 
         {/* Mostrar filtros activos de manera visual */}
-        {Array.from(searchParams.entries()).filter(([key]) => key !== "page")
+        {Array.from(searchParams ? searchParams.entries() : []).filter(([key]) => key !== "page")
           .length > 0 && (
           <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border relative">
             {isRemovingFilter && (
@@ -489,7 +489,7 @@ export function ProductFilters() {
             )}
             <h4 className="text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300">
               Filtros Activos (
-              {Array.from(searchParams.entries())
+              {Array.from(searchParams ? searchParams.entries() : [])
                 .filter(([key]) => key !== "page")
                 .reduce(
                   (acc, [key, value]) => acc + value.split(".").length,
@@ -498,7 +498,7 @@ export function ProductFilters() {
               ):
             </h4>
             <div className="flex flex-wrap gap-2">
-              {Array.from(searchParams.entries())
+              {Array.from(searchParams ? searchParams.entries() : [])
                 .filter(([key]) => key !== "page")
                 .map(([key, value]) => (
                   <div key={key} className="flex flex-wrap gap-1">
@@ -517,7 +517,7 @@ export function ProductFilters() {
                           onClick={() => {
                             setIsRemovingFilter(true);
                             const newParams = new URLSearchParams(
-                              searchParams.toString()
+                              searchParams?.toString() ?? ""
                             );
                             const currentValues = newParams.get(key);
                             if (currentValues) {
@@ -569,9 +569,9 @@ export function ProductFilters() {
                 >
                   {section.name}
                   <span className="ml-1 text-xs font-extrabold uppercase">
-                    {searchParams.get(section.id) ? (
+                    {searchParams?.get(section.id) ? (
                       <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                        {searchParams.get(section.id)?.split(".").length}{" "}
+                        {searchParams?.get(section.id)?.split(".").length}{" "}
                         seleccionados
                       </span>
                     ) : (
@@ -671,7 +671,7 @@ export function ProductFilters() {
               <span>
                 💰 Rango de Precios
                 <span className="ml-1 text-xs font-extrabold uppercase">
-                  {searchParams.get("rangoPrecio") ? (
+                  {searchParams?.get("rangoPrecio") ? (
                     <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
                       Activo
                     </span>

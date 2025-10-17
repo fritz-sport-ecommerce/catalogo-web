@@ -29,7 +29,9 @@ export async function GET(req: NextRequest) {
     // Order criteria
     const priceSort = price || precio || undefined;
     const priceOrder = priceSort ? `priceecommerce ${priceSort}` : "";
-    const dateOrder = date ? `_createAt ${date}` : "";
+    // Preferir fecha declarada por contenido si existe, con fallback a _createdAt
+    const dateDir = date === 'asc' || date === 'desc' ? date : 'desc';
+    const dateOrder = `coalesce(fecha_cuando_aparece, _createdAt) ${dateDir}`;
     const orderCriteria = [
       'select(marca == "fritzsport" => 1, 0) desc',
       "select(popularidad > 1 => 1, 0) desc",
@@ -91,6 +93,7 @@ export async function GET(req: NextRequest) {
       groq`${filter} ${order} {
         _id,
         _createdAt,
+        fecha_cuando_aparece,
         name,
         empresa,
         sku,
@@ -202,8 +205,18 @@ export async function GET(req: NextRequest) {
     // 7. Ordenar productos
     const priceSortDir = priceSort as "asc" | "desc" | undefined;
     const sortedProducts = productosConStock.sort((a: any, b: any) => {
+      // Ordenar SIEMPRE por fecha (nuevos primero por defecto), respetando asc/desc si se pasó 'fecha'
+      const ad = new Date((a?.fecha_cuando_aparece as string) || (a?._createdAt as string) || 0).getTime();
+      const bd = new Date((b?.fecha_cuando_aparece as string) || (b?._createdAt as string) || 0).getTime();
+      if (dateDir === 'desc') {
+        if (bd !== ad) return bd - ad;
+      } else {
+        if (ad !== bd) return ad - bd;
+      }
+      // Priorizar con stock
       if (a.stock > 0 && b.stock === 0) return -1;
       if (a.stock === 0 && b.stock > 0) return 1;
+      // Luego precio si se pidió
       if (priceSortDir === "asc") return (a.priceecommerce || 0) - (b.priceecommerce || 0);
       if (priceSortDir === "desc") return (b.priceecommerce || 0) - (a.priceecommerce || 0);
       return 0;

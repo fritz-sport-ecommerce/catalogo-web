@@ -15,9 +15,11 @@ export default function FetchingSkeleton({
   useEffect(() => {
     const interval = setInterval(() => {
       setDisplayProgress((prev) => {
-        const diff = progress - prev;
-        if (Math.abs(diff) < 0.5) return progress;
-        return prev + diff * 0.15;
+        const target = Math.max(0, Math.min(100, progress));
+        const diff = target - prev;
+        if (Math.abs(diff) < 0.5) return target;
+        const next = prev + diff * 0.15;
+        return Math.max(0, Math.min(100, next));
       });
     }, 50);
 
@@ -26,13 +28,14 @@ export default function FetchingSkeleton({
 
   // Mensajes amigables según el progreso
   const getMessage = () => {
-    if (displayProgress < 30) {
+    const pct = Math.max(0, Math.min(100, displayProgress));
+    if (pct < 30) {
       return '🔍 Buscando los mejores productos para ti...';
-    } else if (displayProgress < 60) {
+    } else if (pct < 60) {
       return '💰 Obteniendo precios y disponibilidad...';
-    } else if (displayProgress < 90) {
+    } else if (pct < 90) {
       return '✨ Preparando tus productos favoritos...';
-    } else if (displayProgress < 100) {
+    } else if (pct < 100) {
       return '🎉 ¡Ya casi está todo listo!';
     } else {
       return '✅ ¡Listo! Mostrando productos...';
@@ -52,7 +55,7 @@ export default function FetchingSkeleton({
             {/* Inner pulsing circle con porcentaje */}
             <div className="absolute inset-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <span className="text-lg font-bold text-black dark:text-white">
-                {Math.round(displayProgress)}%
+                {Math.round(Math.max(0, Math.min(100, displayProgress)))}%
               </span>
             </div>
           </div>
@@ -72,22 +75,22 @@ export default function FetchingSkeleton({
         <div className="space-y-3">
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             <span className="font-medium">
-              {displayProgress < 100 ? 'Cargando...' : '¡Completado!'}
+              {Math.max(0, Math.min(100, displayProgress)) < 100 ? 'Cargando...' : '¡Completado!'}
             </span>
-            <span className="font-bold">{Math.round(displayProgress)}%</span>
+            <span className="font-bold">{Math.round(Math.max(0, Math.min(100, displayProgress)))}%</span>
           </div>
           
           {/* Barra de progreso con ancho dinámico */}
           <div className="relative w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden shadow-inner">
             <div 
               className="absolute inset-y-0 left-0 bg-gradient-to-r from-black via-gray-700 to-black dark:from-white dark:via-gray-300 dark:to-white rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${displayProgress}%` }}
+              style={{ width: `${Math.max(0, Math.min(100, displayProgress))}%` }}
             >
             </div>
           </div>
           
           <p className="text-center text-xs text-gray-500 dark:text-gray-400 italic">
-            {displayProgress < 100 ? 'Gracias por tu paciencia 💙' : '¡Todo listo! 🎉'}
+            {Math.max(0, Math.min(100, displayProgress)) < 100 ? 'Gracias por tu paciencia 💙' : '¡Todo listo! 🎉'}
           </p>
         </div>
 

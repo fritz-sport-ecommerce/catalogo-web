@@ -18,7 +18,7 @@ const defaultFormData = {
 const Auth = () => {
   const [formData, setFormData] = useState(defaultFormData);
   const searchParams = useSearchParams();
-  const isPagarForm = searchParams.get("form") === "pagar";
+  const isPagarForm = (searchParams?.get("form") ?? "") === "pagar";
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);

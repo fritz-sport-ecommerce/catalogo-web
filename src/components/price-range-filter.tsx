@@ -8,8 +8,9 @@ import { Label } from "@/components/ui/label";
 
 export function PriceRangeFilter() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const searchParams = useSearchParams();
+
   const [isPending, startTransition] = useTransition();
   
   const [minPrice, setMinPrice] = useState("");
@@ -17,7 +18,7 @@ export function PriceRangeFilter() {
 
   // Cargar valores existentes del URL
   useEffect(() => {
-    const rangoPrecio = searchParams.get("rangoPrecio");
+    const rangoPrecio = searchParams?.get("rangoPrecio");
     if (rangoPrecio) {
       const [min, max] = rangoPrecio.split("-");
       setMinPrice(min || "");
@@ -40,8 +41,8 @@ export function PriceRangeFilter() {
       return;
     }
     
-    const params = new URLSearchParams(searchParams.toString());
-    
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
+
     if (minPrice || maxPrice) {
       params.set("rangoPrecio", `${min}-${max}`);
     } else {
@@ -57,7 +58,7 @@ export function PriceRangeFilter() {
   }, [minPrice, maxPrice, searchParams, pathname, router, startTransition]);
 
   const clearPriceFilter = useCallback(() => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
     params.delete("rangoPrecio");
     params.delete("page");
     
@@ -76,7 +77,7 @@ export function PriceRangeFilter() {
   };
 
   const isOutlet = pathname === "/outlet";
-  const hasActiveFilter = searchParams.get("rangoPrecio");
+  const hasActiveFilter = searchParams?.get("rangoPrecio") ?? "";
 
   return (
     <div className="relative space-y-4">
@@ -176,7 +177,7 @@ export function PriceRangeFilter() {
                 setMaxPrice(range.max === "999999" ? "" : range.max);
                 // Auto-aplicar el filtro
                 setTimeout(() => {
-                  const params = new URLSearchParams(searchParams.toString());
+                  const params = new URLSearchParams(searchParams?.toString() ?? "");
                   params.set("rangoPrecio", `${range.min}-${range.max}`);
                   params.delete("page");
                   startTransition(() => {

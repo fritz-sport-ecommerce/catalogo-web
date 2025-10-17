@@ -51,8 +51,18 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         setProgress(100);
 
         if (quickResult.ok) {
+          // Ordenar por más nuevos primero si el filtro de nuevos está activo
+          const shouldSortByNew = (searchParams?.fecha === 'desc');
+          const products = Array.isArray(quickResult.products) ? [...quickResult.products] : [];
+          if (shouldSortByNew) {
+            products.sort((a: any, b: any) => {
+              const ad = new Date((a?.fecha_cuando_aparece as string) || (a?._createdAt as string) || 0).getTime();
+              const bd = new Date((b?.fecha_cuando_aparece as string) || (b?._createdAt as string) || 0).getTime();
+              return bd - ad; // descendente
+            });
+          }
           setData({
-            products: quickResult.products,
+            products,
             total: quickResult.total,
           });
           

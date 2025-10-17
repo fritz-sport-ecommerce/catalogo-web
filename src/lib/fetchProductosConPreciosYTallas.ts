@@ -109,9 +109,15 @@ export async function fetchProductosConPreciosYTallas(
 
     console.log("🔍 DEBUG - Productos combinados:", {
       total: productosCombinados.length,
-      conImagenes: productosCombinados.filter(p => p.imgcatalogomain || p.images?.length > 0).length,
-      conPrecios: productosCombinados.filter(p => p.priceecommerce > 0).length,
-      conTallas: productosCombinados.filter(p => p.tallascatalogo && p.tallascatalogo.length > 0).length
+      conImagenes: productosCombinados.filter(p => {
+        const tieneImgArray = Array.isArray(p?.images) && p.images.length > 0;
+        return Boolean(p?.imgcatalogomain) || tieneImgArray;
+      }).length,
+      conPrecios: productosCombinados.filter(p => (p?.priceecommerce ?? 0) > 0).length,
+      conTallas: productosCombinados.filter(p => {
+        const tc = p?.tallascatalogo as any;
+        return Boolean(tc && String(tc).length > 0);
+      }).length
     });
 
     // Verificar algunos productos combinados
@@ -119,21 +125,19 @@ export async function fetchProductosConPreciosYTallas(
       const ejemplo = productosCombinados[0];
       console.log("🔍 DEBUG - Ejemplo de producto combinado:", {
         sku: ejemplo.sku,
-        tieneImagen: !!(ejemplo.imgcatalogomain || ejemplo.images?.length > 0),
-        tienePrecio: ejemplo.priceecommerce > 0,
-        tieneTallas: !!(ejemplo.tallascatalogo && ejemplo.tallascatalogo.length > 0),
-        tieneNombre: !!ejemplo.name,
-        tieneGenero: !!ejemplo.genero
+        tieneImagen: Boolean(ejemplo?.imgcatalogomain) || (Array.isArray(ejemplo?.images) && ejemplo.images.length > 0),
+        tienePrecio: (ejemplo?.priceecommerce ?? 0) > 0,
+        tieneTallas: Boolean(ejemplo?.tallascatalogo && String(ejemplo.tallascatalogo).length > 0),
+        tieneNombre: Boolean(ejemplo?.name),
+        tieneGenero: Boolean(ejemplo?.genero)
       });
     }
 
-    // 4. Procesar con productos-traidos-sistema
-    const productosFinales = productosTraidosSistemaFritzSport(
+    // 4. Procesar con productos-traidos-sistema (firma: productos, provincia, razonsocial)
+    const productosFinales = await productosTraidosSistemaFritzSport(
       productosCombinados,
-      tipoproducto,
       provincia,
-      razonsocial,
-      ninos_talla_grande
+      razonsocial
     );
 
     console.log("🔍 DEBUG - Productos finales:", {

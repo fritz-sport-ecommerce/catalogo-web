@@ -91,13 +91,13 @@ export default function LibroReclamacionesPage() {
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   useEffect(() => {
-    const sede = searchParams.get("sede") as keyof typeof tiendas | null;
-    if (!sede) {
+    const sedeParam = (searchParams?.get("sede") ?? "") as keyof typeof tiendas | "";
+    if (!sedeParam) {
       router.replace("/");
       return;
     }
     const today = new Date().toISOString().split("T")[0];
-    const tienda = sede ? tiendas[sede] : undefined;
+    const tienda = tiendas[sedeParam];
 
     setFormData((prev) => ({
       ...prev,
@@ -107,7 +107,7 @@ export default function LibroReclamacionesPage() {
       direccionEstablecimiento: tienda?.direccion || "",
       emailEstablecimiento: tienda?.email || "",
     }));
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   // Ocultar alerta automáticamente después de 2 segundos
   useEffect(() => {
