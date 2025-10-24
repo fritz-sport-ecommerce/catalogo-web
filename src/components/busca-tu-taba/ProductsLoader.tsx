@@ -18,6 +18,8 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   const [data, setData] = useState<{ products: any[]; total: number } | null>(null);
   const [progress, setProgress] = useState(0);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isEmpty, setIsEmpty] = useState(false);
 
   console.log('📋 ProductsLoader - Componente montado con:', {
     searchParamsKeys: Object.keys(searchParams),
@@ -36,6 +38,8 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
       setIsRequestInProgress(true);
       setLoadingInitial(true);
       setProgress(0);
+      setError(null);
+      setIsEmpty(false);
       
       // Simular progreso mientras carga
       const progressInterval = setInterval(() => {
@@ -93,6 +97,16 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
             });
           }
           
+          // Verificar si hay productos
+          if (products.length === 0 || quickResult.total === 0) {
+            setIsEmpty(true);
+            setProgress(100);
+            setTimeout(() => {
+              setLoadingInitial(false);
+            }, 500);
+            return;
+          }
+          
           setData({
             products,
             total: quickResult.total,
@@ -110,16 +124,25 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           }, 300);
         } else {
           console.log('📋 ProductsLoader - Respuesta no exitosa:', quickResult);
+          setError(quickResult.error || 'Error al cargar los productos');
+          setProgress(0);
           setLoadingInitial(false);
         }
       } catch (error) {
         console.error("Error loading products:", error);
         clearInterval(progressInterval);
         setProgress(0);
+        
         // Mostrar error más específico
         if (error instanceof Error && error.name === 'AbortError') {
+          setError('El servidor tardó demasiado en responder. Intenta de nuevo.');
           console.error("Request timeout - servidor sobrecargado");
+        } else if (error instanceof Error) {
+          setError('Error de conexión. Verifica tu internet e intenta de nuevo.');
+        } else {
+          setError('Error inesperado. Intenta de nuevo.');
         }
+        
         setLoadingInitial(false);
       } finally {
         setIsRequestInProgress(false);
@@ -131,15 +154,33 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
     return () => clearTimeout(timeoutId);
   }, [searchParams, itemsPerPage]); // Remover isRequestInProgress de dependencias
 
+  // Función para reintentar
+  const handleRetry = () => {
+    setError(null);
+    setIsEmpty(false);
+    setData(null);
+    // El useEffect se ejecutará automáticamente debido a las dependencias
+  };
+
   console.log('📋 ProductsLoader - Estado actual:', {
     loadingInitial,
     hasData: !!data,
     dataTotal: data?.total,
-    dataProducts: data?.products?.length
+    dataProducts: data?.products?.length,
+    error,
+    isEmpty
   });
 
   if (loadingInitial || !data) {
-    return <FetchingSkeleton progress={progress} />;
+    return (
+      <FetchingSkeleton 
+        progress={progress} 
+        error={error}
+        isEmpty={isEmpty}
+        onRetry={handleRetry}
+        isLoading={loadingInitial}
+      />
+    );
   }
 
   // Estado vacío: sugerir ampliar rango de precios
