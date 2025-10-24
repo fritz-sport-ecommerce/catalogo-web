@@ -67,7 +67,19 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         });
         
         clearTimeout(timeoutId);
-        const quickResult = await quickResponse.json();
+        
+        let quickResult;
+        if (quickResponse.ok) {
+          quickResult = await quickResponse.json();
+        } else {
+          console.log('📋 ProductsLoader - Endpoint principal falló, usando fallback');
+          // Si el endpoint principal falla, usar el fallback
+          const fallbackResponse = await fetch(`/api/busca-tu-taba/quick-fallback?${params.toString()}`, {
+            cache: "no-store",
+            signal: controller.signal,
+          });
+          quickResult = await fallbackResponse.json();
+        }
 
         clearInterval(progressInterval);
         setProgress(100);

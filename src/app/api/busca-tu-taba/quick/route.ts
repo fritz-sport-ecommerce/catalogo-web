@@ -147,7 +147,15 @@ export async function GET(req: NextRequest) {
     let productosSistema: any[] = [];
     try {
       console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsRaw.length, 'productos');
-      const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
+      
+      // Timeout más agresivo para producción (Vercel tiene límite de 10s en hobby)
+      const productosConPrecios = await Promise.race([
+        fetchProductosPrecios(productsRaw, "01"),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout fetching precios')), 8000) // 8s timeout
+        )
+      ]) as any[];
+      
       console.log('📋 DEBUG - Productos con precios obtenidos:', productosConPrecios?.length || 0);
       
       productosSistema = productosTraidosSistemaFritzSport(
@@ -160,6 +168,23 @@ export async function GET(req: NextRequest) {
       console.log('📋 DEBUG - Productos del sistema procesados:', productosSistema?.length || 0);
     } catch (error) {
       console.error("Error fetching productos from sistema:", error);
+      // En caso de error, usar solo productos de Sanity sin precios del sistema
+      productosSistema = productsRaw.map((producto: any) => ({
+        ...producto,
+        priceecommerce: producto.preciomanual || 0,
+        precio_retail: producto.preciomanual || 0,
+        priceemprendedor: producto.preciomanual || 0,
+        precio_emprendedor: producto.preciomanual || 0,
+        mayorista_cd: producto.preciomanual || 0,
+        precio_mayorista: producto.preciomanual || 0,
+        stock: 1, // Asumir stock disponible
+        stockDisponible: 1,
+        tallas: [],
+        tallascatalogo: "",
+        talla_sistema: "",
+        provincias: []
+      }));
+      console.log('📋 DEBUG - Usando fallback con productos de Sanity:', productosSistema?.length || 0);
     }
 
     // 3. Combinar Sanity + Sistema y eliminar duplicados por SKU
