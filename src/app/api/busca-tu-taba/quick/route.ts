@@ -149,12 +149,7 @@ export async function GET(req: NextRequest) {
       console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsRaw.length, 'productos');
       
       // Timeout más agresivo para producción (Vercel tiene límite de 10s en hobby)
-      const productosConPrecios = await Promise.race([
-        fetchProductosPrecios(productsRaw, "01"),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout fetching precios')), 8000) // 8s timeout
-        )
-      ]) as any[];
+      const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
       
       console.log('📋 DEBUG - Productos con precios obtenidos:', productosConPrecios?.length || 0);
       
