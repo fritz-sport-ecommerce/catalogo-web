@@ -83,7 +83,7 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
   return (
     <div className="h-full flex flex-col border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden   hover:shadow-lg transition-shadow">
       {/* Imagen del producto */}
-      <a           href={`https://wa.me/51982827352?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`}
+      <a           href={`https://wa.me/51983478551?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`}
  className="relative overflow-hidden bg-gray-100  aspect-square">
         {isNew && (
           <div className="absolute top-2 left-2 z-10">
@@ -109,7 +109,7 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
         </div>
 
         {/* Nombre del producto */}
-        <a  href={`https://wa.me/51982827352?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`} className="block mb-2.5">
+        <a  href={`https://wa.me/51983478551?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`} className="block mb-2.5">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors min-h-[2.5rem]">
             {product.name || "Sin nombre"}
           </h3>
@@ -176,7 +176,7 @@ export default function ProductCardWithLazyPrices({ product }: { product: Produc
 
         {/* Botón WhatsApp */}
         <a
-          href={`https://wa.me/51982827352?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`}
+          href={`https://wa.me/51983478551?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-auto pt-3  flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 rounded-lg transition-colors text-sm font-medium"
