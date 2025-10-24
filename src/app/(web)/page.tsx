@@ -88,7 +88,7 @@ export default async function Page({ searchParams }: Props) {
                 <div className="sticky xl:top-2 top-10 z-20">
                   <a
                     href="/pdf"
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-black text-white px-6 py-3 text-base font-semibold shadow-lg hover:bg-blue-700 transition-all hover:shadow-xl"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-base font-semibold shadow-lg hover:bg-blue-700 transition-all hover:shadow-xl"
                   >
                     Ver catálogo completo
                     <ExternalLink className="w-5 h-5" />

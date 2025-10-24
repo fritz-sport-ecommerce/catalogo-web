@@ -116,12 +116,12 @@ export default function NavTop({
             <LoveFollowNavigation />
           </div>
           {/* Icono de favoritos móvil */}
-          <div className="xl:hidden">
+          {/* <div className="xl:hidden">
             <LoveFollowNavigation />
-          </div>
+          </div> */}
        
           {/* icono carrito */}
-          <Link href="/carrito">
+          {/* <Link href="/carrito">
             <Button size="sm" variant="ghost" className={`${!isCallcenter ? "xl:hidden" : ""}`}>
               <ShoppingBag className="h-5 w-5" />
               <span className="ml-2 text-sm font-bold">
@@ -129,7 +129,7 @@ export default function NavTop({
               </span>
               <span className="sr-only">Cart</span>
             </Button>
-          </Link>
+          </Link> */}
           {/* dark mode - más visible */}
           <div className="mx-2 flex items-center">
             <ThemeToggle />
@@ -137,7 +137,7 @@ export default function NavTop({
           {/* user profile */}
           {/* <UserProfile /> */}
           {/* icono Buscador móvil */}
-          <Button
+          {/* <Button
             className="xl:hidden p-1"
             onClick={() => setShowMobileSearch(true)}
             size="sm"
@@ -145,7 +145,7 @@ export default function NavTop({
           >
             <Search className={"h-5 xl:w-5"} />
             <span className="sr-only">Buscar</span>
-          </Button>
+          </Button> */}
           {/* icono Buscador desktop */}
           <Button
             className={`hidden xl:block p-1 ${!isCallcenter ? "xl:hidden" : ""}`}
