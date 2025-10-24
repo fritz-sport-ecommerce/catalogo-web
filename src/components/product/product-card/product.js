@@ -112,7 +112,7 @@ export default function Product({
           {Array.isArray(products?.tallas) && products.tallas.length > 0 && (
             <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
               <div className="text-[10px] text-gray-500 dark:text-gray-400 mb-1.5 font-semibold uppercase tracking-wide">
-                Tallas disponibles (EU)
+                Tallas disponibles (EU)ssss
               </div>
               {(() => {
                 const converted = convertUSSizeToEuropean(
