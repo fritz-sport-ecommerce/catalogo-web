@@ -31,6 +31,15 @@ function formatPrice(n?: number) {
 }
 
 export default function ProductCardWithLazyPrices({ product }: { product: Product }) {
+  // Debug log para verificar si el componente se renderiza
+  console.log('📋 ProductCardWithLazyPrices - Renderizando producto:', {
+    _id: product._id,
+    sku: product.sku,
+    name: product.name,
+    hasImages: !!(product.imgcatalogomain || product.images),
+    hasPrices: !!(product.priceecommerce || product.mayorista_cd || product.priceemprendedor)
+  });
+
   // Mejorar fallback de imágenes
   const getImageUrl = () => {
     const catalogoImg = product.imgcatalogomain?.asset?.url;

@@ -60,6 +60,22 @@ export default async function Page({ searchParams }: Props) {
   const hasRangoPrecio = Boolean(priceRange);
   const canShowProducts = hasStyleSelected && hasGenero && hasMarca && hasRangoPrecio;
 
+  // Debug logs para verificar filtros
+  console.log('📋 PAGE DEBUG - Filtros:', {
+    category,
+    tipo,
+    genero,
+    marca,
+    priceRange,
+    populares,
+    date,
+    hasStyleSelected,
+    hasGenero,
+    hasMarca,
+    hasRangoPrecio,
+    canShowProducts
+  });
+
   // Si no hay estilo seleccionado aún, mostrar onboarding y no traer productos
   if (!canShowProducts) {
     const searchKey = JSON.stringify(searchParams);

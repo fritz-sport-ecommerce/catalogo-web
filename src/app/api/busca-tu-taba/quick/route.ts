@@ -146,7 +146,10 @@ export async function GET(req: NextRequest) {
     // 2. Obtener precios y stock del sistema
     let productosSistema: any[] = [];
     try {
+      console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsRaw.length, 'productos');
       const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
+      console.log('📋 DEBUG - Productos con precios obtenidos:', productosConPrecios?.length || 0);
+      
       productosSistema = productosTraidosSistemaFritzSport(
         productosConPrecios,
         undefined,
@@ -154,12 +157,14 @@ export async function GET(req: NextRequest) {
         undefined,
         undefined
       );
+      console.log('📋 DEBUG - Productos del sistema procesados:', productosSistema?.length || 0);
     } catch (error) {
       console.error("Error fetching productos from sistema:", error);
     }
 
     // 3. Combinar Sanity + Sistema y eliminar duplicados por SKU
     const skusVistos = new Set<string>();
+    let productCount = 0; // Contador para debug
     const productosCombinados = productosSistema
       .map((productoSistema: any) => {
         const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
@@ -185,7 +190,7 @@ export async function GET(req: NextRequest) {
         };
         
         // Debug: verificar imágenes en el primer producto
-        if (productosCombinados.length === 0) {
+        if (productCount === 0) {
           console.log('🖼️ DEBUG - Primer producto combinado:', {
             sku: combined.sku,
             tieneImgCatalogo: !!combined.imgcatalogomain?.asset?.url,
@@ -193,6 +198,7 @@ export async function GET(req: NextRequest) {
             imgUrl: combined.imgcatalogomain?.asset?.url || combined.images?.[0]?.asset?.url
           });
         }
+        productCount++;
         
         return combined;
       })
@@ -207,16 +213,22 @@ export async function GET(req: NextRequest) {
 
     // 4. FILTRAR por precios válidos (relajar filtro de stock)
     let productosConStock = productosCombinados.filter((p: any) => {
+      // Solo requerir que tenga al menos un precio válido
       const hasValidPrices = 
-        (p.priceecommerce || 0) > 0 &&
-        (p.mayorista_cd || 0) > 0 &&
-        (p.priceemprendedor || 0) > 0;
+        (p.priceecommerce || 0) > 0 ||
+        (p.mayorista_cd || 0) > 0 ||
+        (p.priceemprendedor || 0) > 0 ||
+        (p.precio_retail || 0) > 0 ||
+        (p.precio_mayorista || 0) > 0;
       return hasValidPrices; // No filtrar por stock aquí
     });
     
     console.log('📋 DEBUG - Productos después de filtro:', {
       conPrecios: productosConStock.length,
-      conStock: productosConStock.filter(p => (p.stock || 0) > 0).length
+      conStock: productosConStock.filter(p => (p.stock || 0) > 0).length,
+      totalCombinados: productosCombinados.length,
+      totalSanity: productsRaw.length,
+      totalSistema: productosSistema.length
     });
 
     // 5. Filtrar por talla si se especifica
@@ -271,6 +283,18 @@ export async function GET(req: NextRequest) {
     // Guardar en cache
     cache.set(cacheKey, { data: result, timestamp: Date.now() });
     console.log('📋 Cache guardado:', cacheKey, '| productos:', result.products.length, '| total:', result.total);
+    console.log('📋 DEBUG - Respuesta final del endpoint:', {
+      ok: result.ok,
+      total: result.total,
+      page: result.page,
+      pageSize: result.pageSize,
+      productsLength: result.products.length,
+      firstProduct: result.products[0] ? {
+        _id: result.products[0]._id,
+        sku: result.products[0].sku,
+        name: result.products[0].name
+      } : null
+    });
     
     return NextResponse.json(result);
   } catch (e: any) {

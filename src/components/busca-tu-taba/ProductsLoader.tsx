@@ -19,6 +19,12 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   const [progress, setProgress] = useState(0);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
+  console.log('📋 ProductsLoader - Componente montado con:', {
+    searchParamsKeys: Object.keys(searchParams),
+    itemsPerPage,
+    hasSearchParams: !!searchParams
+  });
+
   useEffect(() => {
     const fetchProducts = async () => {
       // Evitar múltiples requests simultáneos
@@ -49,9 +55,11 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         params.set("page", "1");
         params.set("limit", String(Math.min(itemsPerPage, 6))); // Máximo 6 items iniciales
 
+        console.log('📋 ProductsLoader - Iniciando request a:', `/api/busca-tu-taba/quick?${params.toString()}`);
+
         // Usar el endpoint quick optimizado con timeout
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout (aumentado de 15s)
         
         const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
@@ -72,7 +80,9 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           console.log('📋 ProductsLoader - Datos recibidos:', {
             total: quickResult.total,
             productos: products.length,
-            shouldSort: shouldSortByNew
+            shouldSort: shouldSortByNew,
+            quickResultOk: quickResult.ok,
+            quickResultStructure: Object.keys(quickResult)
           });
           
           if (shouldSortByNew && products.length > 0) {
@@ -88,11 +98,18 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
             total: quickResult.total,
           });
           
+          console.log('📋 ProductsLoader - Data actualizada:', {
+            products: products.length,
+            total: quickResult.total
+          });
+          
           // Pequeña pausa para mostrar 100%
           setTimeout(() => {
             setLoadingInitial(false);
+            console.log('📋 ProductsLoader - Loading finalizado');
           }, 300);
         } else {
+          console.log('📋 ProductsLoader - Respuesta no exitosa:', quickResult);
           setLoadingInitial(false);
         }
       } catch (error) {
@@ -113,6 +130,13 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
     const timeoutId = setTimeout(fetchProducts, 300);
     return () => clearTimeout(timeoutId);
   }, [searchParams, itemsPerPage]); // Remover isRequestInProgress de dependencias
+
+  console.log('📋 ProductsLoader - Estado actual:', {
+    loadingInitial,
+    hasData: !!data,
+    dataTotal: data?.total,
+    dataProducts: data?.products?.length
+  });
 
   if (loadingInitial || !data) {
     return <FetchingSkeleton progress={progress} />;

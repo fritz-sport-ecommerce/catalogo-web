@@ -23,6 +23,30 @@ export default function InfiniteProductGrid({
   const [hasMore, setHasMore] = React.useState(initial.length < total);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Debug logs
+  React.useEffect(() => {
+    console.log('📋 InfiniteProductGrid - Props recibidos:', {
+      initialLength: initial.length,
+      total,
+      pageSize,
+      useQuickEndpoint,
+      firstProduct: initial[0] ? {
+        _id: initial[0]._id,
+        sku: initial[0].sku,
+        name: initial[0].name
+      } : null
+    });
+  }, [initial, total, pageSize, useQuickEndpoint]);
+
+  React.useEffect(() => {
+    console.log('📋 InfiniteProductGrid - Estado actual:', {
+      itemsLength: items.length,
+      total,
+      loading,
+      hasMore
+    });
+  }, [items, total, loading, hasMore]);
+
   const fetchMore = React.useCallback(async () => {
     if (loading || !hasMore) return;
     setLoading(true);
