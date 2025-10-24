@@ -122,10 +122,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
     setActiveStep((prev) => Math.min(prev, maxStepAvailable));
   }, [maxStepAvailable]);
 
-  // Scroll automático al paso activo (excepto paso 1)
+  // Scroll automático al paso activo (excepto paso 1 y cuando ya se completaron todos los pasos)
   useEffect(() => {
     // No hacer scroll en el paso 1
     if (activeStep === 1) return;
+    
+    // No hacer scroll cuando ya se completaron todos los pasos (paso 6 = buscando productos)
+    if (currentStep === 6) return;
     
     const refs = [step1Ref, step2Ref, step3Ref, step4Ref, step5Ref];
     const currentRef = refs[activeStep - 1];
@@ -139,7 +142,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
         });
       }, 100);
     }
-  }, [activeStep]);
+  }, [activeStep, currentStep]);
   const stepLabel = currentStep === 1
     ? "Paso 1 de 5: Selecciona el tipo de producto"
     : currentStep === 2
