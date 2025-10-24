@@ -30,8 +30,8 @@ export async function middleware(req: NextRequest) {
       !url.includes("/nuestras-tiendas") &&
       !url.includes("/pdf") &&
       !url.includes("/tyc") &&
-      !url.includes("/pyp") && 
-      !url.includes("/libro-reclamaciones-virtual") && 
+      !url.includes("/pyp") &&
+      !url.includes("/libro-reclamaciones-virtual") &&
       !url.includes("/politica-de-cambios") &&
       // No bloquear rutas de API (por ejemplo, /api/vendor-code) en modo mantenimiento
       !url.includes("/api")
@@ -46,16 +46,16 @@ export async function middleware(req: NextRequest) {
 
   // Fallback: rol desde cookies si no hay token
   const roleCookie =
-    cookies.get("user-role")?.value ||
-    cookies.get("rol")?.value ||
-    undefined;
+    cookies.get("user-role")?.value || cookies.get("rol")?.value || undefined;
 
   // Detectar autenticación por presencia de token de NextAuth
   const isAuthenticated = Boolean(token);
 
   // Proteger /tienda y /tienda-mayorista: requiere estar autenticado y rol callcenter
   // Importante: si está autenticado, no confiar en cookies para el rol. Partir del token.
-  let effectiveRole = isAuthenticated ? roleFromToken : (roleFromToken || roleCookie);
+  let effectiveRole = isAuthenticated
+    ? roleFromToken
+    : roleFromToken || roleCookie;
 
   // Si está autenticado, obtener el rol más reciente desde Sanity usando el email del token
   if (isAuthenticated) {
@@ -89,20 +89,21 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/politica-de-cambios") ||
     pathname.startsWith("/mantenimiento") ||
     pathname.startsWith("/auth") ||
-    pathname.startsWith("/api/auth") || 
+    pathname.startsWith("/api/auth") ||
     // Tratar cualquier ruta de API como pública a efectos de middleware,
     // para no interferir con las respuestas JSON/redirects propios de las APIs
     pathname.startsWith("/api") ||
     pathname.startsWith("/verificar-vendedor") ||
-      pathname.startsWith("/users");
+    pathname.startsWith("/users");
 
-  const hasValidRole = effectiveRole === "callcenter" || effectiveRole === "admin";
+  const hasValidRole =
+    effectiveRole === "callcenter" || effectiveRole === "admin";
   if (isAuthenticated && !isPublicPath) {
     // No bloquear aquí '/generar-codigo-vendedor'; se validará más abajo con su propia whitelist
     if (pathname.startsWith("/generar-codigo-vendedor")) {
       // pasar al siguiente bloque
     } else if (!hasValidRole) {
-      return NextResponse.redirect(new URL("/pdf", req.url));
+      // return NextResponse.redirect(new URL("/pdf", req.url));
     }
   }
 
@@ -127,7 +128,8 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/pdf", req.url));
       }
     } else {
-      const hasAccess = effectiveRole === "callcenter" || effectiveRole === "admin";
+      const hasAccess =
+        effectiveRole === "callcenter" || effectiveRole === "admin";
       if (!hasAccess) {
         return NextResponse.redirect(new URL("/pdf", req.url));
       }
@@ -139,7 +141,10 @@ export async function middleware(req: NextRequest) {
   res.headers.set("x-authenticated", String(isAuthenticated));
   if (effectiveRole) {
     res.headers.set("x-user-role", effectiveRole);
-    res.headers.set("x-role-source", roleFromToken ? "token" : (roleCookie ? "cookie" : "none"));
+    res.headers.set(
+      "x-role-source",
+      roleFromToken ? "token" : roleCookie ? "cookie" : "none"
+    );
   } else {
     res.headers.set("x-user-role", "");
     res.headers.set("x-role-source", "none");
@@ -147,5 +152,8 @@ export async function middleware(req: NextRequest) {
   return res;
 }
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|mantenimiento|auth|api/auth).*)", "/users/:path*"],
+  matcher: [
+    "/((?!_next|favicon.ico|mantenimiento|auth|api/auth).*)",
+    "/users/:path*",
+  ],
 };

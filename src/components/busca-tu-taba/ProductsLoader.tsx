@@ -17,9 +17,17 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [data, setData] = useState<{ products: any[]; total: number } | null>(null);
   const [progress, setProgress] = useState(0);
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
+      // Evitar múltiples requests simultáneos
+      if (isRequestInProgress) {
+        console.log('🚫 Evitando request duplicado');
+        return;
+      }
+      
+      setIsRequestInProgress(true);
       setLoadingInitial(true);
       setProgress(0);
       
@@ -39,12 +47,18 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           if (value) params.set(key, value);
         });
         params.set("page", "1");
-        params.set("limit", String(itemsPerPage));
+        params.set("limit", String(Math.min(itemsPerPage, 6))); // Máximo 6 items iniciales
 
-        // Usar el endpoint quick optimizado
+        // Usar el endpoint quick optimizado con timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+        
         const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
+          signal: controller.signal,
         });
+        
+        clearTimeout(timeoutId);
         const quickResult = await quickResponse.json();
 
         clearInterval(progressInterval);
@@ -54,13 +68,21 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           // Ordenar por más nuevos primero si el filtro de nuevos está activo
           const shouldSortByNew = (searchParams?.fecha === 'desc');
           const products = Array.isArray(quickResult.products) ? [...quickResult.products] : [];
-          if (shouldSortByNew) {
+          
+          console.log('📋 ProductsLoader - Datos recibidos:', {
+            total: quickResult.total,
+            productos: products.length,
+            shouldSort: shouldSortByNew
+          });
+          
+          if (shouldSortByNew && products.length > 0) {
             products.sort((a: any, b: any) => {
               const ad = new Date((a?.fecha_cuando_aparece as string) || (a?._createdAt as string) || 0).getTime();
               const bd = new Date((b?.fecha_cuando_aparece as string) || (b?._createdAt as string) || 0).getTime();
               return bd - ad; // descendente
             });
           }
+          
           setData({
             products,
             total: quickResult.total,
@@ -76,12 +98,21 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
       } catch (error) {
         console.error("Error loading products:", error);
         clearInterval(progressInterval);
+        setProgress(0);
+        // Mostrar error más específico
+        if (error instanceof Error && error.name === 'AbortError') {
+          console.error("Request timeout - servidor sobrecargado");
+        }
         setLoadingInitial(false);
+      } finally {
+        setIsRequestInProgress(false);
       }
     };
 
-    fetchProducts();
-  }, [searchParams, itemsPerPage]);
+    // Debounce para evitar requests excesivos
+    const timeoutId = setTimeout(fetchProducts, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchParams, itemsPerPage]); // Remover isRequestInProgress de dependencias
 
   if (loadingInitial || !data) {
     return <FetchingSkeleton progress={progress} />;

@@ -28,7 +28,7 @@ const dataHeader = {
             //   title: "Terrex",
             //   url: "/tienda?genero=mujer&category=terrex",
             // },
-        
+
             {
               id: "6",
               title: "Sandalias",
@@ -113,7 +113,7 @@ const dataHeader = {
               title: "Ver Todas las Zapatillas",
               url: "/tienda?genero=hombre&tipo=calzado",
             },
-    
+
             // {
             //   id: "5",
             //   title: "Urbano",
@@ -249,14 +249,13 @@ const dataHeader = {
     //         //   url: "/tienda?search=zapatillas%20fritz",
     //         // },
 
-
     //         // {
     //         //   id: "35",
     //         //   title: "Fritz Peloteras",
     //         //   url: "/tienda?search=peloteras%20fritz",
     //         // },
     //       ],
-      
+
     //     },
     //     {
     //       categoria: [
@@ -282,7 +281,7 @@ const dataHeader = {
     //           url: "/tienda?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=niños",
     //         },
     //       ],
-      
+
     //     },
     //     {
     //       categoria: [
@@ -308,7 +307,7 @@ const dataHeader = {
     //           url: "/tienda?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=niños",
     //         },
     //       ],
-      
+
     //     },
 
     //     {
@@ -393,7 +392,7 @@ const dataHeader = {
     //           url: "/tienda?tipoproducto=catalogo&tipo=ropa&genero=niños",
 
     //         },
-            
+
     //       ],
     //     },
     //   ],
@@ -416,14 +415,13 @@ const dataHeader = {
     //         //   url: "/tienda-mayorista?search=zapatillas%20fritz",
     //         // },
 
-
     //         // {
     //         //   id: "35",
     //         //   title: "Fritz Peloteras",
     //         //   url: "/tienda-mayorista?search=peloteras%20fritz",
     //         // },
     //       ],
-      
+
     //     },
     //     {
     //       categoria: [
@@ -449,7 +447,7 @@ const dataHeader = {
     //           url: "/tienda-mayorista?razonsocial=fritzsport&tipoproducto=catalogo&marca=adidas&genero=niños",
     //         },
     //       ],
-      
+
     //     },
     //     {
     //       categoria: [
@@ -475,7 +473,7 @@ const dataHeader = {
     //           url: "/tienda-mayorista?razonsocial=fritzduran&tipoproducto=catalogo&marca=adidas&genero=niños",
     //         },
     //       ],
-      
+
     //     },
 
     //     {
@@ -560,12 +558,12 @@ const dataHeader = {
     //           url: "/tienda-mayorista?tipoproducto=catalogo&tipo=ropa&genero=niños",
 
     //         },
-            
+
     //       ],
     //     },
     //   ],
     // },
-  
+
     // {
     //   id: "colections",
     //   titulo: "colecciones",
@@ -702,9 +700,7 @@ const dataHeader = {
   ],
 };
 
-export function NavDesktop({
-  children,
-}) {
+export function NavDesktop({ children }) {
   const [activeHoverNavDesktop, setActiveHoverNavDesktop] = useState();
   const { userRole } = useContext(RoleContext);
   const { status } = useSession();
@@ -723,7 +719,9 @@ export function NavDesktop({
     if (!canSeeStores) return baseMenu;
 
     const tienda = dataHeader.menuSubmenu.find((i) => i.id === "tienda");
-    const tiendaMayorista = dataHeader.menuSubmenu.find((i) => i.id === "tienda-Mayorista");
+    const tiendaMayorista = dataHeader.menuSubmenu.find(
+      (i) => i.id === "tienda-Mayorista"
+    );
 
     return [
       ...baseMenu,

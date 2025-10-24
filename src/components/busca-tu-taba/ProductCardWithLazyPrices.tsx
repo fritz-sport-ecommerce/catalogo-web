@@ -31,7 +31,28 @@ function formatPrice(n?: number) {
 }
 
 export default function ProductCardWithLazyPrices({ product }: { product: Product }) {
-  const imageUrl = product.imgcatalogomain?.asset?.url || product.images?.[0]?.asset?.url || "/placeholder.png";
+  // Mejorar fallback de imágenes
+  const getImageUrl = () => {
+    const catalogoImg = product.imgcatalogomain?.asset?.url;
+    const firstImg = product.images?.[0]?.asset?.url;
+    const fallback = "https://via.placeholder.com/400x400/f3f4f6/9ca3af?text=Sin+Imagen";
+    
+    const finalUrl = catalogoImg || firstImg || fallback;
+    
+    // Debug solo para el primer producto
+    if (product.sku && Math.random() < 0.1) { // 10% de probabilidad para no saturar logs
+      console.log('🖼️ IMG DEBUG:', {
+        sku: product.sku,
+        catalogoImg,
+        firstImg,
+        finalUrl
+      });
+    }
+    
+    return finalUrl;
+  };
+  
+  const imageUrl = getImageUrl();
   const productUrl = `/product/${product.slug || product.sku}`;
 
   // Detectar si es producto nuevo (<= 21 días)

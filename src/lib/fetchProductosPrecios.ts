@@ -14,15 +14,19 @@ export interface BatchProgress {
 
 export type ProgressCallback = (progress: BatchProgress) => void;
 
-// Nueva búsqueda por SKUs usando la nueva API
+// Nueva búsqueda por SKUs usando la nueva API con retry
 async function buscarPorSKU(
   productos: Producto[],
-  codAlmacenes: string[] = ["A02"]
+  codAlmacenes: string[] = ["A02"],
+  retryCount = 0
 ): Promise<any[]> {
+  const MAX_RETRIES = 2;
+  const TIMEOUT_MS = 20000; // Reducido a 20s
+  
   try {
     // Crear controller por llamada para evitar abortos cruzados
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
     const skusTransformados = productos.flatMap((p) => {
       const sku = String(p.sku);
@@ -86,6 +90,19 @@ async function buscarPorSKU(
 
     return data;
   } catch (error: any) {
+    console.error(`❌ DEBUG - Error en lote (intento ${retryCount + 1}/${MAX_RETRIES + 1}):`, {
+      error: error.message,
+      isTimeout: error.name === 'AbortError',
+      skuCount: productos.length
+    });
+    
+    // Retry logic
+    if (retryCount < MAX_RETRIES && error.name !== 'AbortError') {
+      console.log(`🔄 Reintentando lote en ${(retryCount + 1) * 2}s...`);
+      await new Promise(resolve => setTimeout(resolve, (retryCount + 1) * 2000));
+      return buscarPorSKU(productos, codAlmacenes, retryCount + 1);
+    }
+    
     return [];
   }
 }
@@ -104,9 +121,9 @@ export async function fetchProductosPrecios(
       totalProductos: productos.length,
     });
 
-    // Procesar en lotes de 200 SKUs para evitar sobrecarga
-    const BATCH_SIZE = 200;
-    const PARALLEL_BATCHES = 3; // Procesar 3 lotes en paralelo
+    // Procesar en lotes más pequeños para mejor rendimiento
+    const BATCH_SIZE = 150; // Reducido de 200 a 150
+    const PARALLEL_BATCHES = 2; // Reducido de 3 a 2 para menos carga
     const totalBatches = Math.ceil(productos.length / BATCH_SIZE);
     const todosLosResultados: any[] = [];
 

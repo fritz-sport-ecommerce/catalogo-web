@@ -1,27 +1,39 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
 function useURLState() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const setParams = (updates: Record<string, string | null | undefined>) => {
-    const params = new URLSearchParams(searchParams?.toString());
-    Object.entries(updates).forEach(([key, val]) => {
-      if (val === null || val === undefined || val === "") {
-        params.delete(key);
-      } else {
-        params.set(key, String(val));
-      }
-    });
-    params.delete("page"); // reset pagination when filtering
-    // Navegar con los nuevos parámetros sin hacer scroll
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  const setParams = useCallback((updates: Record<string, string | null | undefined>, immediate = false) => {
+    const applyChanges = () => {
+      const params = new URLSearchParams(searchParams?.toString());
+      Object.entries(updates).forEach(([key, val]) => {
+        if (val === null || val === undefined || val === "") {
+          params.delete(key);
+        } else {
+          params.set(key, String(val));
+        }
+      });
+      params.delete("page"); // reset pagination when filtering
+      // Navegar con los nuevos parámetros sin hacer scroll
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    if (immediate) {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      applyChanges();
+    } else {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      const timer = setTimeout(applyChanges, 500); // 500ms debounce
+      setDebounceTimer(timer);
+    }
+  }, [router, pathname, searchParams, debounceTimer]);
 
   return { searchParams, setParams };
 }
@@ -169,7 +181,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
   const onRowClick = (key: string) => {
     if (key === "nuevos") {
-      setParams({ fecha: activeFecha === "desc" ? null : "desc" });
+      setParams({ fecha: activeFecha === "desc" ? null : "desc" }, true); // immediate
       return;
     }
     // Para cualquier categoría
@@ -180,7 +192,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
     } else {
       next = [...current, key];
     }
-    setParams({ category: next.length ? next.join(".") : null });
+    setParams({ category: next.length ? next.join(".") : null }, true); // immediate
     // No avanzar automáticamente de paso
   };
 
@@ -192,7 +204,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
     } else {
       next = [...current, tipo];
     }
-    setParams({ tipo: next.length ? next.join(".") : null });
+    setParams({ tipo: next.length ? next.join(".") : null }, true); // immediate
     // No avanzar automáticamente de paso
   };
 
@@ -375,7 +387,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   const next = current.includes(opt.value)
                     ? current.filter(v => v !== opt.value)
                     : [...current, opt.value];
-                  setParams({ genero: next.length ? next.join('.') : null });
+                  setParams({ genero: next.length ? next.join('.') : null }, true); // immediate
                 }}
                 className={`rounded-xl border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
                   active ? 'border-black dark:border-white bg-black dark:bg-black shadow-md scale-105' : 'border-gray-800 dark:border-black hover:border-black dark:hover:border-black'
@@ -455,7 +467,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   const next = current.includes(opt.value)
                     ? current.filter(v => v !== opt.value)
                     : [...current, opt.value];
-                  setParams({ marca: next.length ? next.join('.') : null });
+                  setParams({ marca: next.length ? next.join('.') : null }, true); // immediate
                 }}
                 className={`rounded-xl bg-black border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
                   isActiveMarca ? 'border-black dark:border-white bg-gray-600 dark:bg-gray-800 shadow-md scale-105' : 'border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
