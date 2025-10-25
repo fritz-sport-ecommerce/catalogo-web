@@ -329,7 +329,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                               const filteredValues = valuesArray.filter((v) => v !== val);
                               setParams({ [key]: filteredValues.length ? filteredValues.join(".") : null });
                             }}
-                            className="ml-2 font-bold text-white hover:text-red-600 transition-colors"
+                            className="ml-2 font-bold text-white hover:text-red-600 dark:text-red-400 transition-colors"
                             aria-label={`Quitar ${key} ${val}`}
                           >
                             ×

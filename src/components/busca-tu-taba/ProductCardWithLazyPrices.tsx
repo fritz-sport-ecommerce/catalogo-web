@@ -119,10 +119,10 @@ export default function ProductCardWithLazyPrices({
       <div className="flex-1 flex flex-col xl:p-3 p-2">
         {/* Género y SKU */}
         <div className="flex items-center justify-between text-xs mb-2.5">
-          <span className="text-gray-500 dark:text-gray-400 uppercase text-[9px] text-base">
+          <span className="text-gray-500 dark:text-gray-400 uppercase text-sm xl:text-base">
             {product.genero || "---"}
           </span>
-          <span className="text-gray-400 dark:text-gray-500 text-[9px] text-base">
+          <span className="text-gray-400 dark:text-gray-500 text-sm xl:text-base">
             {product.sku}
           </span>
         </div>
