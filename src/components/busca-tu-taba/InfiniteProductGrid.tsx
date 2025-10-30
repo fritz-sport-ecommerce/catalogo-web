@@ -3,6 +3,7 @@ import React from "react";
 import Product from "@/components/product/product-card/product";
 import ProductCardWithLazyPrices from "./ProductCardWithLazyPrices";
 import ProductGridSkeleton from "./ProductGridSkeleton";
+import QuickViewModal from "@/components/product/quick-view-modal";
 
 type Product = any;
 
@@ -23,6 +24,16 @@ export default function InfiniteProductGrid({
   const [hasMore, setHasMore] = React.useState(initial.length < total);
   const [loadingError, setLoadingError] = React.useState<string | null>(null);
   const [retryCount, setRetryCount] = React.useState(0);
+  const [quickViewProduct, setQuickViewProduct] = React.useState<any | null>(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = React.useState(false);
+  const [seenKeys, setSeenKeys] = React.useState<Set<string>>(() => {
+    const s = new Set<string>();
+    initial.forEach((p) => {
+      const key = String(p?.sku || p?._id || "");
+      if (key) s.add(key);
+    });
+    return s;
+  });
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
 
   // Debug logs
@@ -75,11 +86,23 @@ export default function InfiniteProductGrid({
       const data = await res.json();
       
       if (data?.ok) {
-        const next = data.products as Product[];
-        setItems((prev) => [...prev, ...next]);
+        const next = (data.products as Product[]) || [];
+        // Filtrar duplicados por sku o _id
+        const deduped: Product[] = [];
+        const updatedSeen = new Set(seenKeys);
+        next.forEach((p) => {
+          const key = String(p?.sku || p?._id || "");
+          if (key && !updatedSeen.has(key)) {
+            updatedSeen.add(key);
+            deduped.push(p);
+          }
+        });
+
+        setItems((prev) => [...prev, ...deduped]);
+        setSeenKeys(updatedSeen);
         setPage((p) => p + 1);
-        const loaded = (page + 1) * pageSize;
-        setHasMore(loaded < data.total);
+        const loadedUnique = (items.length + deduped.length);
+        setHasMore(loadedUnique < data.total);
         setRetryCount(0); // Reset retry count on success
       } else {
         throw new Error(data?.error || 'Error al cargar más productos');
@@ -148,14 +171,38 @@ export default function InfiniteProductGrid({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
             {items.map((product, i) => (
               <div key={`${product._id}-${i}`} className="relative">
-                {useQuickEndpoint ? (
-                  <ProductCardWithLazyPrices product={product} />
-                ) : (
-                  <Product products={product} />
-                )}
+                {/* Clic en la tarjeta abre el modal */}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    setQuickViewProduct(product);
+                    setIsQuickViewOpen(true);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      setQuickViewProduct(product);
+                      setIsQuickViewOpen(true);
+                    }
+                  }}
+                >
+                  {useQuickEndpoint ? (
+                    <ProductCardWithLazyPrices product={product} />
+                  ) : (
+                    <Product products={product} />
+                  )}
+                </div>
               </div>
             ))}
           </div>
+          {/* Modal de Vista Rápida */}
+          {isQuickViewOpen && quickViewProduct && (
+            <QuickViewModal
+              product={quickViewProduct}
+              isOpen={isQuickViewOpen}
+              onClose={() => setIsQuickViewOpen(false)}
+            />
+          )}
           <div ref={sentinelRef} className="h-20" />
           
           {/* Estado de carga mejorado */}

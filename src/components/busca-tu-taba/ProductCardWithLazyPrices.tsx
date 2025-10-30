@@ -3,6 +3,7 @@ import convertUSSizeToEuropean from "@/utils/convertir-talla-usa-eu";
 import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { track } from "@vercel/analytics"; // ✅ para registrar clicks
+import { urlForImage } from "@/sanity/lib/image";
 
 type Product = {
   _id: string;
@@ -50,14 +51,19 @@ export default function ProductCardWithLazyPrices({
   });
 
   const getImageUrl = () => {
-    const catalogoImg = product.imgcatalogomain?.asset?.url;
-    const firstImg = product.images?.[0]?.asset?.url;
+    const catalogoRef = product?.imgcatalogomain?.asset?._ref as string | undefined;
+    const catalogoDirect = product?.imgcatalogomain?.asset?.url as string | undefined;
+    const firstRef = product?.images?.[0]?.asset?._ref as string | undefined;
+    const firstDirect = product?.images?.[0]?.asset?.url as string | undefined;
+
+    const catalogoImg = catalogoRef ? urlForImage(catalogoRef as any).url() : catalogoDirect;
+    const firstImg = firstRef ? urlForImage(firstRef as any).url() : firstDirect;
     const fallback =
       "https://via.placeholder.com/400x400/f3f4f6/9ca3af?text=Sin+Imagen";
 
     const finalUrl = catalogoImg || firstImg || fallback;
 
-    if (product.sku && Math.random() < 0.1) {
+    if (product.sku && (Math.random() < 0.1 || !catalogoImg && !firstImg)) {
       console.log("🖼️ IMG DEBUG:", {
         sku: product.sku,
         catalogoImg,
@@ -97,8 +103,8 @@ export default function ProductCardWithLazyPrices({
 
   return (
     <div className="h-full flex flex-col border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-      {/* Imagen del producto */}
-      <a href={whatsappUrl} className="relative overflow-hidden bg-gray-100 aspect-square">
+      {/* Imagen del producto - sin link; el click lo maneja el contenedor padre para abrir modal */}
+      <div className="relative overflow-hidden bg-gray-100 aspect-square">
         {isNew && (
           <div className="absolute top-2 left-2 z-10">
             <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded bg-red-600 text-white shadow">
@@ -113,7 +119,7 @@ export default function ProductCardWithLazyPrices({
           className="object-cover hover:scale-105 transition-transform duration-300"
           sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
         />
-      </a>
+      </div>
 
       {/* Contenido del producto */}
       <div className="flex-1 flex flex-col xl:p-3 p-2">
@@ -128,11 +134,11 @@ export default function ProductCardWithLazyPrices({
         </div>
 
         {/* Nombre */}
-        <a href={whatsappUrl} className="block mb-2.5">
+        <div className="block mb-2.5">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 hover:text-gray-600 dark:hover:text-gray-300 transition-colors min-h-[2.5rem]">
             {product.name || "Sin nombre"}
           </h3>
-        </a>
+        </div>
 
         {/* Precios */}
         <div className="space-y-1 mb-2.5">
@@ -188,12 +194,13 @@ export default function ProductCardWithLazyPrices({
           </div>
         )}
 
-        {/* ✅ Botón WhatsApp con tracking */}
+        {/* ✅ Botón WhatsApp con tracking (no abre modal) */}
         <a
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             track("contactar_asesor_click", {
               sku: product?.sku ?? "",
               nombre: product?.name ?? "",

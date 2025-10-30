@@ -31,18 +31,20 @@ export default function AlmacenesPorTalla({ tallas, className = "" }: AlmacenesP
   };
 
   // Filtrar solo tallas con stock > 0 y procesar almacenes únicos
-  const tallasConStock = tallas.filter(talla => talla.stock > 0).map(talla => {
+  const inputTallas: TallaConAlmacenes[] = Array.isArray(tallas) ? tallas : [];
+  const tallasConStock = inputTallas.filter(talla => (talla?.stock ?? 0) > 0).map(talla => {
     // Agrupar almacenes por código para evitar duplicados
     const almacenesUnicos = new Map();
     
-    talla.almacenes.forEach(almacen => {
+    const almacenes: AlmacenInfo[] = Array.isArray(talla.almacenes) ? talla.almacenes : [];
+    almacenes.forEach(almacen => {
       // Filtrar almacenes con stock > 0 y que tengan un código de almacén válido
-      if (almacen.stock > 0 && almacen.codigoAlmacen && 
-          !almacen.nombreAlmacen.includes("Desconocido") && 
-          !almacen.nombreAlmacen.includes("Almacén 4")) {
+      if ((almacen?.stock ?? 0) > 0 && almacen?.codigoAlmacen && 
+          !(almacen?.nombreAlmacen || "").includes("Desconocido") && 
+          !(almacen?.nombreAlmacen || "").includes("Almacén 4")) {
         
         // Usar solo el código de almacén como clave para evitar duplicados
-        const key = almacen.codigoAlmacen;
+        const key = String(almacen.codigoAlmacen);
         if (almacenesUnicos.has(key)) {
           // Si ya existe, sumar el stock
           almacenesUnicos.get(key).stock += almacen.stock;
@@ -58,9 +60,9 @@ export default function AlmacenesPorTalla({ tallas, className = "" }: AlmacenesP
 
     return {
       ...talla,
-      almacenes: Array.from(almacenesUnicos.values())
+      almacenes: Array.from(almacenesUnicos.values()) as AlmacenInfo[]
     };
-  }).filter(talla => talla.almacenes.length > 0); // Solo mostrar tallas que tengan almacenes válidos
+  }).filter(talla => Array.isArray(talla.almacenes) && talla.almacenes.length > 0); // Solo mostrar tallas que tengan almacenes válidos
 
   if (tallasConStock.length === 0) {
     return (
@@ -93,7 +95,7 @@ export default function AlmacenesPorTalla({ tallas, className = "" }: AlmacenesP
                 ({talla.stock} disponibles)
               </span>
             </div>
-            {talla.almacenes.length > 1 && (
+            {Array.isArray(talla.almacenes) && talla.almacenes.length > 1 && (
               <div className="flex items-center">
                 <span className="text-xs text-gray-500 dark:text-gray-400 mr-2">
                   {talla.almacenes.length} almacenes
@@ -108,7 +110,7 @@ export default function AlmacenesPorTalla({ tallas, className = "" }: AlmacenesP
           </button>
 
           {/* Contenido expandible */}
-          {tallaExpandida === talla.talla && (
+          {tallaExpandida === talla.talla && Array.isArray(talla.almacenes) && (
             <div className="px-3 pb-3 border-t border-gray-200 dark:border-gray-600">
               <div className="space-y-2 pt-3">
                 {talla.almacenes.map((almacen, index) => (
@@ -142,7 +144,7 @@ export default function AlmacenesPorTalla({ tallas, className = "" }: AlmacenesP
           )}
 
           {/* Vista compacta para una sola talla o cuando no está expandida */}
-          {talla.almacenes.length === 1 && (
+          {Array.isArray(talla.almacenes) && talla.almacenes.length === 1 && (
             <div className="px-3 pb-3 border-t border-gray-200 dark:border-gray-600">
               <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded mt-3">
                 <div className="flex items-center">

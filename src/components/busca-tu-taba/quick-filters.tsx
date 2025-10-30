@@ -393,7 +393,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                   setParams({ genero: next.length ? next.join('.') : null }, true); // immediate
                 }}
                 className={`rounded-xl border-2 px-5 py-5 md:px-6 md:py-6 text-base md:text-lg font-semibold transition-all hover:shadow-lg flex flex-col items-center gap-2 ${
-                  active ? 'border-black dark:border-white bg-black dark:bg-black shadow-md scale-105' : 'border-gray-800 dark:border-black hover:border-black dark:hover:border-black'
+                  active ? 'border-black dark:border-white bg-black dark:bg-black shadow-md scale-105' : 'border-gray-800 dark:border-white  hover:border-black dark:hover:border-white'
                 }`}
               >
                 <span className="text-3xl md:text-4xl">{opt.emoji}</span>
