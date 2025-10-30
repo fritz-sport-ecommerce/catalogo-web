@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Product from "@/components/product/product-card/product";
 import ProductCardWithLazyPrices from "./ProductCardWithLazyPrices";
 import ProductGridSkeleton from "./ProductGridSkeleton";
@@ -20,7 +20,6 @@ export default function InfiniteProductGrid({
   useQuickEndpoint?: boolean;
 }) {
   const router = useRouter();
-  const pathname = typeof window !== "undefined" ? window.location.pathname : usePathname?.();
   const [items, setItems] = React.useState<Product[]>(initial);
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
@@ -187,8 +186,6 @@ export default function InfiniteProductGrid({
                     if (typeof window !== "undefined") {
                       const basePath = window.location.pathname;
                       router?.push ? router.push(basePath) : (window.location.href = basePath);
-                    } else if (pathname) {
-                      router?.push && router.push(pathname as string);
                     }
                   } catch {}
                 }}
@@ -299,8 +296,6 @@ export default function InfiniteProductGrid({
                       if (typeof window !== "undefined") {
                         const basePath = window.location.pathname;
                         router?.push ? router.push(basePath) : (window.location.href = basePath);
-                      } else if (pathname) {
-                        router?.push && router.push(pathname as string);
                       }
                     } catch {}
                   }}
