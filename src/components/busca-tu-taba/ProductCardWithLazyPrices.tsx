@@ -154,6 +154,8 @@ export default function ProductCardWithLazyPrices({
             </div>
           </div>
         </div>
+        <div className="min-h-[100px]">
+
 
         {/* Tallas */}
         {Array.isArray(product?.tallas) && product.tallas.length > 0 && (
@@ -183,7 +185,7 @@ export default function ProductCardWithLazyPrices({
                   {tallasOrdenadas.map((t: any, idx: number) => (
                     <span
                       key={`${t._id || idx}-${t.talla}`}
-                      className="px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded border border-gray-300 dark:border-gray-600"
+                      className="px-1.5 py-0.5 text-[12px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded border border-gray-300 dark:border-gray-600"
                     >
                       {t.talla}
                     </span>
@@ -193,6 +195,8 @@ export default function ProductCardWithLazyPrices({
             })()}
           </div>
         )}
+
+        </div>
 
         {/* ✅ Botón WhatsApp con tracking (no abre modal) */}
         <a

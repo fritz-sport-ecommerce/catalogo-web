@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Product from "@/components/product/product-card/product";
 import ProductCardWithLazyPrices from "./ProductCardWithLazyPrices";
 import ProductGridSkeleton from "./ProductGridSkeleton";
@@ -18,6 +19,8 @@ export default function InfiniteProductGrid({
   pageSize: number;
   useQuickEndpoint?: boolean;
 }) {
+  const router = useRouter();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : usePathname?.();
   const [items, setItems] = React.useState<Product[]>(initial);
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
@@ -35,6 +38,7 @@ export default function InfiniteProductGrid({
     return s;
   });
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+  const ioRef = React.useRef<IntersectionObserver | null>(null);
 
   // Debug logs
   React.useEffect(() => {
@@ -102,7 +106,9 @@ export default function InfiniteProductGrid({
         setSeenKeys(updatedSeen);
         setPage((p) => p + 1);
         const loadedUnique = (items.length + deduped.length);
-        setHasMore(loadedUnique < data.total);
+        // Si la respuesta no trajo nada nuevo, detener definitivamente
+        const hasNewData = deduped.length > 0;
+        setHasMore(hasNewData && loadedUnique < data.total);
         setRetryCount(0); // Reset retry count on success
       } else {
         throw new Error(data?.error || 'Error al cargar más productos');
@@ -120,7 +126,7 @@ export default function InfiniteProductGrid({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, page, pageSize, useQuickEndpoint]);
+  }, [loading, hasMore, page, pageSize, useQuickEndpoint, seenKeys, items.length]);
 
   // Función para reintentar la carga
   const handleRetry = React.useCallback(() => {
@@ -132,16 +138,31 @@ export default function InfiniteProductGrid({
   React.useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
-    const io = new IntersectionObserver((entries) => {
+
+    // Desconectar observador anterior
+    if (ioRef.current) {
+      ioRef.current.disconnect();
+      ioRef.current = null;
+    }
+
+    // Si ya estamos cargando o no hay más, no observar para evitar re-disparos
+    if (loading || !hasMore) return;
+
+    ioRef.current = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !loading && hasMore) {
           fetchMore();
         }
       });
     }, { rootMargin: "400px" }); // Cargar cuando esté a 400px del final
-    io.observe(el);
-    return () => io.disconnect();
-  }, [fetchMore]);
+
+    ioRef.current.observe(el);
+
+    return () => {
+      if (ioRef.current) ioRef.current.disconnect();
+      ioRef.current = null;
+    };
+  }, [fetchMore, loading, hasMore]);
 
   return (
     <div className="flex flex-col w-full">
@@ -159,6 +180,23 @@ export default function InfiniteProductGrid({
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               Intenta ajustar tus filtros para ver más resultados
             </p>
+            <div className="mt-6">
+              <button
+                onClick={() => {
+                  try {
+                    if (typeof window !== "undefined") {
+                      const basePath = window.location.pathname;
+                      router?.push ? router.push(basePath) : (window.location.href = basePath);
+                    } else if (pathname) {
+                      router?.push && router.push(pathname as string);
+                    }
+                  } catch {}
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors"
+              >
+                Ver todos los productos
+              </button>
+            </div>
           </div>
         </div>
       ) : (
@@ -170,7 +208,7 @@ export default function InfiniteProductGrid({
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
             {items.map((product, i) => (
-              <div key={`${product._id}-${i}`} className="relative">
+              <div key={`${product?.sku || product?._id || i}`} className="relative">
                 {/* Clic en la tarjeta abre el modal */}
                 <div
                   role="button"
@@ -203,8 +241,6 @@ export default function InfiniteProductGrid({
               onClose={() => setIsQuickViewOpen(false)}
             />
           )}
-          <div ref={sentinelRef} className="h-20" />
-          
           {/* Estado de carga mejorado */}
           {loading && (
             <div className="mt-8 space-y-4">
@@ -214,9 +250,11 @@ export default function InfiniteProductGrid({
                   Cargando más productos...
                 </span>
               </div>
-              <ProductGridSkeleton count={6} />
+              <ProductGridSkeleton count={pageSize} />
             </div>
           )}
+          
+          <div ref={sentinelRef} className="h-20" />
           
           {/* Estado de error con botón de reintento */}
           {loadingError && !loading && (
@@ -252,6 +290,24 @@ export default function InfiniteProductGrid({
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Has visto todos los productos</span>
+              </div>
+              {/* Botón opcional para reiniciar filtros y ver todo */}
+              <div className="mt-4">
+                <button
+                  onClick={() => {
+                    try {
+                      if (typeof window !== "undefined") {
+                        const basePath = window.location.pathname;
+                        router?.push ? router.push(basePath) : (window.location.href = basePath);
+                      } else if (pathname) {
+                        router?.push && router.push(pathname as string);
+                      }
+                    } catch {}
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-black dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors"
+                >
+                  Ver todos los productos
+                </button>
               </div>
             </div>
           )}

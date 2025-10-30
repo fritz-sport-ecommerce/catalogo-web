@@ -520,7 +520,7 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
               { label: 'S/ 400 - 600', min: 400, max: 600, emoji: '💶' },
               { label: 'S/ 600 - 800', min: 600, max: 800, emoji: '💶' },
               { label: 'S/ 800 - 1000', min: 800, max: 1000, emoji: '💷' },
-              { label: 'S/ 1000+', min: 0, max: 1000, emoji: '💎' }
+                    { label: 'S/ 0 a 1000+', min: 0, max: 1000, emoji: '💎' }
             ].map((rango, idx) => {
               const isActive = rango.min !== null && activeRango === `${rango.min}-${rango.max}`;
               return (
