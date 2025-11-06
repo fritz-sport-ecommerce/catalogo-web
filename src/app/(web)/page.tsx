@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import LoadingSpinner from "./loading";
 import QuickFilters from "@/components/busca-tu-taba/quick-filters";
 
+
 interface Props {
   searchParams: {
     start?: string;
@@ -54,26 +55,51 @@ export default async function Page({ searchParams }: Props) {
     populares,
   } = searchParams;
 
-  const hasStyleSelected = Boolean(category || tipo || populares === "true" || date === "desc");
+  const hasStyleSelected = Boolean(category);
+  const hasTipo = Boolean(tipo);
   const hasGenero = Boolean(genero);
+  const hasTalla = Boolean(talla);
   const hasMarca = Boolean(marca);
   const hasRangoPrecio = Boolean(priceRange);
-  const canShowProducts = hasStyleSelected && hasGenero && hasMarca && hasRangoPrecio;
+  
+  // Verificar si el tipo seleccionado requiere talla (calzado o ropa)
+  const tipoRequiereTalla = tipo && tipo.split('.').some(t => t === 'calzado' || t === 'ropa');
+  
+  // Para mostrar productos necesitamos: tipo, género, estilo (category), marca, precio
+  // Y si es calzado/ropa, también talla
+  const canShowProducts = hasTipo && hasGenero && hasStyleSelected && hasMarca && hasRangoPrecio && (!tipoRequiereTalla || hasTalla);
 
   // Debug logs para verificar filtros
   console.log('📋 PAGE DEBUG - Filtros:', {
-    category,
-    tipo,
-    genero,
-    marca,
-    priceRange,
-    populares,
-    date,
-    hasStyleSelected,
-    hasGenero,
-    hasMarca,
-    hasRangoPrecio,
-    canShowProducts
+    'Parámetros URL': {
+      category,
+      tipo,
+      genero,
+      talla,
+      marca,
+      priceRange
+    },
+    'Validaciones': {
+      hasTipo,
+      hasGenero,
+      hasStyleSelected,
+      hasMarca,
+      hasRangoPrecio,
+      hasTalla,
+      tipoRequiereTalla
+    },
+    'Resultado': {
+      canShowProducts,
+      'Falta': !canShowProducts ? 
+        (!hasTipo ? 'tipo' : 
+         !hasGenero ? 'genero' : 
+         !hasStyleSelected ? 'category/estilo' : 
+         !hasMarca ? 'marca' : 
+         !hasRangoPrecio ? 'rangoPrecio' : 
+         (tipoRequiereTalla && !hasTalla) ? 'talla' : 
+         'nada (debería mostrar productos)') 
+        : 'Todos los filtros completos'
+    }
   });
 
   // Si no hay estilo seleccionado aún, mostrar onboarding y no traer productos
@@ -103,7 +129,7 @@ export default async function Page({ searchParams }: Props) {
                       Busca tu Producto
                     </h1>
                     <p className="text-center text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-8">
-                      Encuentra tus productos ideales en 5 pasos simples
+                      Encuentra tus productos ideales en pasos simples
                     </p>
                   </div>
                   
@@ -133,8 +159,8 @@ export default async function Page({ searchParams }: Props) {
                     </ol>
                   </div> */}
                
-                  <div className="flex items-center justify-center">
-                    <QuickFilters variant="onboarding" />
+                  <div className="">
+                    <QuickFilters />
                   </div>
                 </div>
               </section>
@@ -148,6 +174,12 @@ export default async function Page({ searchParams }: Props) {
   const itemsPerPage = 10; // Mostrar 10 productos inicialmente
   const searchKey = JSON.stringify(searchParams);
 
+  // Agregar fecha=desc por defecto si no está presente para mostrar productos nuevos primero
+  const searchParamsWithDefaults = {
+    ...searchParams,
+    fecha: searchParams.fecha || 'desc'
+  };
+
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <div key={searchKey}>
@@ -156,6 +188,7 @@ export default async function Page({ searchParams }: Props) {
             <div className="max-w-[1920px] mx-auto">
               <section aria-labelledby="products-heading" className="pt-6 lg:pt-8">
                 <h2 id="products-heading" className="sr-only">Products</h2>
+                
                 <div
                   className={cn(
                     "grid grid-cols-1 gap-x-6 lg:gap-x-8 gap-y-8 items-start",
@@ -175,11 +208,11 @@ export default async function Page({ searchParams }: Props) {
                   </div>
                   
                   <div id="productos">
-                    <ProductsLoader searchParams={searchParams} itemsPerPage={itemsPerPage} />
+                    <ProductsLoader searchParams={searchParamsWithDefaults} itemsPerPage={itemsPerPage} />
                   </div>
                 </div>
                 
-                {/* Botón flotante mobile - Solo visible en mobile */}
+                {/* Botón flotante mobile para filtros */}
                 <div className="lg:hidden">
                   <QuickFilters />
                 </div>

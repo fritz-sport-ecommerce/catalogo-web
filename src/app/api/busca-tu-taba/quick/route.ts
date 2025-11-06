@@ -253,9 +253,43 @@ export async function GET(req: NextRequest) {
 
     // 5. Filtrar por talla si se especifica
     if (talla) {
+      const tallasEUArray = talla.split('.');
+      console.log('📋 DEBUG - Filtrando por tallas EU:', tallasEUArray);
+      
+      // Importar la función de conversión
+      const convertUSSizeToEuropean = (await import('@/utils/convertir-talla-usa-eu')).default;
+      
       productosConStock = productosConStock.filter((producto: any) => {
-        return producto.tallas && producto.tallas.some((t: any) => String(t.talla) === talla);
+        // Convertir las tallas del producto de USA a EU
+        const tallasConvertidas = convertUSSizeToEuropean(
+          producto.tallas || [],
+          producto.genero || genero || 'unisex',
+          producto.marca || 'ADIDAS',
+          producto.subgenero,
+          'calzado'
+        );
+        
+        // Buscar si alguna talla convertida coincide con las tallas EU buscadas
+        const match = Array.isArray(tallasConvertidas) && tallasConvertidas.some((tallaObj: any) => {
+          const tallaEU = String(tallaObj.talla || '').trim();
+          return tallasEUArray.includes(tallaEU);
+        });
+        
+        if (!match && producto.sku) {
+          console.log('📋 DEBUG - Producto sin match de talla:', {
+            sku: producto.sku,
+            marca: producto.marca,
+            genero: producto.genero,
+            tallasOriginales: producto.tallas?.map((t: any) => t.talla),
+            tallasConvertidas: Array.isArray(tallasConvertidas) ? tallasConvertidas.map((t: any) => t.talla) : tallasConvertidas,
+            buscandoEU: tallasEUArray
+          });
+        }
+        
+        return match;
       });
+      
+      console.log('📋 DEBUG - Productos después de filtro de talla:', productosConStock.length);
     }
 
     // 6. Filtrar por rango de precio si se especifica
