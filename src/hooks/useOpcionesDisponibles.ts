@@ -67,86 +67,80 @@ export function useOpcionesDisponibles({
       abortControllerRef.current = new AbortController();
       
       try {
+        // Usar endpoint de opciones (más ligero que /quick)
         const params = new URLSearchParams({
           tipo,
-          genero,
-          limit: '50' // Aumentado a 50 para mejor análisis de opciones
+          genero
         });
 
         if (category) params.set('category', category);
         if (marca) params.set('marca', marca);
 
-        const response = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
+        const response = await fetch(`/api/busca-tu-taba/opciones?${params.toString()}`, {
           signal: abortControllerRef.current.signal,
           cache: 'no-store'
         });
         
         const data = await response.json();
 
-        if (data.ok && data.products) {
-          // Analizar marcas disponibles
-          const marcasSet = new Set<string>();
-          const categoriasSet = new Set<string>();
-          const precios: number[] = [];
-
-          data.products.forEach((producto: any) => {
-            if (producto.marca) {
-              marcasSet.add(producto.marca.toLowerCase());
-            }
-            if (producto.categories && Array.isArray(producto.categories)) {
-              producto.categories.forEach((cat: string) => categoriasSet.add(cat));
-            }
-            if (producto.priceecommerce && producto.priceecommerce > 0) {
-              precios.push(producto.priceecommerce);
-            }
-          });
-
-          // Calcular rangos de precios con más detalle
-          const rangosPrecios: { min: number; max: number; count: number; label: string; emoji: string }[] = [];
-          if (precios.length > 0) {
-            precios.sort((a, b) => a - b);
-            const min = precios[0];
-            const max = precios[precios.length - 1];
-            
-            // Crear rangos dinámicos
-            const rangos = [
-              { min: 0, max: 100, label: 'Hasta S/ 100', emoji: '💵' },
-              { min: 100, max: 200, label: 'S/ 100 - 200', emoji: '💵' },
-              { min: 200, max: 300, label: 'S/ 200 - 300', emoji: '💵' },
-              { min: 300, max: 400, label: 'S/ 300 - 400', emoji: '💶' },
-              { min: 400, max: 500, label: 'S/ 400 - 500', emoji: '💶' },
-              { min: 500, max: 600, label: 'S/ 500 - 600', emoji: '💷' },
-              { min: 600, max: 800, label: 'S/ 600 - 800', emoji: '💷' },
-              { min: 800, max: 1000, label: 'S/ 800 - 1000', emoji: '💷' },
-              { min: 1000, max: 999999, label: 'Más de S/ 1000', emoji: '💎' }
-            ];
-
-            rangos.forEach(rango => {
-              const count = precios.filter(p => p >= rango.min && p < rango.max).length;
-              if (count > 0) {
-                rangosPrecios.push({ ...rango, count });
-              }
-            });
-          }
+        if (data.ok && data.opciones) {
+          // Usar marcas y categorías del endpoint
+          const marcasDisponibles = data.opciones.marcas || [];
+          const categoriasDisponibles = data.opciones.categorias || [];
+          
+          // RANGOS DE PRECIOS ESTÁTICOS - Mostrar todos los rangos comunes
+          // El filtrado real se hará en el endpoint principal
+          const rangosPrecios = [
+            { min: 0, max: 100, label: 'Hasta S/ 100', emoji: '💵', count: 1 },
+            { min: 100, max: 200, label: 'S/ 100 - 200', emoji: '💵', count: 1 },
+            { min: 200, max: 300, label: 'S/ 200 - 300', emoji: '💵', count: 1 },
+            { min: 300, max: 400, label: 'S/ 300 - 400', emoji: '💶', count: 1 },
+            { min: 400, max: 500, label: 'S/ 400 - 500', emoji: '💶', count: 1 },
+            { min: 500, max: 600, label: 'S/ 500 - 600', emoji: '💷', count: 1 },
+            { min: 600, max: 800, label: 'S/ 600 - 800', emoji: '💷', count: 1 },
+            { min: 800, max: 1000, label: 'S/ 800 - 1000', emoji: '💷', count: 1 },
+            { min: 1000, max: 999999, label: 'Más de S/ 1000', emoji: '💎', count: 1 }
+          ];
 
           const result = {
-            marcas: Array.from(marcasSet),
-            categorias: Array.from(categoriasSet),
-            rangosPrecios
+            marcas: marcasDisponibles,
+            categorias: categoriasDisponibles,
+            rangosPrecios // Todos los rangos disponibles
           };
 
           // Guardar en cache
           opcionesCache.set(cacheKey, { 
             data: result, 
-            total: data.total || data.products.length,
+            total: data.totalProductos || 0,
             timestamp: Date.now() 
           });
 
           setOpciones(result);
-          setTotalProductos(data.total || data.products.length);
-          console.log('✅ Opciones cargadas:', { marcas: result.marcas.length, rangos: result.rangosPrecios.length });
+          setTotalProductos(data.totalProductos || 0);
+          console.log('✅ Opciones cargadas:', { 
+            marcas: result.marcas.length, 
+            categorias: result.categorias.length,
+            rangos: result.rangosPrecios.length 
+          });
         } else {
-          setOpciones({ marcas: [], categorias: [], rangosPrecios: [] });
+          // Fallback: mostrar rangos estáticos aunque falle el endpoint
+          const rangosPrecios = [
+            { min: 0, max: 100, label: 'Hasta S/ 100', emoji: '💵', count: 1 },
+            { min: 100, max: 200, label: 'S/ 100 - 200', emoji: '💵', count: 1 },
+            { min: 200, max: 300, label: 'S/ 200 - 300', emoji: '💵', count: 1 },
+            { min: 300, max: 400, label: 'S/ 300 - 400', emoji: '💶', count: 1 },
+            { min: 400, max: 500, label: 'S/ 400 - 500', emoji: '💶', count: 1 },
+            { min: 500, max: 600, label: 'S/ 500 - 600', emoji: '💷', count: 1 },
+            { min: 600, max: 800, label: 'S/ 600 - 800', emoji: '💷', count: 1 },
+            { min: 800, max: 1000, label: 'S/ 800 - 1000', emoji: '💷', count: 1 },
+            { min: 1000, max: 999999, label: 'Más de S/ 1000', emoji: '💎', count: 1 }
+          ];
+          
+          setOpciones({ 
+            marcas: [], 
+            categorias: [], 
+            rangosPrecios 
+          });
           setTotalProductos(0);
         }
       } catch (error: any) {
@@ -157,8 +151,27 @@ export function useOpcionesDisponibles({
         }
         
         console.error('Error fetching opciones disponibles:', error);
-        setOpciones({ marcas: [], categorias: [], rangosPrecios: [] });
+        
+        // Fallback: mostrar rangos estáticos en caso de error
+        const rangosPrecios = [
+          { min: 0, max: 100, label: 'Hasta S/ 100', emoji: '💵', count: 1 },
+          { min: 100, max: 200, label: 'S/ 100 - 200', emoji: '💵', count: 1 },
+          { min: 200, max: 300, label: 'S/ 200 - 300', emoji: '💵', count: 1 },
+          { min: 300, max: 400, label: 'S/ 300 - 400', emoji: '💶', count: 1 },
+          { min: 400, max: 500, label: 'S/ 400 - 500', emoji: '💶', count: 1 },
+          { min: 500, max: 600, label: 'S/ 500 - 600', emoji: '💷', count: 1 },
+          { min: 600, max: 800, label: 'S/ 600 - 800', emoji: '💷', count: 1 },
+          { min: 800, max: 1000, label: 'S/ 800 - 1000', emoji: '💷', count: 1 },
+          { min: 1000, max: 999999, label: 'Más de S/ 1000', emoji: '💎', count: 1 }
+        ];
+        
+        setOpciones({ 
+          marcas: [], 
+          categorias: [], 
+          rangosPrecios 
+        });
         setTotalProductos(0);
+        
         if (error instanceof Error) {
           if (error.message.includes('504') || error.message.includes('Gateway')) {
             setError('El servidor está sobrecargado. Intenta de nuevo.');

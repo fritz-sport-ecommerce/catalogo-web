@@ -377,17 +377,27 @@ export async function GET(req: NextRequest) {
       expectedEnd: Math.min(start + itemsPerPage, totalProducts)
     });
 
-    // Si hay pocos resultados, agregar MUCHAS sugerencias (sin filtro de precio ni talla)
+    // SIEMPRE agregar sugerencias para asegurar mínimo 6 productos totales
     let suggestions: any[] = [];
-    const MIN_RESULTS = 12; // Mostrar sugerencias si hay menos de 12 resultados
+    const MIN_TOTAL_PRODUCTS = 6; // Mínimo de productos totales (resultados + sugerencias)
     const MAX_SUGGESTIONS = 50; // Máximo de sugerencias a mostrar
     
-    // Mostrar sugerencias si hay pocos resultados totales
-    if (totalProducts < MIN_RESULTS && page === 1) {
-      console.log('📋 DEBUG - Buscando sugerencias porque solo hay', totalProducts, 'resultados');
+    // Calcular cuántas sugerencias necesitamos
+    const currentTotal = pageItems.length;
+    const suggestionsNeeded = Math.max(0, MIN_TOTAL_PRODUCTS - currentTotal);
+    
+    // Mostrar sugerencias si hay pocos resultados totales O si es la primera página
+    if ((currentTotal < MIN_TOTAL_PRODUCTS || totalProducts < 12) && page === 1) {
+      console.log('📋 DEBUG - Buscando sugerencias:', {
+        currentTotal,
+        totalProducts,
+        suggestionsNeeded,
+        minRequired: MIN_TOTAL_PRODUCTS
+      });
       
       // Obtener productos sugeridos sin filtros de precio ni talla, solo género y tipo
-      const suggestionFilter = `*[${productFilter}${generoFilter}${tipoFilter}${marcaFilter} && empresa == "fritz_sport"][0...${MAX_SUGGESTIONS + 20}]`;
+      const suggestionLimit = Math.max(suggestionsNeeded, MAX_SUGGESTIONS);
+      const suggestionFilter = `*[${productFilter}${generoFilter}${tipoFilter}${marcaFilter} && empresa == "fritz_sport"][0...${suggestionLimit + 20}]`;
       const suggestedRaw = await client.fetch(
         groq`${suggestionFilter} ${order} {
           _id,

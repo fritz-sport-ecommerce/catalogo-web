@@ -107,16 +107,19 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
             });
           }
           
-          // Verificar si hay productos
-          if (products.length === 0 || quickResult.total === 0) {
-            setIsEmpty(true);
-            setProgress(100);
-            setTimeout(() => {
-              setLoadingInitial(false);
-            }, 500);
-            return;
-          }
+          // SIEMPRE mostrar productos, incluso si son pocos
+          // Combinar productos + sugerencias para asegurar mínimo 6 items
+          const MIN_PRODUCTS = 6;
+          const totalItems = products.length + suggestions.length;
           
+          console.log('📋 ProductsLoader - Verificando mínimo de productos:', {
+            productos: products.length,
+            sugerencias: suggestions.length,
+            total: totalItems,
+            minimo: MIN_PRODUCTS
+          });
+          
+          // Si hay menos de MIN_PRODUCTS, las sugerencias se mostrarán automáticamente
           setData({
             products,
             total: quickResult.total,
@@ -187,11 +190,14 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
     hasData: !!data,
     dataTotal: data?.total,
     dataProducts: data?.products?.length,
+    dataSuggestions: data?.suggestions?.length,
     error,
     isEmpty
   });
 
-  if (loadingInitial || !data) {
+  // Si hay error pero tenemos datos en cache, mostrar los datos
+  if (error && !data) {
+    // Solo mostrar error si no hay datos en absoluto
     return (
       <FetchingSkeleton 
         progress={progress} 
@@ -203,11 +209,27 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
     );
   }
 
-  // Estado vacío: sugerir ampliar rango de precios
-  if ((data.total ?? 0) === 0) {
+  if (loadingInitial || !data) {
+    return (
+      <FetchingSkeleton 
+        progress={progress} 
+        error={null} // No mostrar error durante carga inicial
+        isEmpty={isEmpty}
+        onRetry={handleRetry}
+        isLoading={loadingInitial}
+      />
+    );
+  }
+
+  // Si no hay productos pero hay sugerencias, mostrarlas
+  // NO mostrar mensaje de "no encontrado" si hay sugerencias
+  const totalItems = (data.products?.length || 0) + (data.suggestions?.length || 0);
+  
+  if (totalItems === 0) {
+    // Solo mostrar mensaje si realmente no hay nada
     const handleSuggestPriceRange = () => {
       const params = new URLSearchParams(urlParams?.toString());
-      params.set("rangoPrecio", "0-1000");
+      params.set("rangoPrecio", "0-999999");
       params.delete("page");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
@@ -220,12 +242,12 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed rounded-2xl border-gray-200 dark:border-gray-700">
         <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2">No se encontraron productos</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Prueba ampliando el rango de precios a 0 - 1000 para ver más resultados.</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Prueba ampliando el rango de precios para ver más resultados.</p>
         <button
           onClick={handleSuggestPriceRange}
           className="inline-flex items-center justify-center gap-2 rounded-lg bg-black text-white px-5 py-3 text-sm font-semibold shadow-lg hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-all"
         >
-          Aplicar rango 0 - 1000
+          Ver todos los precios
         </button>
         <div className="mt-6 text-xs text-gray-500 dark:text-gray-400">O bien</div>
         <button

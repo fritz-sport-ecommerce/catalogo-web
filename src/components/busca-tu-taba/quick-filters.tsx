@@ -772,9 +772,9 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                       <span className={`${isActive ? 'font-bold text-black dark:text-white' : ''} ${!disponible ? 'line-through' : ''}`}>
                         {rango.label}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {/* <span className="text-xs text-gray-500 dark:text-gray-400">
                         {rango.count > 0 ? `${rango.count} productos` : 'Sin productos'}
-                      </span>
+                      </span> */}
                     </div>
                     {isActive && (
                       <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">✓</div>
