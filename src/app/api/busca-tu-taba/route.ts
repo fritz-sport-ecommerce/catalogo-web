@@ -169,9 +169,14 @@ export async function GET(req: NextRequest) {
       const emprendedor = Number(p.priceemprendedor || 0);
       return retail > 0 && mayorista > 0 && emprendedor > 0;
     });
+    // Marcar productos que tienen la talla buscada (no filtrar)
     if (talla) {
-      filteredProducts = filteredProducts.filter((producto: any) => {
-        return producto.tallas && producto.tallas.some((t: any) => String(t.talla) === talla);
+      filteredProducts = filteredProducts.map((producto: any) => {
+        const hasTallaMatch = producto.tallas && producto.tallas.some((t: any) => String(t.talla) === talla);
+        return {
+          ...producto,
+          hasMatchingSize: hasTallaMatch
+        };
       });
     }
     if (priceRange) {
@@ -184,8 +189,17 @@ export async function GET(req: NextRequest) {
 
     const priceSortDir = priceSort as "asc" | "desc" | undefined;
     const sortedProducts = filteredProducts.sort((a: any, b: any) => {
+      // PRIMERO: Priorizar productos con talla buscada
+      if (talla) {
+        if (a.hasMatchingSize && !b.hasMatchingSize) return -1;
+        if (!a.hasMatchingSize && b.hasMatchingSize) return 1;
+      }
+      
+      // SEGUNDO: Priorizar con stock
       if (a.stock > 0 && b.stock === 0) return -1;
       if (a.stock === 0 && b.stock > 0) return 1;
+      
+      // TERCERO: Precio si se pidió
       if (priceSortDir === "asc") return (a.priceecommerce || 0) - (b.priceecommerce || 0);
       if (priceSortDir === "desc") return (b.priceecommerce || 0) - (a.priceecommerce || 0);
       return 0;

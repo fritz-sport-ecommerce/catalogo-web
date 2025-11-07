@@ -15,7 +15,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   const pathname = usePathname();
   const urlParams = useSearchParams();
   const [loadingInitial, setLoadingInitial] = useState(true);
-  const [data, setData] = useState<{ products: any[]; total: number } | null>(null);
+  const [data, setData] = useState<{ products: any[]; total: number; suggestions?: any[] } | null>(null);
   const [progress, setProgress] = useState(0);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           if (value) params.set(key, value);
         });
         params.set("page", "1");
-        params.set("limit", String(Math.min(itemsPerPage, 6))); // Máximo 6 items iniciales
+        params.set("limit", String(itemsPerPage)); // Usar el itemsPerPage completo
 
         console.log('📋 ProductsLoader - Iniciando request a:', `/api/busca-tu-taba/quick?${params.toString()}`);
 
@@ -81,9 +81,12 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           const shouldSortByNew = (searchParams?.fecha === 'desc');
           const products = Array.isArray(quickResult.products) ? [...quickResult.products] : [];
           
+          const suggestions = Array.isArray(quickResult.suggestions) ? quickResult.suggestions : [];
+          
           console.log('📋 ProductsLoader - Datos recibidos:', {
             total: quickResult.total,
             productos: products.length,
+            sugerencias: suggestions.length,
             shouldSort: shouldSortByNew,
             quickResultOk: quickResult.ok,
             quickResultStructure: Object.keys(quickResult)
@@ -110,11 +113,13 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           setData({
             products,
             total: quickResult.total,
+            suggestions: suggestions.length > 0 ? suggestions : undefined,
           });
           
           console.log('📋 ProductsLoader - Data actualizada:', {
             products: products.length,
-            total: quickResult.total
+            total: quickResult.total,
+            suggestions: suggestions.length
           });
           
           // Pequeña pausa para mostrar 100%
@@ -224,6 +229,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
       total={data.total}
       pageSize={itemsPerPage}
       useQuickEndpoint={true}
+      initialSuggestions={data.suggestions}
     />
   );
 }

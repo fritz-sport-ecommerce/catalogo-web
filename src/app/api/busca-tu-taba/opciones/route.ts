@@ -108,7 +108,8 @@ export async function GET(req: NextRequest) {
       .filter((producto: any) => {
         if (!producto.sku || skusVistos.has(producto.sku)) return false;
         skusVistos.add(producto.sku);
-        return (producto.priceecommerce || 0) > 0; // Solo productos con precio
+        // Solo productos con precio Y stock > 0
+        return (producto.priceecommerce || 0) > 0 && (producto.stock || 0) > 0;
       });
 
     // Filtrar por talla si se especifica

@@ -24,6 +24,7 @@ type Product = {
   tallascatalogo?: string;
   tallas?: any[];
   stock?: number;
+  hasMatchingSize?: boolean;
 };
 
 function formatPrice(n?: number) {
@@ -34,9 +35,11 @@ function formatPrice(n?: number) {
 export default function ProductCardWithLazyPrices({
   product,
   index,
+  isHighlighted = false,
 }: {
   product: Product;
   index?: number;
+  isHighlighted?: boolean;
 }) {
   console.log("📋 ProductCardWithLazyPrices - Renderizando producto:", {
     _id: product._id,
@@ -58,8 +61,9 @@ export default function ProductCardWithLazyPrices({
 
     const catalogoImg = catalogoRef ? urlForImage(catalogoRef as any).url() : catalogoDirect;
     const firstImg = firstRef ? urlForImage(firstRef as any).url() : firstDirect;
-    const fallback =
-      "https://via.placeholder.com/400x400/f3f4f6/9ca3af?text=Sin+Imagen";
+    
+    // Fallback: imagen SVG en data URL
+    const fallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%239ca3af'%3ESin Imagen%3C/text%3E%3C/svg%3E";
 
     const finalUrl = catalogoImg || firstImg || fallback;
 
@@ -102,9 +106,20 @@ export default function ProductCardWithLazyPrices({
   const whatsappUrl = `https://wa.me/51983478551?text=Hola, estoy interesado en el producto ${product.name} (SKU: ${product.sku})`;
 
   return (
-    <div className="h-full flex flex-col border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+    <div className={`h-full flex flex-col border rounded-lg overflow-hidden transition-all ${
+      isHighlighted 
+        ? 'border-green-500 dark:border-green-400 shadow-lg ring-2 ring-green-500/20 dark:ring-green-400/20' 
+        : 'border-gray-200 dark:border-gray-700 hover:shadow-lg'
+    }`}>
       {/* Imagen del producto - sin link; el click lo maneja el contenedor padre para abrir modal */}
       <div className="relative overflow-hidden bg-gray-100 aspect-square">
+        {isHighlighted && (
+          <div className="absolute top-2 right-2 z-10">
+            <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded bg-green-600 text-white shadow">
+              ✓ Tu talla
+            </span>
+          </div>
+        )}
         {isNew && (
           <div className="absolute top-2 left-2 z-10">
             <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded bg-red-600 text-white shadow">

@@ -5,6 +5,7 @@ const nextConfig = {
       "cdn.sanity.io",
       "lh3.googleusercontent.com",
       "images.unsplash.com",
+      "via.placeholder.com",
     ],
   },
   reactStrictMode: false,

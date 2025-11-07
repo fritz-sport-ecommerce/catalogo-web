@@ -13,14 +13,27 @@ export default function InfiniteProductGrid({
   total,
   pageSize,
   useQuickEndpoint = false,
+  initialSuggestions = [],
 }: {
   initial: Product[];
   total: number;
   pageSize: number;
   useQuickEndpoint?: boolean;
+  initialSuggestions?: Product[];
 }) {
   const router = useRouter();
   const [items, setItems] = React.useState<Product[]>(initial);
+  
+  // Ordenar sugerencias: primero las que tienen "Tu talla"
+  const sortedSuggestions = React.useMemo(() => {
+    return [...initialSuggestions].sort((a, b) => {
+      if (a.hasMatchingSize && !b.hasMatchingSize) return -1;
+      if (!a.hasMatchingSize && b.hasMatchingSize) return 1;
+      return 0;
+    });
+  }, [initialSuggestions]);
+  
+  const [suggestions, setSuggestions] = React.useState<Product[]>(sortedSuggestions);
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(initial.length < total);
@@ -41,18 +54,25 @@ export default function InfiniteProductGrid({
 
   // Debug logs
   React.useEffect(() => {
+    const uniqueSkus = new Set(initial.map(p => p.sku).filter(Boolean));
     console.log('📋 InfiniteProductGrid - Props recibidos:', {
       initialLength: initial.length,
+      uniqueSkus: uniqueSkus.size,
       total,
       pageSize,
       useQuickEndpoint,
+      suggestionsLength: initialSuggestions.length,
+      conTalla: initial.filter(p => p.hasMatchingSize).length,
+      sinTalla: initial.filter(p => !p.hasMatchingSize).length,
+      hasDuplicates: initial.length !== uniqueSkus.size,
       firstProduct: initial[0] ? {
         _id: initial[0]._id,
         sku: initial[0].sku,
-        name: initial[0].name
+        name: initial[0].name,
+        hasMatchingSize: initial[0].hasMatchingSize
       } : null
     });
-  }, [initial, total, pageSize, useQuickEndpoint]);
+  }, [initial, total, pageSize, useQuickEndpoint, initialSuggestions]);
 
   React.useEffect(() => {
     console.log('📋 InfiniteProductGrid - Estado actual:', {
@@ -90,6 +110,8 @@ export default function InfiniteProductGrid({
       
       if (data?.ok) {
         const next = (data.products as Product[]) || [];
+        const newSuggestions = (data.suggestions as Product[]) || [];
+        
         // Filtrar duplicados por sku o _id
         const deduped: Product[] = [];
         const updatedSeen = new Set(seenKeys);
@@ -101,13 +123,29 @@ export default function InfiniteProductGrid({
           }
         });
 
-        setItems((prev) => [...prev, ...deduped]);
+        setItems((prev) => {
+          const newItems = [...prev, ...deduped];
+          // Calcular hasMore con el nuevo total
+          const loadedUnique = newItems.length;
+          const hasNewData = deduped.length > 0;
+          setHasMore(hasNewData && loadedUnique < data.total);
+          
+          console.log('📋 InfiniteProductGrid - Productos cargados:', {
+            prevLength: prev.length,
+            dedupedLength: deduped.length,
+            newLength: newItems.length,
+            total: data.total,
+            hasMore: hasNewData && loadedUnique < data.total
+          });
+          
+          return newItems;
+        });
+        
+        if (newSuggestions.length > 0) {
+          setSuggestions(newSuggestions);
+        }
         setSeenKeys(updatedSeen);
         setPage((p) => p + 1);
-        const loadedUnique = (items.length + deduped.length);
-        // Si la respuesta no trajo nada nuevo, detener definitivamente
-        const hasNewData = deduped.length > 0;
-        setHasMore(hasNewData && loadedUnique < data.total);
         setRetryCount(0); // Reset retry count on success
       } else {
         throw new Error(data?.error || 'Error al cargar más productos');
@@ -201,8 +239,14 @@ export default function InfiniteProductGrid({
           <div className="mb-6">
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
               Mostrando <span className="font-semibold text-gray-900 dark:text-white">{items.length}</span> de <span className="font-semibold text-gray-900 dark:text-white">{total}</span> productos
+              {suggestions.length > 0 && (
+                <span className="ml-2 text-gray-500 dark:text-gray-500">
+                  + {suggestions.length} sugerencias
+                </span>
+              )}
             </p>
           </div>
+          {/* Todos los productos (resaltados si tienen la talla buscada) */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
             {items.map((product, i) => (
               <div key={`${product?.sku || product?._id || i}`} className="relative">
@@ -222,7 +266,11 @@ export default function InfiniteProductGrid({
                   }}
                 >
                   {useQuickEndpoint ? (
-                    <ProductCardWithLazyPrices product={product} />
+                    <ProductCardWithLazyPrices 
+                      product={product} 
+                      isHighlighted={product.hasMatchingSize || false} 
+                      index={i} 
+                    />
                   ) : (
                     <Product products={product} />
                   )}
@@ -230,6 +278,50 @@ export default function InfiniteProductGrid({
               </div>
             ))}
           </div>
+
+          {/* Sugerencias si hay pocos resultados */}
+          {suggestions.length > 0 && (
+            <div className="mt-10">
+              <div className="mb-6 pb-3 border-b-2 border-gray-300 dark:border-gray-700">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  También te puede interesar
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Encontramos {suggestions.length} productos similares que podrían gustarte
+                </p>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
+                {suggestions.map((product, i) => (
+                  <div key={`suggestion-${product?.sku || product?._id || i}`} className="relative">
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        setQuickViewProduct(product);
+                        setIsQuickViewOpen(true);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          setQuickViewProduct(product);
+                          setIsQuickViewOpen(true);
+                        }
+                      }}
+                    >
+                      {useQuickEndpoint ? (
+                        <ProductCardWithLazyPrices 
+                          product={product} 
+                          isHighlighted={product.hasMatchingSize || false} 
+                          index={i} 
+                        />
+                      ) : (
+                        <Product products={product} />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {/* Modal de Vista Rápida */}
           {isQuickViewOpen && quickViewProduct && (
             <QuickViewModal
@@ -248,6 +340,21 @@ export default function InfiniteProductGrid({
                 </span>
               </div>
               <ProductGridSkeleton count={pageSize} />
+            </div>
+          )}
+          
+          {/* Botón manual de cargar más (visible cuando hay más productos) */}
+          {hasMore && !loading && !loadingError && (
+            <div className="mt-8 flex justify-center">
+              <button
+                onClick={fetchMore}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-black dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors shadow-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                Cargar más productos ({items.length} de {total})
+              </button>
             </div>
           )}
           

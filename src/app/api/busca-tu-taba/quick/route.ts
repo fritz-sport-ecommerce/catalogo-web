@@ -224,7 +224,12 @@ export async function GET(req: NextRequest) {
       })
       .filter((producto: any) => {
         // Eliminar duplicados por SKU
-        if (!producto.sku || skusVistos.has(producto.sku)) {
+        if (!producto.sku) {
+          console.log('⚠️ Producto sin SKU encontrado:', producto._id);
+          return false;
+        }
+        if (skusVistos.has(producto.sku)) {
+          console.log('⚠️ SKU duplicado filtrado:', producto.sku);
           return false;
         }
         skusVistos.add(producto.sku);
@@ -251,15 +256,15 @@ export async function GET(req: NextRequest) {
       totalSistema: productosSistema.length
     });
 
-    // 5. Filtrar por talla si se especifica
+    // 5. Marcar productos que tienen la talla buscada (no filtrar)
     if (talla) {
       const tallasEUArray = talla.split('.');
-      console.log('📋 DEBUG - Filtrando por tallas EU:', tallasEUArray);
+      console.log('📋 DEBUG - Marcando productos con tallas EU:', tallasEUArray);
       
       // Importar la función de conversión
       const convertUSSizeToEuropean = (await import('@/utils/convertir-talla-usa-eu')).default;
       
-      productosConStock = productosConStock.filter((producto: any) => {
+      productosConStock = productosConStock.map((producto: any) => {
         // Convertir las tallas del producto de USA a EU
         const tallasConvertidas = convertUSSizeToEuropean(
           producto.tallas || [],
@@ -270,26 +275,31 @@ export async function GET(req: NextRequest) {
         );
         
         // Buscar si alguna talla convertida coincide con las tallas EU buscadas
-        const match = Array.isArray(tallasConvertidas) && tallasConvertidas.some((tallaObj: any) => {
+        const hasTallaMatch = Array.isArray(tallasConvertidas) && tallasConvertidas.some((tallaObj: any) => {
           const tallaEU = String(tallaObj.talla || '').trim();
           return tallasEUArray.includes(tallaEU);
         });
         
-        if (!match && producto.sku) {
-          console.log('📋 DEBUG - Producto sin match de talla:', {
-            sku: producto.sku,
-            marca: producto.marca,
-            genero: producto.genero,
-            tallasOriginales: producto.tallas?.map((t: any) => t.talla),
-            tallasConvertidas: Array.isArray(tallasConvertidas) ? tallasConvertidas.map((t: any) => t.talla) : tallasConvertidas,
-            buscandoEU: tallasEUArray
-          });
-        }
-        
-        return match;
+        // Marcar el producto si tiene la talla buscada
+        return {
+          ...producto,
+          hasMatchingSize: hasTallaMatch
+        };
       });
       
-      console.log('📋 DEBUG - Productos después de filtro de talla:', productosConStock.length);
+      console.log('📋 DEBUG - Productos con talla marcada:', {
+        total: productosConStock.length,
+        conTalla: productosConStock.filter(p => p.hasMatchingSize).length,
+        sinTalla: productosConStock.filter(p => !p.hasMatchingSize).length,
+        ejemploConTalla: productosConStock.find(p => p.hasMatchingSize)?.sku,
+        ejemploSinTalla: productosConStock.find(p => !p.hasMatchingSize)?.sku
+      });
+    } else {
+      // Si no hay filtro de talla, asegurarse de que todos tengan hasMatchingSize = false
+      productosConStock = productosConStock.map((producto: any) => ({
+        ...producto,
+        hasMatchingSize: false
+      }));
     }
 
     // 6. Filtrar por rango de precio si se especifica
@@ -304,7 +314,13 @@ export async function GET(req: NextRequest) {
     // 7. Ordenar productos
     const priceSortDir = priceSort as "asc" | "desc" | undefined;
     const sortedProducts = productosConStock.sort((a: any, b: any) => {
-      // Ordenar SIEMPRE por fecha (nuevos primero por defecto), respetando asc/desc si se pasó 'fecha'
+      // PRIMERO: Priorizar productos con talla buscada
+      if (talla) {
+        if (a.hasMatchingSize && !b.hasMatchingSize) return -1;
+        if (!a.hasMatchingSize && b.hasMatchingSize) return 1;
+      }
+      
+      // SEGUNDO: Ordenar por fecha (nuevos primero por defecto), respetando asc/desc si se pasó 'fecha'
       const ad = new Date((a?.fecha_cuando_aparece as string) || (a?._createdAt as string) || 0).getTime();
       const bd = new Date((b?.fecha_cuando_aparece as string) || (b?._createdAt as string) || 0).getTime();
       if (dateDir === 'desc') {
@@ -312,19 +328,153 @@ export async function GET(req: NextRequest) {
       } else {
         if (ad !== bd) return ad - bd;
       }
-      // Priorizar con stock
+      
+      // TERCERO: Priorizar con stock
       if (a.stock > 0 && b.stock === 0) return -1;
       if (a.stock === 0 && b.stock > 0) return 1;
-      // Luego precio si se pidió
+      
+      // CUARTO: Precio si se pidió
       if (priceSortDir === "asc") return (a.priceecommerce || 0) - (b.priceecommerce || 0);
       if (priceSortDir === "desc") return (b.priceecommerce || 0) - (a.priceecommerce || 0);
       return 0;
     });
 
-    // 8. Paginación
+    // 8. Paginación y sugerencias
     const totalProducts = sortedProducts.length;
     const start = (page - 1) * itemsPerPage;
     const pageItems = sortedProducts.slice(start, start + itemsPerPage);
+    
+    console.log('📋 DEBUG - Paginación:', {
+      totalProducts,
+      page,
+      itemsPerPage,
+      start,
+      pageItemsLength: pageItems.length,
+      expectedEnd: Math.min(start + itemsPerPage, totalProducts)
+    });
+
+    // Si hay pocos resultados, agregar MUCHAS sugerencias (sin filtro de precio ni talla)
+    let suggestions: any[] = [];
+    const MIN_RESULTS = 12; // Mostrar sugerencias si hay menos de 12 resultados
+    const MAX_SUGGESTIONS = 50; // Máximo de sugerencias a mostrar
+    
+    // Mostrar sugerencias si hay pocos resultados totales
+    if (totalProducts < MIN_RESULTS && page === 1) {
+      console.log('📋 DEBUG - Buscando sugerencias porque solo hay', totalProducts, 'resultados');
+      
+      // Obtener productos sugeridos sin filtros de precio ni talla, solo género y tipo
+      const suggestionFilter = `*[${productFilter}${generoFilter}${tipoFilter}${marcaFilter} && empresa == "fritz_sport"][0...${MAX_SUGGESTIONS + 20}]`;
+      const suggestedRaw = await client.fetch(
+        groq`${suggestionFilter} ${order} {
+          _id,
+          _createdAt,
+          fecha_cuando_aparece,
+          name,
+          sku,
+          imgcatalogomain {
+            asset-> {
+              _id,
+              url
+            }
+          },
+          images[] {
+            asset-> {
+              _id,
+              url
+            }
+          },
+          genero,
+          tipo,
+          marca,
+          categories,
+          popularidad,
+          activo,
+          "slug": slug.current
+        }`
+      );
+      
+      console.log('📋 DEBUG - Productos sugeridos de Sanity:', suggestedRaw.length);
+
+      // Obtener precios para sugerencias
+      try {
+        const suggestedConPrecios = await fetchProductosPrecios(suggestedRaw, "01");
+        const suggestedSistema = productosTraidosSistemaFritzSport(
+          suggestedConPrecios,
+          undefined,
+          "LIMA",
+          undefined,
+          undefined
+        );
+
+        const skusSugeridos = new Set(pageItems.map((p: any) => p.sku));
+        suggestions = suggestedSistema
+          .map((productoSistema: any) => {
+            const productoSanity = suggestedRaw.find((p: any) => p.sku === productoSistema.sku);
+            
+            // Si hay filtro de talla, marcar si el producto tiene esa talla
+            let hasTallaMatch = false;
+            if (talla) {
+              const tallasEUArray = talla.split('.');
+              const convertUSSizeToEuropean = require('@/utils/convertir-talla-usa-eu').default;
+              const tallasConvertidas = convertUSSizeToEuropean(
+                productoSistema.tallas || [],
+                productoSanity?.genero || genero || 'unisex',
+                productoSanity?.marca || 'ADIDAS',
+                productoSistema.subgenero,
+                'calzado'
+              );
+              hasTallaMatch = Array.isArray(tallasConvertidas) && tallasConvertidas.some((tallaObj: any) => {
+                const tallaEU = String(tallaObj.talla || '').trim();
+                return tallasEUArray.includes(tallaEU);
+              });
+            }
+            
+            return {
+              ...productoSanity,
+              imgcatalogomain: productoSanity?.imgcatalogomain,
+              images: productoSanity?.images,
+              priceecommerce: productoSistema.priceecommerce,
+              precio_retail: productoSistema.precio_retail,
+              priceemprendedor: productoSistema.priceemprendedor,
+              precio_emprendedor: productoSistema.precio_emprendedor,
+              mayorista_cd: productoSistema.mayorista_cd,
+              precio_mayorista: productoSistema.precio_mayorista,
+              stock: productoSistema.stock,
+              stockDisponible: productoSistema.stockDisponible,
+              tallas: productoSistema.tallas,
+              tallascatalogo: productoSistema.tallascatalogo,
+              talla_sistema: productoSistema.talla_sistema,
+              provincias: productoSistema.provincias,
+              isSuggestion: true, // Marcar como sugerencia
+              hasMatchingSize: hasTallaMatch, // Marcar si tiene la talla buscada
+            };
+          })
+          .filter((p: any) => {
+            // Excluir productos ya mostrados y validar que tenga al menos un precio
+            const hasValidPrices = 
+              (p.priceecommerce || 0) > 0 ||
+              (p.mayorista_cd || 0) > 0 ||
+              (p.priceemprendedor || 0) > 0;
+            return !skusSugeridos.has(p.sku) && hasValidPrices;
+          })
+          .sort((a: any, b: any) => {
+            // Priorizar sugerencias que tienen la talla buscada
+            if (talla) {
+              if (a.hasMatchingSize && !b.hasMatchingSize) return -1;
+              if (!a.hasMatchingSize && b.hasMatchingSize) return 1;
+            }
+            return 0;
+          })
+          .slice(0, MAX_SUGGESTIONS); // Mostrar hasta MAX_SUGGESTIONS
+        
+        console.log('📋 DEBUG - Sugerencias generadas:', {
+          total: suggestions.length,
+          conTalla: talla ? suggestions.filter(s => s.hasMatchingSize).length : 0
+        });
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+      }
+    }
 
     const result = {
       ok: true,
@@ -332,6 +482,7 @@ export async function GET(req: NextRequest) {
       page,
       pageSize: itemsPerPage,
       products: pageItems,
+      suggestions: suggestions.length > 0 ? suggestions : undefined,
     };
     
     // Guardar en cache
@@ -343,10 +494,16 @@ export async function GET(req: NextRequest) {
       page: result.page,
       pageSize: result.pageSize,
       productsLength: result.products.length,
+      suggestionsLength: suggestions.length,
+      hasSuggestions: !!result.suggestions,
       firstProduct: result.products[0] ? {
         _id: result.products[0]._id,
         sku: result.products[0].sku,
         name: result.products[0].name
+      } : null,
+      firstSuggestion: suggestions[0] ? {
+        sku: suggestions[0].sku,
+        name: suggestions[0].name
       } : null
     });
     
