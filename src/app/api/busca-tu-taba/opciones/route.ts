@@ -4,6 +4,10 @@ import { groq } from "next-sanity";
 import { fetchProductosPrecios } from "@/lib/fetchProductosPrecios";
 import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-tu-taba";
 
+// Configuración de runtime para Vercel
+export const runtime = 'nodejs';
+export const maxDuration = 10; // 10 segundos máximo
+
 // Cache para opciones disponibles
 const opcionesCache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_TTL = 120000; // 2 minutos (aumentado para reducir llamadas)
@@ -56,7 +60,7 @@ export async function GET(req: NextRequest) {
       : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${tipoFilter}${popularesFilter} && empresa == "fritz_sport"][0...100]`; // Reducido a 100
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${tipoFilter}${popularesFilter} && empresa == "fritz_sport"][0...50]`; // Reducido a 50
 
     // Obtener productos de Sanity
     const productsRaw = await client.fetch(
@@ -78,9 +82,9 @@ export async function GET(req: NextRequest) {
     // Obtener precios y stock del sistema con timeout
     let productosSistema: any[] = [];
     try {
-      // Timeout de 7 segundos para opciones
+      // Timeout de 5 segundos para opciones (más corto)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout fetching prices for options')), 7000)
+        setTimeout(() => reject(new Error('Timeout fetching prices for options')), 5000)
       );
       
       const productosConPrecios = await Promise.race([

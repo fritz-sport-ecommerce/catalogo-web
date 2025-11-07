@@ -20,13 +20,24 @@ setInterval(() => {
 }, 300000);
 
 // Endpoint optimizado - obtiene precios del sistema y filtra por stock > 0
+// Configuración de runtime para Vercel
+export const runtime = 'nodejs';
+export const maxDuration = 10; // 10 segundos máximo
+
 export async function GET(req: NextRequest) {
   const startTime = Date.now();
   
   try {
     const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") || "1");
-    const itemsPerPage = Math.min(Number(searchParams.get("limit") || "10"), 50); // Máximo 50 items
+    const requestedLimit = Number(searchParams.get("limit") || "10");
+    const itemsPerPage = Math.min(requestedLimit, 20); // Máximo 20 items (reducido de 50)
+    
+    if (requestedLimit > 20) {
+      console.warn(`⚠️ Límite solicitado (${requestedLimit}) excede el máximo (20). Usando 20.`);
+    }
+    
+    console.log(`📋 Quick endpoint - Requested: ${requestedLimit}, Using: ${itemsPerPage}`);
     
     // Generar cache key simple y efectivo
     const urlParams = new URLSearchParams(searchParams.toString());
@@ -113,7 +124,7 @@ export async function GET(req: NextRequest) {
     const tipoProductoFilter = tipoproducto ? `&& tipoproducto == "${tipoproducto}"` : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...100] `; // Límite de 100 productos para evitar timeout
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...50] `; // Límite de 50 productos para evitar timeout
 
     // 1. Fetch datos de Sanity con estructura de imágenes compatible
     const productsRaw = await client.fetch(
@@ -150,9 +161,9 @@ export async function GET(req: NextRequest) {
     try {
       console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsRaw.length, 'productos');
       
-      // Timeout de 8 segundos (Vercel tiene límite de 10s en hobby plan)
+      // Timeout de 6 segundos (dejar margen para el resto del procesamiento)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout fetching prices')), 8000)
+        setTimeout(() => reject(new Error('Timeout fetching prices')), 6000)
       );
       
       const productosConPrecios = await Promise.race([
