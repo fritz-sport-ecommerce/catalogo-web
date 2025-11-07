@@ -213,7 +213,7 @@ export default function ProductCardWithLazyPrices({
 
         </div>
 
-        {/* ✅ Botón WhatsApp con tracking (no abre modal) */}
+        {/* ✅ Botón WhatsApp con tracking completo (no abre modal) */}
         <a
           href={whatsappUrl}
           target="_blank"
@@ -223,7 +223,14 @@ export default function ProductCardWithLazyPrices({
             track("contactar_asesor_click", {
               sku: product?.sku ?? "",
               nombre: product?.name ?? "",
-              index: index ?? 0 as number,
+              genero: product?.genero ?? "",
+              marca: product?.marca ?? "",
+              precio_mayorista: product?.mayorista_cd ?? 0,
+              precio_emprendedor: product?.priceemprendedor ?? 0,
+              precio_retail: product?.priceecommerce ?? 0,
+              tiene_talla_buscada: isHighlighted,
+              posicion: index ?? 0,
+              timestamp: new Date().toISOString(),
             });
           }}
           className="mt-auto pt-3 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 rounded-lg transition-colors text-sm font-medium"

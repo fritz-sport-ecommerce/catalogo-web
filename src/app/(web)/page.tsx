@@ -5,6 +5,7 @@ import OnboardingSkeleton from "@/components/busca-tu-taba/OnboardingSkeleton";
 import { Suspense } from "react";
 import LoadingSpinner from "./loading";
 import QuickFilters from "@/components/busca-tu-taba/quick-filters";
+import FunnelTracker from "@/components/busca-tu-taba/FunnelTracker";
 
 
 interface Props {
@@ -108,6 +109,8 @@ export default async function Page({ searchParams }: Props) {
     return (
       <Suspense fallback={<OnboardingSkeleton />}>
         <div key={searchKey}>
+          {/* Tracker del funnel */}
+          <FunnelTracker searchParams={searchParams} canShowProducts={canShowProducts} />
           <main className="w-full px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center justify-center py-6">
@@ -183,6 +186,8 @@ export default async function Page({ searchParams }: Props) {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <div key={searchKey}>
+        {/* Tracker del funnel */}
+        <FunnelTracker searchParams={searchParams} canShowProducts={canShowProducts} />
         <div>
           <main className="w-full px-4 sm:px-6 lg:px-8">
             <div className="max-w-[1920px] mx-auto">
