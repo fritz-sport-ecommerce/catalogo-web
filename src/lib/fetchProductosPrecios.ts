@@ -41,16 +41,16 @@ async function buscarPorSKU(
     };
 
     // DEBUG: Mostrar qué estamos enviando
-    console.log("🔍 DEBUG - Solicitud a API:", {
-      url: "https://fritz.ngrok.app/api/productos/precio-stock-por-almacenes",
-      totalSKUs: solicitud.codigos.length,
-      primerosSkus: solicitud.codigos.slice(0, 5),
-      almacenes: solicitud.codAlmacenes,
-      rucE: solicitud.rucE,
-    });
+    // console.log("🔍 DEBUG - Solicitud a API:", {
+    //   url: `${process.env.URL_API_FRITZ_SPORT}/api/productos/precio-stock-por-almacenes`,
+    //   totalSKUs: solicitud.codigos.length,
+    //   primerosSkus: solicitud.codigos.slice(0, 5),
+    //   almacenes: solicitud.codAlmacenes,
+    //   rucE: solicitud.rucE,
+    // });
 
     const url =
-      "https://fritz.ngrok.app/api/productos/precio-stock-por-almacenes";
+      `${process.env.URL_API_FRITZ_SPORT}/api/productos/precio-stock-por-almacenes`;
 
     const resp = await fetch(url, {
       method: "POST",

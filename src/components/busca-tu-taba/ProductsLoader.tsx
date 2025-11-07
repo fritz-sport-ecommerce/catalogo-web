@@ -29,6 +29,9 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   });
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    
     const fetchProducts = async () => {
       // Evitar múltiples requests simultáneos (excepto en retry)
       if (isRequestInProgress && retryTrigger === 0) {
@@ -62,9 +65,8 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
 
         console.log('📋 ProductsLoader - Iniciando request a:', `/api/busca-tu-taba/quick?${params.toString()}`);
 
-        // Usar el endpoint quick optimizado con timeout
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout (reducido de 30s para detectar problemas más rápido)
+        // Usar el endpoint quick optimizado con timeout más corto
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout (más agresivo)
         
         const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
@@ -72,6 +74,8 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         });
         
         clearTimeout(timeoutId);
+        
+        if (!isMounted) return;
         
         // Verificar si la respuesta es válida antes de parsear JSON
         if (!quickResponse.ok) {
@@ -81,6 +85,9 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         const quickResult = await quickResponse.json();
 
         clearInterval(progressInterval);
+        
+        if (!isMounted) return;
+        
         setProgress(100);
 
         if (quickResult.ok) {
@@ -134,23 +141,30 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
           
           // Pequeña pausa para mostrar 100%
           setTimeout(() => {
-            setLoadingInitial(false);
-            console.log('📋 ProductsLoader - Loading finalizado');
+            if (isMounted) {
+              setLoadingInitial(false);
+              console.log('📋 ProductsLoader - Loading finalizado');
+            }
           }, 300);
         } else {
           console.log('📋 ProductsLoader - Respuesta no exitosa:', quickResult);
-          setError(quickResult.error || 'Error al cargar los productos');
-          setProgress(0);
-          setLoadingInitial(false);
+          if (isMounted) {
+            setError(quickResult.error || 'Error al cargar los productos');
+            setProgress(0);
+            setLoadingInitial(false);
+          }
         }
       } catch (error) {
-        console.error("Error loading products:", error);
         clearInterval(progressInterval);
+        
+        if (!isMounted) return;
+        
+        console.error("Error loading products:", error);
         setProgress(0);
         
         // Mostrar error más específico
         if (error instanceof Error && error.name === 'AbortError') {
-          setError('El servidor tardó demasiado (30s). Intenta reducir los filtros o recarga la página.');
+          setError('El servidor tardó demasiado (8s). Intenta reducir los filtros o recarga la página.');
           console.error("Request timeout - servidor sobrecargado");
         } else if (error instanceof Error) {
           // Detectar errores 504
@@ -167,13 +181,20 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         
         setLoadingInitial(false);
       } finally {
-        setIsRequestInProgress(false);
+        if (isMounted) {
+          setIsRequestInProgress(false);
+        }
       }
     };
 
     // Debounce para evitar requests excesivos
     const timeoutId = setTimeout(fetchProducts, 300);
-    return () => clearTimeout(timeoutId);
+    
+    return () => {
+      isMounted = false;
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
   }, [searchParams, itemsPerPage, retryTrigger]); // Agregar retryTrigger a dependencias
 
   // Función para reintentar - ahora fuerza un nuevo fetch
