@@ -79,151 +79,29 @@ export async function GET(req: NextRequest) {
 
     console.log('📋 Opciones - Productos de Sanity:', productsRaw.length);
 
-    // Obtener precios y stock del sistema con timeout
-    let productosSistema: any[] = [];
-    try {
-      // Timeout de 5 segundos para opciones (más corto)
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout fetching prices for options')), 5000)
-      );
-      
-      const productosConPrecios = await Promise.race([
-        fetchProductosPrecios(productsRaw, "01"),
-        timeoutPromise
-      ]) as any;
-      
-      console.log('📋 Opciones - Productos con precios:', productosConPrecios?.length || 0);
-      
-      productosSistema = productosTraidosSistemaFritzSport(
-        productosConPrecios,
-        undefined,
-        "LIMA",
-        undefined,
-        undefined
-      );
-    } catch (error) {
-      console.error("Error fetching productos from sistema (opciones):", error);
-      // En caso de timeout, retornar opciones vacías pero válidas
-      const isTimeout = error instanceof Error && error.message.includes('Timeout');
-      
-      if (isTimeout) {
-        console.warn('⚠️ Timeout en opciones - retornando opciones básicas');
-        // Retornar opciones básicas sin precios
-        return NextResponse.json({
-          ok: true,
-          totalProductos: 0,
-          opciones: {
-            tipos: Array.from(new Set(productsRaw.map((p: any) => p.tipo).filter(Boolean))),
-            generos: Array.from(new Set(productsRaw.map((p: any) => p.genero).filter(Boolean))),
-            marcas: Array.from(new Set(productsRaw.map((p: any) => p.marca).filter(Boolean))),
-            categorias: Array.from(new Set(productsRaw.flatMap((p: any) => p.categories || []).filter(Boolean))),
-            tallas: []
-          },
-          timeout: true
-        });
-      }
-      
-      productosSistema = productsRaw.map((producto: any) => ({
-        ...producto,
-        priceecommerce: 0,
-        stock: 0,
-        tallas: [],
-        tallascatalogo: ""
-      }));
-    }
+    // SIMPLIFICADO: NO hacer fetch de precios para evitar timeout
+    // Solo retornar opciones básicas de Sanity (super rápido)
+    const productosCombinados = productsRaw;
 
-    // Combinar datos
-    const skusVistos = new Set<string>();
-    const productosCombinados = productosSistema
-      .map((productoSistema: any) => {
-        const productoSanity = productsRaw.find((p: any) => p.sku === productoSistema.sku);
-        return {
-          ...productoSanity,
-          priceecommerce: productoSistema.priceecommerce,
-          stock: productoSistema.stock,
-          tallas: productoSistema.tallas,
-          tallascatalogo: productoSistema.tallascatalogo
-        };
-      })
-      .filter((producto: any) => {
-        if (!producto.sku || skusVistos.has(producto.sku)) return false;
-        skusVistos.add(producto.sku);
-        // Solo productos con precio Y stock > 0
-        return (producto.priceecommerce || 0) > 0 && (producto.stock || 0) > 0;
-      });
-
-    // Filtrar por talla si se especifica
-    let productosConStock = productosCombinados;
-    if (talla) {
-      const tallasArray = talla.split('.');
-      productosConStock = productosConStock.filter((producto: any) => {
-        const enTallas = producto.tallas && producto.tallas.some((t: any) => 
-          tallasArray.includes(String(t.talla))
-        );
-        const enCatalogo = producto.tallascatalogo && tallasArray.some((tallaFiltro: string) => 
-          producto.tallascatalogo.split(',').map((t: string) => t.trim()).includes(tallaFiltro)
-        );
-        return enTallas || enCatalogo;
-      });
-    }
-
-    // Filtrar por rango de precio si se especifica
-    if (priceRange) {
-      const [minPrice, maxPrice] = priceRange.split("-").map(Number);
-      productosConStock = productosConStock.filter((producto: any) => {
-        const precio = producto.priceecommerce || 0;
-        return precio >= minPrice && precio <= maxPrice;
-      });
-    }
+    // No filtrar por talla ni precio en opciones - solo mostrar todas las opciones disponibles
+    const productosConStock = productosCombinados;
 
     // Extraer opciones disponibles
-    const tiposDisponibles = Array.from(new Set(productosConStock.map(p => p.tipo).filter(Boolean)));
-    const generosDisponibles = Array.from(new Set(productosConStock.map(p => p.genero).filter(Boolean)));
-    const marcasDisponibles = Array.from(new Set(productosConStock.map(p => p.marca).filter(Boolean)));
+    const tiposDisponibles = Array.from(new Set(productosConStock.map((p: any) => p.tipo).filter(Boolean)));
+    const generosDisponibles = Array.from(new Set(productosConStock.map((p: any) => p.genero).filter(Boolean)));
+    const marcasDisponibles = Array.from(new Set(productosConStock.map((p: any) => p.marca).filter(Boolean)));
     
     // Categorías disponibles (aplanar arrays de categorías)
     const categoriasDisponibles = Array.from(new Set(
       productosConStock
-        .flatMap(p => p.categories || [])
+        .flatMap((p: any) => p.categories || [])
         .filter(Boolean)
     ));
 
-    // Tallas disponibles
-    const tallasDisponibles = new Map<string, { stock: number; productos: number }>();
-    productosConStock.forEach(producto => {
-      // De tallas detalladas
-      if (producto.tallas && Array.isArray(producto.tallas)) {
-        producto.tallas.forEach((tallaObj: any) => {
-          const talla = String(tallaObj.talla || tallaObj);
-          const stock = tallaObj.stock || 0;
-          if (tallasDisponibles.has(talla)) {
-            const existing = tallasDisponibles.get(talla)!;
-            tallasDisponibles.set(talla, {
-              stock: existing.stock + stock,
-              productos: existing.productos + 1
-            });
-          } else {
-            tallasDisponibles.set(talla, { stock, productos: 1 });
-          }
-        });
-      }
-      
-      // De tallascatalogo
-      if (producto.tallascatalogo) {
-        const tallas = producto.tallascatalogo.split(',').map((t: string) => t.trim()).filter(Boolean);
-        tallas.forEach((talla :string ) => {
-          if (tallasDisponibles.has(talla)) {
-            const existing = tallasDisponibles.get(talla)!;
-            tallasDisponibles.set(talla, {
-              stock: existing.stock,
-              productos: existing.productos + 1
-            });
-          } else {
-            tallasDisponibles.set(talla, { stock: 0, productos: 1 });
-          }
-        });
-      }
-    });
+    // Tallas disponibles - simplificado (sin stock, solo lista)
+    const tallasSet = new Set<string>();
+    // No extraer tallas de productos para evitar procesamiento pesado
+    // Las tallas se manejarán en el endpoint principal
 
     const result = {
       ok: true,
@@ -233,20 +111,7 @@ export async function GET(req: NextRequest) {
         generos: generosDisponibles.sort(),
         marcas: marcasDisponibles.sort(),
         categorias: categoriasDisponibles.sort(),
-        tallas: Array.from(tallasDisponibles.entries()).map(([talla, info]) => ({
-          talla,
-          stock: info.stock,
-          productos: info.productos,
-          disponible: info.stock > 0 || info.productos > 0
-        })).sort((a, b) => {
-          // Ordenar tallas numéricamente si es posible
-          const aNum = parseFloat(a.talla);
-          const bNum = parseFloat(b.talla);
-          if (!isNaN(aNum) && !isNaN(bNum)) {
-            return aNum - bNum;
-          }
-          return a.talla.localeCompare(b.talla);
-        })
+        tallas: [] // Simplificado - no retornar tallas para evitar procesamiento pesado
       }
     };
 
