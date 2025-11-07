@@ -20,6 +20,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [retryTrigger, setRetryTrigger] = useState(0); // Nuevo: trigger para forzar retry
 
   console.log('📋 ProductsLoader - Componente montado con:', {
     searchParamsKeys: Object.keys(searchParams),
@@ -29,8 +30,8 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
 
   useEffect(() => {
     const fetchProducts = async () => {
-      // Evitar múltiples requests simultáneos
-      if (isRequestInProgress) {
+      // Evitar múltiples requests simultáneos (excepto en retry)
+      if (isRequestInProgress && retryTrigger === 0) {
         console.log('🚫 Evitando request duplicado');
         return;
       }
@@ -63,7 +64,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
 
         // Usar el endpoint quick optimizado con timeout
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout (aumentado de 15s)
+        const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout (reducido de 30s para detectar problemas más rápido)
         
         const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
@@ -170,14 +171,15 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
     // Debounce para evitar requests excesivos
     const timeoutId = setTimeout(fetchProducts, 300);
     return () => clearTimeout(timeoutId);
-  }, [searchParams, itemsPerPage]); // Remover isRequestInProgress de dependencias
+  }, [searchParams, itemsPerPage, retryTrigger]); // Agregar retryTrigger a dependencias
 
-  // Función para reintentar
+  // Función para reintentar - ahora fuerza un nuevo fetch
   const handleRetry = () => {
+    console.log('🔄 Reintentando carga de productos...');
     setError(null);
     setIsEmpty(false);
     setData(null);
-    // El useEffect se ejecutará automáticamente debido a las dependencias
+    setRetryTrigger(prev => prev + 1); // Incrementar para forzar useEffect
   };
 
   console.log('📋 ProductsLoader - Estado actual:', {

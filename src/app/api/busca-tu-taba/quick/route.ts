@@ -6,7 +6,7 @@ import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-
 
 // Cache simple en memoria (en producción usar Redis)
 const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 30000; // 30 segundos (reducido)
+const CACHE_TTL = 120000; // 2 minutos (aumentado de 30s para reducir llamadas)
 
 // Limpiar cache viejo cada 5 minutos
 setInterval(() => {
@@ -22,7 +22,7 @@ setInterval(() => {
 // Endpoint optimizado - obtiene precios del sistema y filtra por stock > 0
 // Configuración de runtime para Vercel
 export const runtime = 'nodejs';
-export const maxDuration = 10; // 10 segundos máximo
+export const maxDuration = 9; // 9 segundos máximo (reducido de 10)
 
 export async function GET(req: NextRequest) {
   const startTime = Date.now();
@@ -124,7 +124,7 @@ export async function GET(req: NextRequest) {
     const tipoProductoFilter = tipoproducto ? `&& tipoproducto == "${tipoproducto}"` : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...50] `; // Límite de 50 productos para evitar timeout
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...30] `; // Límite de 30 productos para evitar timeout (reducido de 50)
 
     // 1. Fetch datos de Sanity con estructura de imágenes compatible
     const productsRaw = await client.fetch(
@@ -156,18 +156,22 @@ export async function GET(req: NextRequest) {
       }`
     );
 
-    // 2. Obtener precios y stock del sistema con timeout
+    // 2. Limitar productos antes de fetch de precios (seguridad extra)
+    const productsLimited = productsRaw.slice(0, 25); // Máximo 25 productos para fetch de precios
+    console.log('📋 DEBUG - Productos limitados:', productsRaw.length, '→', productsLimited.length);
+    
+    // 3. Obtener precios y stock del sistema con timeout
     let productosSistema: any[] = [];
     try {
-      console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsRaw.length, 'productos');
+      console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsLimited.length, 'productos');
       
-      // Timeout de 6 segundos (dejar margen para el resto del procesamiento)
+      // Timeout de 5 segundos (más agresivo para evitar 504)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout fetching prices')), 6000)
+        setTimeout(() => reject(new Error('Timeout fetching prices')), 5000)
       );
       
       const productosConPrecios = await Promise.race([
-        fetchProductosPrecios(productsRaw, "01"),
+        fetchProductosPrecios(productsLimited, "01"), // Usar productos limitados
         timeoutPromise
       ]) as any;
       
@@ -184,7 +188,7 @@ export async function GET(req: NextRequest) {
     } catch (error) {
       console.error("Error fetching productos from sistema:", error);
       // En caso de error, usar solo productos de Sanity sin precios del sistema
-      productosSistema = productsRaw.map((producto: any) => ({
+      productosSistema = productsLimited.map((producto: any) => ({
         ...producto,
         priceecommerce: producto.preciomanual || 0,
         precio_retail: producto.preciomanual || 0,
