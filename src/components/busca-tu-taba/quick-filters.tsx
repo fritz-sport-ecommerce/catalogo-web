@@ -512,7 +512,41 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                 </div>
               )}
               
-              <div className={`grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 ${loadingTallas ? 'opacity-40 pointer-events-none' : ''}`}>
+              {errorTallas && !loadingTallas && (
+                <div className="absolute inset-0 bg-red-50/95 dark:bg-red-900/20 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center">
+                  <div className="text-center p-4">
+                    <div className="text-4xl mb-3">⚠️</div>
+                    <div className="text-sm font-medium text-red-700 dark:text-red-300 mb-3">
+                      {errorTallas}
+                    </div>
+                    <button
+                      onClick={retryTallas}
+                      className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      🔄 Reintentar
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {!loadingTallas && !errorTallas && tallasDisponibles.length === 0 && (
+                <div className="absolute inset-0 bg-yellow-50/95 dark:bg-yellow-900/20 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center">
+                  <div className="text-center p-4">
+                    <div className="text-4xl mb-3">😕</div>
+                    <div className="text-sm font-medium text-yellow-700 dark:text-yellow-300 mb-3">
+                      No hay tallas disponibles con estos filtros
+                    </div>
+                    <button
+                      onClick={retryTallas}
+                      className="px-4 py-2 bg-yellow-600 text-white text-sm font-semibold rounded-lg hover:bg-yellow-700 transition-colors"
+                    >
+                      🔄 Reintentar
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className={`grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-3 ${loadingTallas || errorTallas || tallasDisponibles.length === 0 ? 'opacity-40 pointer-events-none' : ''}`}>
                 {tallasBase.map((talla) => {
                   const active = activeTalla.split('.').includes(talla.value);
                   const tallaInfo = tallasDisponibles.find(t => t.talla === talla.value);
