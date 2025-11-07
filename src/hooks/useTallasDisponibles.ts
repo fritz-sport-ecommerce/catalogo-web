@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import convertUSSizeToEuropean from '@/utils/convertir-talla-usa-eu';
 
 interface TallaDisponible {
@@ -15,6 +15,10 @@ interface UseTallasDisponiblesProps {
   rangoPrecio?: string;
 }
 
+// Cache global para tallas - evita refetch innecesarios
+const tallasCache = new Map<string, { data: TallaDisponible[]; timestamp: number }>();
+const CACHE_TTL = 120000; // 2 minutos de cache
+
 export function useTallasDisponibles({
   tipo,
   genero,
@@ -26,6 +30,7 @@ export function useTallasDisponibles({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryTrigger, setRetryTrigger] = useState(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     // Solo buscar tallas si tenemos los filtros básicos mínimos
@@ -41,22 +46,45 @@ export function useTallasDisponibles({
       return;
     }
 
+    // Cancelar request anterior si existe
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
     const fetchTallasDisponibles = async () => {
+      // Generar cache key (sin marca ni precio para cache más amplio)
+      const cacheKey = `tallas-${tipo}-${genero}-${category}`;
+      const cached = tallasCache.get(cacheKey);
+      
+      // Usar cache si está disponible y no ha expirado
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+        console.log('✅ Tallas desde cache:', cacheKey);
+        setTallasDisponibles(cached.data);
+        return;
+      }
+
       setLoading(true);
       setError(null);
+      
+      // Crear nuevo AbortController
+      abortControllerRef.current = new AbortController();
+      
       try {
         const params = new URLSearchParams({
           tipo,
           genero,
           category,
-          limit: '20' // Reducido de 100 a 20 para evitar timeout
+          limit: '30' // Aumentado a 30 para mejor cobertura de tallas
         });
         
-        // Agregar parámetros opcionales solo si están definidos
-        if (marca) params.set('marca', marca);
-        if (rangoPrecio) params.set('rangoPrecio', rangoPrecio);
+        // NO incluir marca ni precio en la búsqueda de tallas
+        // Esto permite cache más efectivo y resultados más amplios
 
-        const response = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`);
+        const response = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
+          signal: abortControllerRef.current.signal,
+          cache: 'no-store'
+        });
+        
         const data = await response.json();
 
         if (data.ok && data.products) {
@@ -104,11 +132,21 @@ export function useTallasDisponibles({
             stock: info.stock
           }));
 
+          // Guardar en cache
+          tallasCache.set(cacheKey, { data: tallasArray, timestamp: Date.now() });
+          
           setTallasDisponibles(tallasArray);
+          console.log('✅ Tallas cargadas:', tallasArray.length);
         } else {
           setTallasDisponibles([]);
         }
-      } catch (error) {
+      } catch (error: any) {
+        // Ignorar errores de abort
+        if (error.name === 'AbortError') {
+          console.log('⏹️ Fetch de tallas cancelado');
+          return;
+        }
+        
         console.error('Error fetching tallas disponibles:', error);
         setTallasDisponibles([]);
         if (error instanceof Error) {
@@ -125,10 +163,15 @@ export function useTallasDisponibles({
       }
     };
 
-    // Debounce para evitar muchas requests
-    const timeoutId = setTimeout(fetchTallasDisponibles, 500);
-    return () => clearTimeout(timeoutId);
-  }, [tipo, genero, category, marca, rangoPrecio, retryTrigger]);
+    // Debounce más corto para mejor UX
+    const timeoutId = setTimeout(fetchTallasDisponibles, 300);
+    return () => {
+      clearTimeout(timeoutId);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [tipo, genero, category, retryTrigger]); // Removido marca y rangoPrecio de dependencias
 
   const retry = () => {
     console.log('🔄 Reintentando carga de tallas...');

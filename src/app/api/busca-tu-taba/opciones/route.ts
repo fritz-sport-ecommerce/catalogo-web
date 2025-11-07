@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import { fetchProductosPrecios } from "@/lib/fetchProductosPrecios";
-import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-tu-taba";
 
 // Configuración de runtime para Vercel
 export const runtime = 'nodejs';
-export const maxDuration = 8; // 8 segundos máximo (reducido de 10)
+export const maxDuration = 5; // 5 segundos máximo (reducido para evitar timeouts)
 
 // Cache para opciones disponibles - MUY AGRESIVO
 const opcionesCache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 300000; // 5 minutos (muy largo para evitar llamadas)
+const CACHE_TTL = 180000; // 3 minutos (reducido para balance entre performance y actualización)
 
 export async function GET(req: NextRequest) {
   const startTime = Date.now();
@@ -26,16 +24,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(cached.data);
     }
 
-    const date = searchParams.get("fecha") || undefined;
     const color = searchParams.get("color") || undefined;
     const category = searchParams.get("category") || undefined;
     const search = searchParams.get("search") || undefined;
     const genero = searchParams.get("genero") || undefined;
-    const coleccion = searchParams.get("coleccion") || undefined;
     const marca = searchParams.get("marca") || undefined;
     const tipo = searchParams.get("tipo") || undefined;
-    const talla = searchParams.get("talla") || undefined;
-    const priceRange = searchParams.get("rangoPrecio") || undefined;
     const populares = searchParams.get("populares") || undefined;
 
     // Construir filtros
@@ -105,10 +99,7 @@ export async function GET(req: NextRequest) {
         .filter(Boolean)
     ));
 
-    // Tallas disponibles - simplificado (sin stock, solo lista)
-    const tallasSet = new Set<string>();
-    // No extraer tallas de productos para evitar procesamiento pesado
-    // Las tallas se manejarán en el endpoint principal
+    // Las tallas se manejarán en el endpoint principal para evitar procesamiento pesado
 
     const result = {
       ok: true,
