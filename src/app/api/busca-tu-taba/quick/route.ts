@@ -21,10 +21,12 @@ setInterval(() => {
 
 // Endpoint optimizado - obtiene precios del sistema y filtra por stock > 0
 export async function GET(req: NextRequest) {
+  const startTime = Date.now();
+  
   try {
     const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") || "1");
-    const itemsPerPage = Math.min(Number(searchParams.get("limit") || "6"), 12); // Máximo 12 items
+    const itemsPerPage = Math.min(Number(searchParams.get("limit") || "10"), 50); // Máximo 50 items
     
     // Generar cache key simple y efectivo
     const urlParams = new URLSearchParams(searchParams.toString());
@@ -111,7 +113,7 @@ export async function GET(req: NextRequest) {
     const tipoProductoFilter = tipoproducto ? `&& tipoproducto == "${tipoproducto}"` : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...150] `; // Límite de 150 productos
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...100] `; // Límite de 100 productos para evitar timeout
 
     // 1. Fetch datos de Sanity con estructura de imágenes compatible
     const productsRaw = await client.fetch(
@@ -143,13 +145,20 @@ export async function GET(req: NextRequest) {
       }`
     );
 
-    // 2. Obtener precios y stock del sistema
+    // 2. Obtener precios y stock del sistema con timeout
     let productosSistema: any[] = [];
     try {
       console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsRaw.length, 'productos');
       
-      // Timeout más agresivo para producción (Vercel tiene límite de 10s en hobby)
-      const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
+      // Timeout de 8 segundos (Vercel tiene límite de 10s en hobby plan)
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout fetching prices')), 8000)
+      );
+      
+      const productosConPrecios = await Promise.race([
+        fetchProductosPrecios(productsRaw, "01"),
+        timeoutPromise
+      ]) as any;
       
       console.log('📋 DEBUG - Productos con precios obtenidos:', productosConPrecios?.length || 0);
       
@@ -507,8 +516,26 @@ export async function GET(req: NextRequest) {
       } : null
     });
     
+    const duration = Date.now() - startTime;
+    console.log(`⏱️ Request completado en ${duration}ms`);
+    
     return NextResponse.json(result);
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e?.message || "Unexpected error" }, { status: 500 });
+    const duration = Date.now() - startTime;
+    console.error(`❌ Error después de ${duration}ms:`, e?.message || e);
+    
+    // Retornar error más descriptivo
+    const errorMessage = e?.message || "Error inesperado";
+    const isTimeout = errorMessage.includes('Timeout') || errorMessage.includes('timeout');
+    
+    return NextResponse.json({ 
+      ok: false, 
+      error: isTimeout 
+        ? "El servidor tardó demasiado. Intenta con menos filtros o recarga la página." 
+        : errorMessage,
+      duration 
+    }, { 
+      status: isTimeout ? 504 : 500 
+    });
   }
 }

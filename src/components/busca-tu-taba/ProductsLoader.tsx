@@ -71,6 +71,12 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         });
         
         clearTimeout(timeoutId);
+        
+        // Verificar si la respuesta es válida antes de parsear JSON
+        if (!quickResponse.ok) {
+          throw new Error(`Error ${quickResponse.status}: ${quickResponse.statusText}`);
+        }
+        
         const quickResult = await quickResponse.json();
 
         clearInterval(progressInterval);
@@ -140,10 +146,17 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         
         // Mostrar error más específico
         if (error instanceof Error && error.name === 'AbortError') {
-          setError('El servidor tardó demasiado en responder. Intenta de nuevo.');
+          setError('El servidor tardó demasiado (30s). Intenta reducir los filtros o recarga la página.');
           console.error("Request timeout - servidor sobrecargado");
         } else if (error instanceof Error) {
-          setError('Error de conexión. Verifica tu internet e intenta de nuevo.');
+          // Detectar errores 504
+          if (error.message.includes('504') || error.message.includes('Gateway')) {
+            setError('El servidor está sobrecargado (504). Intenta de nuevo en unos segundos.');
+          } else if (error.message.includes('JSON')) {
+            setError('Error al procesar la respuesta. El servidor puede estar sobrecargado.');
+          } else {
+            setError(`Error: ${error.message}`);
+          }
         } else {
           setError('Error inesperado. Intenta de nuevo.');
         }

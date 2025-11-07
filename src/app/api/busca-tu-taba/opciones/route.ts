@@ -6,9 +6,11 @@ import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-
 
 // Cache para opciones disponibles
 const opcionesCache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 60000; // 1 minuto
+const CACHE_TTL = 120000; // 2 minutos (aumentado para reducir llamadas)
 
 export async function GET(req: NextRequest) {
+  const startTime = Date.now();
+  
   try {
     const { searchParams } = new URL(req.url);
     
@@ -16,6 +18,7 @@ export async function GET(req: NextRequest) {
     const cacheKey = `opciones-${searchParams.toString()}`;
     const cached = opcionesCache.get(cacheKey);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      console.log('📋 Cache hit para opciones:', cacheKey.substring(0, 50));
       return NextResponse.json(cached.data);
     }
 
@@ -53,7 +56,7 @@ export async function GET(req: NextRequest) {
       : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${tipoFilter}${popularesFilter} && empresa == "fritz_sport"][0...200]`;
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${tipoFilter}${popularesFilter} && empresa == "fritz_sport"][0...100]`; // Reducido a 100
 
     // Obtener productos de Sanity
     const productsRaw = await client.fetch(
@@ -70,10 +73,23 @@ export async function GET(req: NextRequest) {
       }`
     );
 
-    // Obtener precios y stock del sistema
+    console.log('📋 Opciones - Productos de Sanity:', productsRaw.length);
+
+    // Obtener precios y stock del sistema con timeout
     let productosSistema: any[] = [];
     try {
-      const productosConPrecios = await fetchProductosPrecios(productsRaw, "01");
+      // Timeout de 7 segundos para opciones
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout fetching prices for options')), 7000)
+      );
+      
+      const productosConPrecios = await Promise.race([
+        fetchProductosPrecios(productsRaw, "01"),
+        timeoutPromise
+      ]) as any;
+      
+      console.log('📋 Opciones - Productos con precios:', productosConPrecios?.length || 0);
+      
       productosSistema = productosTraidosSistemaFritzSport(
         productosConPrecios,
         undefined,
@@ -82,7 +98,27 @@ export async function GET(req: NextRequest) {
         undefined
       );
     } catch (error) {
-      console.error("Error fetching productos from sistema:", error);
+      console.error("Error fetching productos from sistema (opciones):", error);
+      // En caso de timeout, retornar opciones vacías pero válidas
+      const isTimeout = error instanceof Error && error.message.includes('Timeout');
+      
+      if (isTimeout) {
+        console.warn('⚠️ Timeout en opciones - retornando opciones básicas');
+        // Retornar opciones básicas sin precios
+        return NextResponse.json({
+          ok: true,
+          totalProductos: 0,
+          opciones: {
+            tipos: Array.from(new Set(productsRaw.map((p: any) => p.tipo).filter(Boolean))),
+            generos: Array.from(new Set(productsRaw.map((p: any) => p.genero).filter(Boolean))),
+            marcas: Array.from(new Set(productsRaw.map((p: any) => p.marca).filter(Boolean))),
+            categorias: Array.from(new Set(productsRaw.flatMap((p: any) => p.categories || []).filter(Boolean))),
+            tallas: []
+          },
+          timeout: true
+        });
+      }
+      
       productosSistema = productsRaw.map((producto: any) => ({
         ...producto,
         priceecommerce: 0,
@@ -213,8 +249,25 @@ export async function GET(req: NextRequest) {
     // Guardar en cache
     opcionesCache.set(cacheKey, { data: result, timestamp: Date.now() });
     
+    const duration = Date.now() - startTime;
+    console.log(`⏱️ Opciones completadas en ${duration}ms`);
+    
     return NextResponse.json(result);
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e?.message || "Unexpected error" }, { status: 500 });
+    const duration = Date.now() - startTime;
+    console.error(`❌ Error en opciones después de ${duration}ms:`, e?.message || e);
+    
+    const errorMessage = e?.message || "Error inesperado";
+    const isTimeout = errorMessage.includes('Timeout') || errorMessage.includes('timeout');
+    
+    return NextResponse.json({ 
+      ok: false, 
+      error: isTimeout 
+        ? "El servidor tardó demasiado. Intenta de nuevo." 
+        : errorMessage,
+      duration 
+    }, { 
+      status: isTimeout ? 504 : 500 
+    });
   }
 }
