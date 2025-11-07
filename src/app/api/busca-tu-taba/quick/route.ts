@@ -20,9 +20,10 @@ setInterval(() => {
 }, 300000);
 
 // Endpoint optimizado - obtiene precios del sistema y filtra por stock > 0
-// Configuración de runtime para Vercel
+// Configuración de runtime para Vercel Pro
 export const runtime = 'nodejs';
-export const maxDuration = 9; // 9 segundos máximo (reducido de 10)
+export const maxDuration = 30; // 30 segundos máximo (Vercel Pro permite hasta 60s)
+export const dynamic = 'force-dynamic'; // Evitar cache estático
 
 export async function GET(req: NextRequest) {
   const startTime = Date.now();
@@ -124,7 +125,7 @@ export async function GET(req: NextRequest) {
     const tipoProductoFilter = tipoproducto ? `&& tipoproducto == "${tipoproducto}"` : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...30] `; // Límite de 30 productos para evitar timeout (reducido de 50)
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${coleccionFilter}${tipoFilter}${tipoProductoFilter}${popularesFilter} && empresa == "fritz_sport"][0...40] `; // Límite de 40 productos (Vercel Pro permite más tiempo)
 
     // 1. Fetch datos de Sanity con estructura de imágenes compatible
     const productsRaw = await client.fetch(
@@ -157,7 +158,7 @@ export async function GET(req: NextRequest) {
     );
 
     // 2. Limitar productos antes de fetch de precios (seguridad extra)
-    const productsLimited = productsRaw.slice(0, 25); // Máximo 25 productos para fetch de precios
+    const productsLimited = productsRaw.slice(0, 30); // Máximo 30 productos para fetch de precios
     console.log('📋 DEBUG - Productos limitados:', productsRaw.length, '→', productsLimited.length);
     
     // 3. Obtener precios y stock del sistema con timeout
@@ -165,9 +166,9 @@ export async function GET(req: NextRequest) {
     try {
       console.log('📋 DEBUG - Obteniendo precios del sistema para:', productsLimited.length, 'productos');
       
-      // Timeout de 5 segundos (más agresivo para evitar 504)
+      // Timeout de 20 segundos (Vercel Pro permite 30s total)
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout fetching prices')), 5000)
+        setTimeout(() => reject(new Error('Timeout fetching prices')), 20000)
       );
       
       const productosConPrecios = await Promise.race([
@@ -396,8 +397,9 @@ export async function GET(req: NextRequest) {
       });
       
       // Obtener productos sugeridos sin filtros de precio ni talla, solo género y tipo
-      const suggestionLimit = Math.max(suggestionsNeeded, MAX_SUGGESTIONS);
-      const suggestionFilter = `*[${productFilter}${generoFilter}${tipoFilter}${marcaFilter} && empresa == "fritz_sport"][0...${suggestionLimit + 20}]`;
+      // Limitar a 25 (Vercel Pro permite más tiempo)
+      const suggestionLimit = Math.min(25, Math.max(suggestionsNeeded, MAX_SUGGESTIONS));
+      const suggestionFilter = `*[${productFilter}${generoFilter}${tipoFilter}${marcaFilter} && empresa == "fritz_sport"][0...${suggestionLimit}]`;
       const suggestedRaw = await client.fetch(
         groq`${suggestionFilter} ${order} {
           _id,
@@ -429,9 +431,16 @@ export async function GET(req: NextRequest) {
       
       console.log('📋 DEBUG - Productos sugeridos de Sanity:', suggestedRaw.length);
 
-      // Obtener precios para sugerencias
+      // Obtener precios para sugerencias con timeout de 8 segundos
       try {
-        const suggestedConPrecios = await fetchProductosPrecios(suggestedRaw, "01");
+        const suggestionTimeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout fetching suggestion prices')), 8000)
+        );
+        
+        const suggestedConPrecios = await Promise.race([
+          fetchProductosPrecios(suggestedRaw, "01"),
+          suggestionTimeoutPromise
+        ]) as any;
         const suggestedSistema = productosTraidosSistemaFritzSport(
           suggestedConPrecios,
           undefined,

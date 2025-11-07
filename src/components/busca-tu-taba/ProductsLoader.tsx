@@ -65,8 +65,8 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
 
         console.log('📋 ProductsLoader - Iniciando request a:', `/api/busca-tu-taba/quick?${params.toString()}`);
 
-        // Usar el endpoint quick optimizado con timeout más corto
-        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout (más agresivo)
+        // Usar el endpoint quick optimizado con timeout de 35s (Vercel Pro tiene 30s en el backend)
+        const timeoutId = setTimeout(() => controller.abort(), 35000);
         
         const quickResponse = await fetch(`/api/busca-tu-taba/quick?${params.toString()}`, {
           cache: "no-store",
@@ -164,7 +164,7 @@ export default function ProductsLoader({ searchParams, itemsPerPage }: ProductsL
         
         // Mostrar error más específico
         if (error instanceof Error && error.name === 'AbortError') {
-          setError('El servidor tardó demasiado (8s). Intenta reducir los filtros o recarga la página.');
+          setError('La búsqueda tardó más de 35 segundos. Intenta reducir los filtros o recarga la página.');
           console.error("Request timeout - servidor sobrecargado");
         } else if (error instanceof Error) {
           // Detectar errores 504
