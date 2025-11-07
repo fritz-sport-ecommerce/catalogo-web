@@ -6,11 +6,11 @@ import productosTraidosSistemaFritzSport from "@/config/productos-sistema-busca-
 
 // Configuración de runtime para Vercel
 export const runtime = 'nodejs';
-export const maxDuration = 10; // 10 segundos máximo
+export const maxDuration = 8; // 8 segundos máximo (reducido de 10)
 
-// Cache para opciones disponibles
+// Cache para opciones disponibles - MUY AGRESIVO
 const opcionesCache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_TTL = 120000; // 2 minutos (aumentado para reducir llamadas)
+const CACHE_TTL = 300000; // 5 minutos (muy largo para evitar llamadas)
 
 export async function GET(req: NextRequest) {
   const startTime = Date.now();
@@ -60,22 +60,29 @@ export async function GET(req: NextRequest) {
       : "";
     const popularesFilter = populares === "true" ? "&& popularidad > 1" : "";
 
-    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${tipoFilter}${popularesFilter} && empresa == "fritz_sport"][0...50]`; // Reducido a 50
+    const filter = `*[${productFilter}${generoFilter}${colorFilter}${categoryFilter}${searchFilter}${marcaFilter}${tipoFilter}${popularesFilter} && empresa == "fritz_sport"][0...30]`; // Reducido a 30 para evitar timeout
 
-    // Obtener productos de Sanity
-    const productsRaw = await client.fetch(
-      groq`${filter} {
-        _id,
-        name,
-        sku,
-        genero,
-        tipo,
-        marca,
-        categories,
-        popularidad,
-        activo
-      }`
+    // Obtener productos de Sanity con timeout
+    const sanityTimeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Sanity fetch timeout')), 5000)
     );
+    
+    const productsRaw = await Promise.race([
+      client.fetch(
+        groq`${filter} {
+          _id,
+          name,
+          sku,
+          genero,
+          tipo,
+          marca,
+          categories,
+          popularidad,
+          activo
+        }`
+      ),
+      sanityTimeout
+    ]) as any[];
 
     console.log('📋 Opciones - Productos de Sanity:', productsRaw.length);
 
