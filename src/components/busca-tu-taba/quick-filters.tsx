@@ -202,13 +202,13 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
 
   // IMPORTANTE: Llamar TODOS los hooks al nivel superior (no condicionalmente)
   // Hook para estilos disponibles (Paso 3)
-  const { opciones: opcionesEstilos, totalProductos: totalEstilos, loading: loadingEstilos } = useOpcionesDisponibles({
+  const { opciones: opcionesEstilos, totalProductos: totalEstilos, loading: loadingEstilos, error: errorEstilos, retry: retryEstilos } = useOpcionesDisponibles({
     tipo: activeTipo,
     genero: activeGenero
   });
 
   // Hook para tallas disponibles (Paso 4)
-  const { tallasDisponibles, loading: loadingTallas } = useTallasDisponibles({
+  const { tallasDisponibles, loading: loadingTallas, error: errorTallas, retry: retryTallas } = useTallasDisponibles({
     tipo: activeTipo,
     genero: activeGenero,
     category: activeCategory,
@@ -217,14 +217,14 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
   });
 
   // Hook para marcas disponibles (Paso 5)
-  const { opciones: opcionesMarcas, totalProductos: totalMarcas, loading: loadingMarcas } = useOpcionesDisponibles({
+  const { opciones: opcionesMarcas, totalProductos: totalMarcas, loading: loadingMarcas, error: errorMarcas, retry: retryMarcas } = useOpcionesDisponibles({
     tipo: activeTipo,
     genero: activeGenero,
     category: activeCategory
   });
 
   // Hook para precios disponibles (Paso 6)
-  const { opciones: opcionesPrecios, totalProductos: totalPrecios, loading: loadingPrecios } = useOpcionesDisponibles({
+  const { opciones: opcionesPrecios, totalProductos: totalPrecios, loading: loadingPrecios, error: errorPrecios, retry: retryPrecios } = useOpcionesDisponibles({
     tipo: activeTipo,
     genero: activeGenero,
     category: activeCategory,
@@ -396,6 +396,23 @@ export default function QuickFilters({ variant = "sidebar" }: QuickFiltersProps)
                       <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                       <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                     </div>
+                  </div>
+                </div>
+              )}
+              
+              {errorEstilos && !loadingEstilos && (
+                <div className="absolute inset-0 bg-red-50/95 dark:bg-red-900/20 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center">
+                  <div className="text-center p-4">
+                    <div className="text-4xl mb-3">⚠️</div>
+                    <div className="text-sm font-medium text-red-700 dark:text-red-300 mb-3">
+                      {errorEstilos}
+                    </div>
+                    <button
+                      onClick={retryEstilos}
+                      className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      🔄 Reintentar
+                    </button>
                   </div>
                 </div>
               )}

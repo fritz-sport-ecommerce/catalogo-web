@@ -26,6 +26,8 @@ export function useOpcionesDisponibles({
   });
   const [totalProductos, setTotalProductos] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     // Solo buscar opciones si tenemos filtros básicos
@@ -37,6 +39,7 @@ export function useOpcionesDisponibles({
 
     const fetchOpcionesDisponibles = async () => {
       setLoading(true);
+      setError(null);
       try {
         const params = new URLSearchParams({
           tipo,
@@ -108,6 +111,15 @@ export function useOpcionesDisponibles({
         console.error('Error fetching opciones disponibles:', error);
         setOpciones({ marcas: [], categorias: [], rangosPrecios: [] });
         setTotalProductos(0);
+        if (error instanceof Error) {
+          if (error.message.includes('504') || error.message.includes('Gateway')) {
+            setError('El servidor está sobrecargado. Intenta de nuevo.');
+          } else {
+            setError('Error al cargar opciones. Intenta de nuevo.');
+          }
+        } else {
+          setError('Error inesperado. Intenta de nuevo.');
+        }
       } finally {
         setLoading(false);
       }
@@ -116,7 +128,12 @@ export function useOpcionesDisponibles({
     // Debounce para evitar muchas requests
     const timeoutId = setTimeout(fetchOpcionesDisponibles, 300);
     return () => clearTimeout(timeoutId);
-  }, [tipo, genero, category, marca]);
+  }, [tipo, genero, category, marca, retryTrigger]);
 
-  return { opciones, totalProductos, loading };
+  const retry = () => {
+    console.log('🔄 Reintentando carga de opciones...');
+    setRetryTrigger(prev => prev + 1);
+  };
+
+  return { opciones, totalProductos, loading, error, retry };
 }

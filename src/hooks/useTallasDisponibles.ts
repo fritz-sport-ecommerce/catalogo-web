@@ -24,6 +24,8 @@ export function useTallasDisponibles({
 }: UseTallasDisponiblesProps) {
   const [tallasDisponibles, setTallasDisponibles] = useState<TallaDisponible[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [retryTrigger, setRetryTrigger] = useState(0);
 
   useEffect(() => {
     // Solo buscar tallas si tenemos los filtros básicos mínimos
@@ -41,6 +43,7 @@ export function useTallasDisponibles({
 
     const fetchTallasDisponibles = async () => {
       setLoading(true);
+      setError(null);
       try {
         const params = new URLSearchParams({
           tipo,
@@ -108,6 +111,15 @@ export function useTallasDisponibles({
       } catch (error) {
         console.error('Error fetching tallas disponibles:', error);
         setTallasDisponibles([]);
+        if (error instanceof Error) {
+          if (error.message.includes('504') || error.message.includes('Gateway')) {
+            setError('El servidor está sobrecargado. Intenta de nuevo.');
+          } else {
+            setError('Error al cargar tallas. Intenta de nuevo.');
+          }
+        } else {
+          setError('Error inesperado. Intenta de nuevo.');
+        }
       } finally {
         setLoading(false);
       }
@@ -116,7 +128,12 @@ export function useTallasDisponibles({
     // Debounce para evitar muchas requests
     const timeoutId = setTimeout(fetchTallasDisponibles, 500);
     return () => clearTimeout(timeoutId);
-  }, [tipo, genero, category, marca, rangoPrecio]);
+  }, [tipo, genero, category, marca, rangoPrecio, retryTrigger]);
 
-  return { tallasDisponibles, loading };
+  const retry = () => {
+    console.log('🔄 Reintentando carga de tallas...');
+    setRetryTrigger(prev => prev + 1);
+  };
+
+  return { tallasDisponibles, loading, error, retry };
 }
