@@ -46,7 +46,7 @@ export function useTallasDisponibles({
           tipo,
           genero,
           category,
-          limit: '100' // Obtener más productos para analizar tallas
+          limit: '20' // Reducido de 100 a 20 para evitar timeout
         });
         
         // Agregar parámetros opcionales solo si están definidos

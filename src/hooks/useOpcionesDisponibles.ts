@@ -41,7 +41,7 @@ export function useOpcionesDisponibles({
         const params = new URLSearchParams({
           tipo,
           genero,
-          limit: '150' // Obtener más productos para analizar opciones
+          limit: '20' // Reducido de 150 a 20 para evitar timeout
         });
 
         if (category) params.set('category', category);
