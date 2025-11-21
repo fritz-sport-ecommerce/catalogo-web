@@ -78,6 +78,12 @@ const CATEGORY_OPTIONS: Record<string, RowItem[]> = {
     { key: "training", label: "Training", emoji: "💪" },
     { key: "sandalias", label: "Sandalias", emoji: "🩴" },
     { key: "skateboarding", label: "Skateboarding", emoji: "🛹" },
+    { key: "terrex", label: "Terrex", emoji: "⛰️" },
+    { key: "sportwear", label: "Sportwear", emoji: "🏃‍♂️" },
+    { key: "futsal", label: "Futsal", emoji: "⚽" },
+    { key: "voley", label: "Voley", emoji: "🏐" },
+    { key: "casual", label: "Casual", emoji: "👞" },
+    { key: "outdoor", label: "Outdoor", emoji: "🥾" },
   ],
   ropa: [
     { key: "polos", label: "Polos", emoji: "👕" },

@@ -1,6 +1,6 @@
-// export const fetchCache = "force-no-store";
-// export const revalidate = 0; // seconds
-// export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0; // seconds
+export const dynamic = "force-dynamic";
 
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
@@ -40,37 +40,27 @@ export const metadata: Metadata = {
   },
 };
 export default async function Page() {
-  // console.log(productos);
-
-  const catalogoProvincias = await client.fetch<SanityProduct[]>(
-    groq`*[_type == "catalogo"]{portadas_catalogo}[0].portadas_catalogo`
-  );
-  const catalogo = await client.fetch<SanityProduct[]>(
+  const catalogo = await client.fetch<any>(
     groq`*[_type == "catalogo"]{catalogospdf,catalogospdf_emprendedor}[0]`
   );
 
-  // const getUrlFromId = () => {
-  //   // Example ref: file-207fd9951e759130053d37cf0a558ffe84ddd1c9-mp3
-  //   // We don't need the first part, unless we're using the same function for files and images
-  //   const [_file, id, extension] = pdf.split('-');
-  //   return `https://cdn.sanity.io/files/ibvmpbc1/production/${id}.${extension}`
-  // }
+  // Verificar si existen PDFs en Sanity
+  const hasPdfs = catalogo?.catalogospdf?.length > 0 || catalogo?.catalogospdf_emprendedor?.length > 0;
 
-  // console.log(getUrlFromId());
-  // console.log(catalogoProvincias);
+  // Si no hay PDFs, no mostrar nada
+  if (!hasPdfs) {
+    return null;
+  }
 
   return (
     <div>
-      {/* <object className='w-[100vw] h-[100vh]' data={getUrlFromId()} type="application/pdf"></object> */}
      <DetectProvinciaAnalytics />
       <div>
-        {/* <MainPdf catalogo={catalogo} items={products} /> */}
         <main className=" w-full px-6">
           <section
             aria-labelledby="products-heading"
             className="flex pb-24 pt-6"
           >
-            {/* Product grid */}
             <div className="w-full">
               <a
                 href="tel:+51983478551"
