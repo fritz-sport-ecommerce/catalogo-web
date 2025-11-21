@@ -56,7 +56,7 @@ export default async function Page() {
     <div>
      <DetectProvinciaAnalytics />
       <div>
-        <main className=" w-full px-6">
+        <main className=" w-full xl:px-6">
           <section
             aria-labelledby="products-heading"
             className="flex pb-24 pt-6"

@@ -1,10 +1,9 @@
 "use client";
 import { urlForImage } from "@/sanity/lib/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FaDownload, FaEye, FaStar } from "react-icons/fa";
-import { Button } from "../ui/button";
+import { FaEye } from "react-icons/fa";
 import { track } from '@vercel/analytics';
+
 export default function DescargarPdf({ catalogo }) {
   const [provinciaSeleccionada] = useState("mayorista");
   const [dataCatalogo, setDataCatalogo] = useState(
@@ -27,13 +26,63 @@ export default function DescargarPdf({ catalogo }) {
     setDataCatalogo(catalogosFiltrados);
   }, [provinciaSeleccionada, catalogo]);
 
-  const handleDownloadClick = (el) => {
-    track('Descargar Catalogo', {
-      titulo: el.titulo,
-      mes: el.mes,
-      marca: el.marca,
-      tipo: provinciaSeleccionada
-    });
+  const getMarcaLogo = (marca) => {
+    const marcaLower = marca?.toLowerCase();
+    if (marcaLower === "adidas") {
+      return "https://cdn.sanity.io/images/ibvmpbc1/production/ee995528aa127d0552dd5316aa8847ffe79adc8b-196x196.png";
+    } else if (marcaLower === "nike") {
+      return "https://cdn.sanity.io/images/ibvmpbc1/production/c4f4c571a1e591fa12e147037f7b4fcf33dea577-196x196.png";
+    } else if (marcaLower === "umbro") {
+      return "https://cdn.sanity.io/images/ibvmpbc1/production/9d0a222c5b91f8b28240fbee5f87dbf4b7bb949e-510x330.png";
+    } else if (marcaLower === "fritzsport") {
+      return "https://cdn.sanity.io/images/ibvmpbc1/production/1f88bc3407a18b080e2d40b1a560cdede9aba9c5-1080x1080.png";
+    } else if (marcaLower === "reebok") {
+      return "https://cdn.sanity.io/images/ibvmpbc1/production/9bc79d5239ce2e4b60d2da9936fafd69e38242c5-1089x296.png";
+    }
+    return "https://cdn.sanity.io/images/ibvmpbc1/production/4a5cdee84967d0d4fa665fcde4263e8128a52909-196x196.png";
+  };
+
+  const getBadgeInfo = (titulo) => {
+    const tituloLower = titulo?.toLowerCase() || '';
+    if (tituloLower.includes('liquidacion') || tituloLower.includes('liquidación')) {
+      return { text: 'Liquidación', color: 'bg-red-600 text-white' };
+    } else if (tituloLower.includes('linea') || tituloLower.includes('línea')) {
+      return { text: 'Línea', color: 'bg-blue-600 text-white' };
+    }
+    return { text: 'Destacado', color: 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' };
+  };
+
+  const getBrandsToShow = (titulo, marca) => {
+    const tituloLower = titulo?.toLowerCase() || '';
+    
+    // Catálogo Nike Mayorista - solo Nike
+    if (tituloLower.includes('nikemayorista') || tituloLower.includes('nike mayorista')) {
+      return ['nike'];
+    }
+    
+    // Lo más nuevo - 4 marcas
+    if (tituloLower.includes('lo mas nuevo') || tituloLower.includes('lo más nuevo') || tituloLower.includes('nuevo')) {
+      return ['fritzsport', 'adidas', 'nike', 'reebok'];
+    }
+    
+    // Peloteras, ropa, tallas grandes, accesorios - Adidas y Nike
+    if (tituloLower.includes('peloteras') || 
+        tituloLower.includes('ropa') || 
+        tituloLower.includes('tallas grandes') || 
+        tituloLower.includes('accesorios')) {
+      return ['adidas', 'nike'];
+    }
+    
+    // Por defecto, mostrar la marca del catálogo
+    return [marca];
+  };
+
+  const getApproximateTime = () => {
+    const now = new Date();
+    const minutes = now.getMinutes();
+    const roundedMinutes = Math.floor(minutes / 5) * 5;
+    const approximateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), roundedMinutes);
+    return approximateTime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
   };
 
   const handleViewClick = (el) => {
@@ -52,99 +101,107 @@ export default function DescargarPdf({ catalogo }) {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <div className="text-center w-full text-xl sm:text-2xl font-bold uppercase tracking-wide text-gray-800 dark:text-gray-100 py-5">
-        CATALOGO {provinciaSeleccionada}
+      <div className="text-center w-full text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 py-8">
+        Catálogo {provinciaSeleccionada.charAt(0).toUpperCase() + provinciaSeleccionada.slice(1)}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-3 2xl:grid-cols-4 xl:gap-6 gap-x-1 gap-y-6">
         {dataCatalogo.map((el, idx) => (
-          <section
+          <a
             key={el._key}
-            className={`relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] bg-white dark:bg-gray-900 border ${
+            href={getUrlFromId(el.asset?._ref)}
+            target="_blank"
+            onClick={() => handleViewClick(el)}
+            className={`group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-xl bg-white dark:bg-gray-900 border cursor-pointer block ${
               idx === 0
-                ? "ring-4 ring-yellow-400 border-yellow-400 bg-yellow-50 dark:bg-yellow-900/30"
-                : "border-gray-200 dark:border-gray-700"
+                ? "ring-[1px] ring-black dark:ring-white border-black dark:border-white"
+                : "border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
             }`}
           >
-            {idx === 0 && (
-              <span
-                className="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg z-10 animate-pulse
-                  bg-gradient-to-r from-yellow-400 to-yellow-500 border-2 border-yellow-500 text-black"
-                style={{
-                  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                  fontWeight: 900,
-                  letterSpacing: '0.5px',
-                  boxShadow: '0 0 20px rgba(255, 214, 0, 0.6)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4em',
-                }}
-              >
-                <FaStar style={{ filter: 'drop-shadow(0 0 4px #FFD600)' }} />
-                <span>Destacado</span>
-              </span>
-            )}
+            {idx === 0 && (() => {
+              const badge = getBadgeInfo(el?.titulo);
+              return (
+                <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-md text-[10px] font-semibold z-10 uppercase tracking-wider ${badge.color}`}>
+                  {badge.text}
+                </span>
+              );
+            })()}
 
             {/* Imagen principal - ocupa todo el ancho */}
-            <div className="relative w-full aspect-[3/4] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border-b-2 border-gray-300 dark:border-gray-600">
-              <div className="absolute inset-0 border-4 border-white/20 dark:border-black/30 pointer-events-none z-10"></div>
+            <div className="relative w-full aspect-[3/4] overflow-hidden bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <img
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 src={urlForImage(el?.imgdw?.asset?._ref).url()}
                 alt={el?.titulo || "Catalogo"}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               
-              {/* Título sobre la imagen */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                <h3 className="text-lg font-bold uppercase tracking-wide drop-shadow-lg">
-                  {el?.titulo}
-                </h3>
-              </div>
+
             </div>
 
             {/* Contenido inferior */}
-            <div className="p-4 space-y-3">
-              <div className="flex justify-between items-center text-xs">
-                <span className="px-2 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium">
-                  {provinciaSeleccionada}
-                </span>
-                <span className="text-gray-500 dark:text-gray-400">
-                  {el?.marca}
-                </span>
+            <div className="p-6">
+              {/* Título */}
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 leading-tight">
+                {el?.titulo}
+              </h3>
+
+              {/* Marca con logo */}
+              {(() => {
+                const brands = getBrandsToShow(el?.titulo, el?.marca);
+                const isMultipleBrands = brands.length > 1;
+                
+                return (
+                  <div className="flex items-center gap-2 mb-4 flex-wrap">
+                    {brands.map((brand, index) => (
+                      <div 
+                        key={index}
+                        className="w-10 h-10 bg-black rounded-md p-1.5 flex items-center justify-center border border-gray-100 dark:border-gray-700"
+                      >
+                        <img 
+                          src={getMarcaLogo(brand)} 
+                          alt={brand}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ))}
+                    {!isMultipleBrands && (
+                      <span className="text-sm font-medium text-gray-900 dark:text-white uppercase tracking-wide">
+                        {brands[0]}
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Separador */}
+              <div className="h-px bg-gray-200 dark:bg-gray-700 mb-4"></div>
+
+              {/* Información */}
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Periodo</span>
+                  <span className="text-xs font-medium text-gray-900 dark:text-white capitalize">
+                    {el?.mes || new Date().toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Última actualización</span>
+                  <span className="text-xs font-medium text-gray-900 dark:text-white">
+                    {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                    <span className="text-[10px] text-gray-400 dark:text-gray-500 ml-1">
+                      {getApproximateTime()}
+                    </span>
+                  </span>
+                </div>
               </div>
 
-              <div className="flex justify-between items-center text-xs text-gray-600 dark:text-gray-400">
-                <span className="font-semibold uppercase">{el?.mes || new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })}</span>
-                <span className="text-[10px]">
-                  {new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })} • {new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-2 pt-2">
-                <a
-                  href={getUrlFromId(el.asset?._ref)}
-                  target="_blank"
-                  onClick={() => handleDownloadClick(el)}
-                  className="flex-1"
-                >
-                  <Button className="w-full flex items-center justify-center gap-2 text-white bg-gradient-to-r from-gray-700 to-gray-900 hover:from-yellow-400 hover:to-yellow-500 focus:ring-yellow-300 rounded-lg text-sm px-4 py-2.5 shadow-md transition-all hover:shadow-lg">
-                    <FaDownload /> Descargar
-                  </Button>
-                </a>
-
-                <Link
-                  href={getUrlFromId(el.asset?._ref)}
-                  target="_blank"
-                  onClick={() => handleViewClick(el)}
-                  className="flex-1"
-                >
-                  <Button className="w-full flex items-center justify-center gap-2 text-white bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 focus:ring-blue-300 rounded-lg text-sm px-4 py-2.5 shadow-md transition-all">
-                    <FaEye /> Ver
-                  </Button>
-                </Link>
+              {/* Call to action minimalista */}
+              <div className="flex items-center justify-center gap-2 pt-2 text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                <FaEye className="text-sm" />
+                <span>Ver catálogo</span>
               </div>
             </div>
-          </section>
+          </a>
         ))}
       </div>
     </div>
